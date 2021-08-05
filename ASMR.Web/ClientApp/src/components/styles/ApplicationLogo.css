@@ -1,0 +1,4 @@
+.application-logo-with-border {
+	filter: drop-shadow(1px 1px 0 #A2A2A6) drop-shadow(-1px -1px 0 #A2A2A6);
+	-webkit-filter: drop-shadow(1px 1px 0 #A2A2A6) drop-shadow(-1px -1px 0 #A2A2A6);
+}

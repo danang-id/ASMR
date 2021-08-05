@@ -1,0 +1,25 @@
+html {
+	line-height: 1.15;
+}
+
+@supports (-webkit-text-size-adjust: 100%) {
+	html {
+		-webkit-text-size-adjust: 100%;
+	}
+}
+
+body {
+	margin: 0;
+}
+
+.no-script {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	font-family: "Titillium Web", sans-serif;
+	height: 100vh;
+	margin: 0;
+	padding: 0;
+}

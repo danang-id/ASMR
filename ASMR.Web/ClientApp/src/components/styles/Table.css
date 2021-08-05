@@ -1,0 +1,25 @@
+.table {
+	@apply w-full divide-y;
+
+	.table-head {
+		.table-row {
+		}
+	}
+
+	.table-body {
+		@apply divide-y divide-gray-300 dark:divide-gray-600;
+
+		.table-row {
+		}
+	}
+
+	.table-data-cell-head {
+		@apply flex-wrap px-6 py-3
+		text-left text-xs font-medium uppercase tracking-wider
+		bg-gray-100 dark:bg-gray-900;
+	}
+
+	.table-data-cell {
+		@apply px-6 py-4 whitespace-normal;
+	}
+}

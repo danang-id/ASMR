@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.ct-toast {
+	@apply bg-white text-primary-dark dark:bg-primary-light dark:text-secondary;
+}
+
+hr {
+	@apply h-0.5 w-full my-1 bg-primary dark:bg-secondary;
+}

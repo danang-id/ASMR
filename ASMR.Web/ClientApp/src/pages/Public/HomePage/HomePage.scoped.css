@@ -1,0 +1,27 @@
+.page {
+	@apply flex flex-col items-center justify-center;
+
+	.header {
+		@apply flex flex-col sm:flex-row items-center justify-center;
+
+		.application-logo {
+			@apply w-32 sm:w-36;
+		}
+
+		.title {
+			@apply font-bold text-3xl sm:text-4xl mx-4;
+		}
+	}
+
+	.sub-header {
+		@apply flex items-center justify-center text-center;
+
+		.sub-title {
+			@apply font-medium text-lg sm:text-xl;
+		}
+	}
+
+	.call-to-action {
+		@apply flex items-center justify-center mt-16;
+	}
+}

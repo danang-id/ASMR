@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <ReleaseVersion>1.0.0</ReleaseVersion>
+    <AssemblyName>ASMR-Core</AssemblyName>
+    <Company>Pandora Karya Digital</Company>
+    <Product>ASMR Core Library</Product>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+</Project>

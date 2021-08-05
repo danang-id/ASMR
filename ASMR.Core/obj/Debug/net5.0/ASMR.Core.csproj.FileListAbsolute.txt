@@ -1,0 +1,12 @@
+/home/danang/Projects/ASMR/ASMR.Core/bin/Debug/net5.0/ASMR-Core.deps.json
+/home/danang/Projects/ASMR/ASMR.Core/bin/Debug/net5.0/ASMR-Core.dll
+/home/danang/Projects/ASMR/ASMR.Core/bin/Debug/net5.0/ref/ASMR-Core.dll
+/home/danang/Projects/ASMR/ASMR.Core/bin/Debug/net5.0/ASMR-Core.pdb
+/home/danang/Projects/ASMR/ASMR.Core/obj/Debug/net5.0/ASMR.Core.GeneratedMSBuildEditorConfig.editorconfig
+/home/danang/Projects/ASMR/ASMR.Core/obj/Debug/net5.0/ASMR.Core.AssemblyInfoInputs.cache
+/home/danang/Projects/ASMR/ASMR.Core/obj/Debug/net5.0/ASMR.Core.AssemblyInfo.cs
+/home/danang/Projects/ASMR/ASMR.Core/obj/Debug/net5.0/ASMR.Core.csproj.CoreCompileInputs.cache
+/home/danang/Projects/ASMR/ASMR.Core/obj/Debug/net5.0/ASMR-Core.dll
+/home/danang/Projects/ASMR/ASMR.Core/obj/Debug/net5.0/ref/ASMR-Core.dll
+/home/danang/Projects/ASMR/ASMR.Core/obj/Debug/net5.0/ASMR-Core.pdb
+/home/danang/Projects/ASMR/ASMR.Core/obj/Debug/net5.0/ASMR.Core.csproj.AssemblyReference.cache

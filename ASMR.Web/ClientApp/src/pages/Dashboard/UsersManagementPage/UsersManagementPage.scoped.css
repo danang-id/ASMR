@@ -1,0 +1,37 @@
+.table-container {
+	@apply flex flex-col justify-center items-start min-w-full rounded-lg shadow
+		bg-white dark:bg-black overflow-hidden;
+}
+
+.table-data-cell {
+	.user-information {
+		@apply flex gap-4;
+
+		.user-image-container {
+			@apply w-12 h-12;
+		}
+
+		.user-names-container {
+			.full-name {
+				@apply font-semibold;
+			}
+
+			.username {
+				@apply text-sm font-light;
+			}
+		}
+	}
+
+	.user-roles {
+		@apply flex flex-row lg:flex-col justify-start items-start my-3 lg:m-0 gap-2;
+
+		.role {
+			@apply px-2 inline-flex text-sm leading-5 font-semibold rounded-full
+			bg-primary dark:bg-secondary text-secondary dark:text-primary uppercase;
+		}
+	}
+
+	.management-actions {
+		@apply flex flex-col lg:flex-row justify-start lg:justify-end items-start lg:items-center;
+	}
+}

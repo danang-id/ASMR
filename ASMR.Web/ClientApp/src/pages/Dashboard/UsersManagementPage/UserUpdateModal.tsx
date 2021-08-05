@@ -1,0 +1,131 @@
+
+import { ChangeEvent, useEffect, useState } from "react"
+import Button from "@asmr/components/Button"
+import Form from "@asmr/components/Form"
+import Modal from "@asmr/components/Modal"
+import Role from "@asmr/data/enumerations/Role"
+import User from "@asmr/data/models/User"
+import UpdateUserRequestModel from "@asmr/data/request/UpdateUserRequestModel"
+import { ProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
+import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.css"
+
+interface UserUpdateModalProps {
+	onClose: () => void
+	onUpdateUser: (requestModel: UpdateUserRequestModel, imageFile: File | null) => void
+	progress: ProgressInfo,
+	show: boolean
+	user: User | null
+}
+function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUpdateModalProps): JSX.Element {
+	const emptyRequestModel: UpdateUserRequestModel = {
+		firstName: "",
+		lastName: "",
+		username: "",
+		roles: []
+	}
+	const [isAdministrator, setIsAdministrator] = useState(false)
+	const [requestModel, setRequestModal] = useState<UpdateUserRequestModel>(emptyRequestModel)
+
+	function onChange(event: ChangeEvent<HTMLInputElement>) {
+		const newRequestModel = { ...requestModel }
+		if (event.target.name.startsWith("role")) {
+			const roles: Role[] = [...(newRequestModel.roles ?? [])]
+			const role: Role = parseInt(event.target.name.substring(5))
+			const roleIndex = roles.indexOf(role)
+			if (event.target.checked) {
+				newRequestModel.roles = [...roles, role]
+			} else if (roleIndex !== -1 && (role !== Role.Administrator || !isAdministrator)) {
+				roles.splice(roleIndex, 1)
+				newRequestModel.roles = [...roles]
+			}
+		} else {
+			// @ts-ignore
+			newRequestModel[event.target.name] = event.target.value
+		}
+
+		setRequestModal(newRequestModel)
+	}
+
+	function renderRolesAssignment(role: string, index: number): JSX.Element | null {
+		if (typeof Role[Number(role)] !== "string" || (Number(role) === Role.Administrator && !isAdministrator)) {
+			return null
+		}
+
+		const roles = requestModel.roles ?? []
+		const checked = roles.includes(Number(role))
+		const readOnly = Number(role) === Role.Administrator && roles.includes(Role.Administrator)
+		return (
+			<span key={index} className="role-checkbox">
+				<Form.Input checked={checked} name={`role-${role}`} readOnly={readOnly} type="checkbox" onChange={onChange}/>
+				&nbsp;&nbsp;&nbsp;
+				<p className={checked ? "role-checked" : ""}>{Role[Number(role)]}</p>
+			</span>
+		)
+	}
+
+	useEffect(() => {
+		if (!show) {
+			setIsAdministrator(false)
+			setRequestModal(emptyRequestModel)
+			return
+		}
+		if (user) {
+			const newRequestModel: UpdateUserRequestModel = {
+				firstName: user.firstName,
+				lastName: user.lastName,
+				username: user.username,
+				roles: user.roles.map(userRole => userRole.role)
+			}
+			setIsAdministrator(newRequestModel.roles.includes(Role.Administrator))
+			setRequestModal(newRequestModel)
+		}
+	}, [show, user])
+
+	return (
+		<Modal onClose={onClose} show={show} title={`Modify ${user?.firstName ?? ""} ${user?.lastName ?? ""}'s Profile`}>
+			<Modal.Body>
+				<Form className="modal-form">
+					<div className="form-row">
+						<label className="form-field">First Name</label>
+						<div className="form-data">
+							<Form.Input name="firstName" value={requestModel.firstName} onChange={onChange} />
+						</div>
+					</div>
+					<div className="form-row">
+						<label className="form-field">Last Name</label>
+						<div className="form-data">
+							<Form.Input name="lastName" value={requestModel.lastName} onChange={onChange} />
+						</div>
+					</div>
+					<div className="form-row">
+						<label className="form-field">Username</label>
+						<div className="form-data">
+							<Form.Input name="username" value={requestModel.username} onChange={onChange} />
+						</div>
+					</div>
+					<div className="form-row">
+						<label className="form-field">Roles</label>
+						<div className="form-data role-checkboxes">
+							{
+								Object.keys(Role).map(renderRolesAssignment)
+							}
+						</div>
+					</div>
+				</Form>
+			</Modal.Body>
+
+			<Modal.Footer>
+				<div className="modal-actions">
+					<Button disabled={progress.loading} outline size="sm" onClick={onClose}>
+						Cancel
+					</Button>
+					<Button disabled={progress.loading} size="sm" onClick={() => onUpdateUser(requestModel, null)}>
+						Save
+					</Button>
+				</div>
+			</Modal.Footer>
+		</Modal>
+	)
+}
+
+export default UserUpdateModal

@@ -1,0 +1,12 @@
+.layout {
+	@apply min-w-full w-full max-w-full min-h-screen;
+
+	.application-status {
+		@apply font-medium text-sm fixed z-10 bottom-4 left-4 p-1 cursor-pointer
+			rounded bg-opacity-90 bg-secondary dark:bg-primary;
+	}
+}
+
+.layout-theme {
+	@apply bg-light dark:bg-dark text-dark dark:text-light;
+}

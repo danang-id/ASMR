@@ -1,0 +1,7 @@
+.user-image {
+	@apply rounded-lg border border-secondary bg-white;
+}
+
+.user-image-circular {
+	@apply rounded-full;
+}

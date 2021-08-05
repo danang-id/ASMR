@@ -1,0 +1,31 @@
+.bean-selector {
+	@apply w-2/3 sm:w-48;
+}
+
+.table-container {
+	@apply flex flex-col justify-center items-start min-w-full rounded-lg shadow
+	bg-white dark:bg-black overflow-hidden;
+}
+
+.table-data-cell {
+	.table-data-information {
+		@apply flex;
+	}
+
+	.information {
+		@apply flex flex-col;
+	}
+
+	.weight-per-packaging {
+		@apply font-bold;
+	}
+
+	.product-inventory {
+		@apply my-2 sm:m-0 text-sm;
+	}
+
+	.management-actions {
+		@apply flex flex-col md:flex-row justify-start md:justify-end items-start md:items-center;
+	}
+}
+

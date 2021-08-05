@@ -1,0 +1,63 @@
+.navigation-header {
+	@apply fixed top-0 left-0 h-20 w-full
+		flex justify-center items-center;
+
+	.navigation-bar {
+		@apply flex justify-start items-center h-14 w-full z-10
+			bg-white dark:bg-black rounded-xl shadow-xl;
+
+		width: calc(100% - 2rem);
+	}
+}
+
+.navigation-bar-left {
+	@apply flex justify-start items-center cursor-pointer;
+
+	.application-logo {
+		@apply h-12 w-auto mx-4;
+	}
+
+	.application-name {
+		@apply hidden sm:block font-bold text-xl;
+	}
+}
+
+.navigation-bar-right {
+	@apply flex justify-start items-center ml-auto mr-4;
+
+	.profile-menu {
+		@apply flex justify-end items-center gap-2 h-14 px-3
+			rounded cursor-pointer hover:bg-secondary-dark dark:hover:bg-primary-dark;
+
+		.profile-image {
+			@apply h-10 w-10;
+		}
+
+		.profile-information {
+			@apply hidden md:flex flex-col justify-center items-end;
+
+			.profile-name {
+				@apply font-semibold;
+			}
+
+			.profile-username {
+				@apply text-sm italic;
+			}
+		}
+	}
+}
+
+.profile-menu-overlay {
+	@apply fixed right-8 z-20 p-2 w-36 rounded-lg shadow-lg
+		bg-secondary dark:bg-primary border-secondary dark:border-primary;
+
+	top: 4.25rem;
+
+	.profile-menu-item {
+		@apply w-full m-0 rounded shadow-none;
+	}
+
+	.profile-menu-separator {
+		@apply h-1;
+	}
+}

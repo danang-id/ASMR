@@ -1,0 +1,3 @@
+.warning-box {
+	@apply m-2 p-2 text-white font-semibold rounded-lg bg-red-800 border border-secondary;
+}

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <ReleaseVersion>1.0.0</ReleaseVersion>
+    <AssemblyName>ASMR-Common</AssemblyName>
+    <RootNamespace>ASMR.Common</RootNamespace>
+    <PackageId>ASMR.Common</PackageId>
+    <Authors>ASMR.Common</Authors>
+    <Company>Pandora Karya Digital</Company>
+    <Product>ASMR Common Library</Product>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="libsodium" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="libsodium" Version="1.0.18.1" />
+  </ItemGroup>
+</Project>

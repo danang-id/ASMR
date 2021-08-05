@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "sArvtS3MKOqNwMuFDvIlZmcKmD3N15ZjcxrvrLcamyoH8jO1QTgwi/T2VhSedsjaXW2SZht3dG6eDc/x0aqBHA==",
+  "success": true,
+  "projectFilePath": "/home/danang/Projects/ASMR/ASMR.Common/ASMR.Common.csproj",
+  "expectedPackageFiles": [
+    "/home/danang/.nuget/packages/libsodium/1.0.18.1/libsodium.1.0.18.1.nupkg.sha512"
+  ],
+  "logs": []
+}

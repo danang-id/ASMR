@@ -1,0 +1,19 @@
+.feature-card-list {
+	@apply flex flex-wrap justify-center items-center w-full;
+}
+
+.feature-card {
+	@apply flex flex-row sm:flex-col justify-start sm:justify-center items-center gap-4
+		h-16 sm:h-36 w-full sm:w-36 mx-4 my-2 sm:m-2 px-4 py-2 sm:p-2
+		border-2 cursor-pointer rounded-lg shadow-xl
+		bg-white dark:bg-black border-secondary dark:border-primary
+		hover:bg-secondary-dark dark:hover:bg-primary-light;
+
+	.feature-icon {
+		@apply text-4xl;
+	}
+
+	.feature-name {
+		@apply text-center;
+	}
+}

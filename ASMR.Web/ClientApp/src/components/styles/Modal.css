@@ -1,0 +1,35 @@
+.modal {
+	@apply fixed inset-0 z-20 overflow-y-hidden md:overflow-y-auto;
+
+	.modal-dialog {
+		@apply min-h-screen p-0 md:px-4 text-center;
+
+		.modal-overlay {
+			@apply fixed inset-0;
+		}
+
+		.modal-center {
+			@apply inline-block h-screen align-middle;
+		}
+
+		.modal-container {
+			@apply inline-block h-screen w-full md:h-auto md:max-w-xl my-0 md:my-8 overflow-auto md:overflow-hidden
+				text-left align-middle transition-all transform shadow-none md:shadow-xl rounded-none md:rounded-2xl
+				bg-white dark:bg-black text-dark dark:text-light
+				border border-0 md:border-2 border-primary dark:border-secondary
+				divide-y divide-gray-300 dark:divide-gray-600;
+		}
+
+		.modal-title {
+			@apply flex justify-between items-center w-full p-4 text-lg font-semibold leading-6;
+		}
+
+		.modal-body {
+			@apply w-full px-6 py-4;
+		}
+
+		.modal-footer {
+			@apply w-full p-4;
+		}
+	}
+}

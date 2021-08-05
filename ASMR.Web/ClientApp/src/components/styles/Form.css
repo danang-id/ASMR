@@ -1,0 +1,31 @@
+.form {
+	@apply w-full;
+
+	.form-row {
+		@apply flex justify-center items-center w-full;
+	}
+
+	.form-icon {
+		@apply mr-2;
+	}
+
+	.form-input {
+		@apply w-full p-1 border-2 border-opacity-90 rounded-lg
+		bg-light border-secondary dark:bg-dark dark:border-primary;
+	}
+
+	.form-input[type="checkbox"] {
+		@apply h-4 w-4 p-1 border-2 border-opacity-90 rounded-xl
+			bg-light border-secondary dark:bg-dark dark:border-primary;
+	}
+
+	.form-select {
+		@apply w-full p-1 border-2 border-opacity-90 rounded-lg
+			bg-light border-secondary dark:bg-dark dark:border-primary;
+	}
+
+	.form-text-area {
+		@apply w-full p-1 border-2 border-opacity-90 rounded-lg
+		bg-light border-secondary dark:bg-dark dark:border-primary;
+	}
+}

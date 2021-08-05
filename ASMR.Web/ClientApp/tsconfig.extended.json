@@ -1,0 +1,12 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./",
+		"paths": {
+			"@root": ["./"],
+			"@root/*": ["./*"],
+			"@asmr": ["./src/"],
+			"@asmr/*": ["./src/*"]
+		},
+		"downlevelIteration": true
+	}
+}
