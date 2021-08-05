@@ -13,21 +13,21 @@ client:
 linux:
 	cd ASMR.Web; dotnet publish --configuration Release \
 		--framework net5.0 \
-		--output bin/Release/dist/linux-x64 \
+		--output Release/Dist/linux-x64 \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=true -p:PublishTrimmed=true \
 		--runtime linux-x64
 
 osx:
 	cd ASMR.Web; dotnet publish --configuration Release \
 		--framework net5.0 \
-		--output bin/Release/dist/osx-x64 \
+		--output Release/Dist/osx-x64 \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=true -p:PublishTrimmed=true \
 		--runtime osx-x64
 
 win:
 	cd ASMR.Web; dotnet publish --configuration Release \
 		--framework net5.0 \
-		--output bin/Release/dist/win-x64 \
+		--output Release/Dist/win-x64 \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=true -p:PublishTrimmed=true \
 		--runtime win-x64
 
