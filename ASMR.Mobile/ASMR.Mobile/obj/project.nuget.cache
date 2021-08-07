@@ -1,0 +1,14 @@
+{
+  "version": 2,
+  "dgSpecHash": "t/Gst4lP3hNWZttTQhMt4q3Wb2GK6SO5GZoa6sSZ0CFZMQsEEXUT3w5yYMv76QCG2SJ+Gn3zgmftg7mPpdrk8Q==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Danang\\Projects\\ASMR\\ASMR.Mobile\\ASMR.Mobile\\ASMR.Mobile.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Danang\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\Danang\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\Danang\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\xamarin.essentials\\1.6.1\\xamarin.essentials.1.6.1.nupkg.sha512",
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\xamarin.forms\\5.0.0.2012\\xamarin.forms.5.0.0.2012.nupkg.sha512"
+  ],
+  "logs": []
+}
