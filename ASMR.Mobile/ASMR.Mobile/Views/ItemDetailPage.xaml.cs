@@ -1,10 +1,8 @@
 ﻿using ASMR.Mobile.ViewModels;
-using System.ComponentModel;
-using Xamarin.Forms;
 
 namespace ASMR.Mobile.Views
 {
-    public partial class ItemDetailPage : ContentPage
+    public partial class ItemDetailPage
     {
         public ItemDetailPage()
         {

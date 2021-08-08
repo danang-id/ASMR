@@ -1,14 +1,9 @@
 ﻿using ASMR.Mobile.Models;
 using ASMR.Mobile.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
 namespace ASMR.Mobile.Views
 {
-    public partial class NewItemPage : ContentPage
+    public partial class NewItemPage
     {
         public Item Item { get; set; }
 

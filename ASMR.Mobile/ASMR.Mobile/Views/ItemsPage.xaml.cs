@@ -1,20 +1,10 @@
-﻿using ASMR.Mobile.Models;
-using ASMR.Mobile.ViewModels;
-using ASMR.Mobile.Views;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using ASMR.Mobile.ViewModels;
 
 namespace ASMR.Mobile.Views
 {
-    public partial class ItemsPage : ContentPage
+    public partial class ItemsPage
     {
-        ItemsViewModel _viewModel;
+        private readonly ItemsViewModel _viewModel;
 
         public ItemsPage()
         {

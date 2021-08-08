@@ -1,12 +1,10 @@
-﻿using ASMR.Mobile.ViewModels;
-using ASMR.Mobile.Views;
+﻿using ASMR.Mobile.Views;
 using System;
-using System.Collections.Generic;
 using Xamarin.Forms;
 
 namespace ASMR.Mobile
 {
-    public partial class AppShell : Xamarin.Forms.Shell
+    public partial class AppShell
     {
         public AppShell()
         {

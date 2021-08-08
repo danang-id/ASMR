@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ASMR.Mobile.Models
+﻿namespace ASMR.Mobile.Models
 {
     public class Item
     {
