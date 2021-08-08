@@ -1,30 +1,21 @@
-﻿<Properties StartupConfiguration="{49494EAE-78FB-4275-BABB-C17FA1BD36A5}|Default">
+﻿<Properties StartupConfiguration="{2917ED6C-24DB-4F5B-B2F6-1AEE0D4DEB3A}|Default">
   <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State name="__root__">
           <Node name="ASMR" expanded="True">
             <Node name="ASMR.Web" expanded="True">
-              <Node name="ClientApp" expanded="True">
-                <Node name="src" expanded="True">
-                  <Node name="pages" expanded="True">
-                    <Node name="Dashboard" expanded="True">
-                      <Node name="ProductsManagementPage" expanded="True">
-                        <Node name="ProductCreateModal.tsx" selected="True" />
-                      </Node>
-                    </Node>
-                  </Node>
-                </Node>
-              </Node>
+              <Node name=".gitignore" selected="True" />
             </Node>
           </Node>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.ASMR.Mobile.iOS PreferredExecutionTarget="MonoDevelop.IPhone.IPhoneDeviceTarget" />
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.ItemProperties.ASMR.Web PreferredExecutionTarget="/Applications/Safari.app" />
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x64" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|iPhone" />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

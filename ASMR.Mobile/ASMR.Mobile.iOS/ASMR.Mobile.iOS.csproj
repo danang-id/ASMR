@@ -135,13 +135,13 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
+    <PackageReference Include="Xamarin.Forms" Version="5.0.0.2083" />
+    <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\ASMR.Mobile\ASMR.Mobile.csproj">
-      <Project>{35F2F83A-36A7-405C-8225-689073891BB1}</Project>
+      <Project>{56ED1DDA-E81C-41AE-AB3D-03485776587E}</Project>
       <Name>ASMR.Mobile</Name>
     </ProjectReference>
   </ItemGroup>
