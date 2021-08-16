@@ -93,7 +93,7 @@ namespace ASMR.Web.Controllers.API
                     "The bean image file size must be under 2 MB.");
                 return BadRequest(new ProductResponseModel(errorModel));
             }
-            if (!formFile.IsImage())
+            if (!formFile.IsImage(Logger))
             {
                 var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
                     "The file you uploaded is not an image.");
@@ -152,7 +152,7 @@ namespace ASMR.Web.Controllers.API
                     }
                 }
 
-                if (!formFile.IsImage())
+                if (!formFile.IsImage(Logger))
                 {
                     var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
                         "The file you uploaded is not an image.");
