@@ -1,0 +1,24 @@
+{
+	"Android": {
+		"PlayStore": {
+			"Available": false,
+			"Link": null
+		},
+		"DirectDownload": {
+			"Available": false,
+			"Link": "https://asmr.hamzahjundi.me/api/release/mobile/update?platform=Android"
+		},
+		"Version": "1.0.0"
+	},
+	"iOS": {
+		"AppStore": {
+			"Available": false,
+			"Link": null
+		},
+		"DirectDownload": {
+			"Available": false,
+			"Link": "https://asmr.hamzahjundi.me/api/release/mobile/update?platform=iOS"
+		},
+		"Version": "1.0.0"
+	}
+}
