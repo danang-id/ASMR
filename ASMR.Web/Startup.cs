@@ -9,6 +9,7 @@
 //
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using ASMR.Common.Constants;
 using ASMR.Web.Constants;
 using ASMR.Web.Data;
 using ASMR.Web.Extensions;
@@ -55,7 +56,7 @@ namespace ASMR.Web
                 .AddCookie(CookieAuthenticationConstants.AuthenticationScheme, options => {
                     options.ClaimsIssuer = CookieAuthenticationConstants.ClaimIssuer;
                     options.Cookie.HttpOnly = CookieAuthenticationConstants.CookieHttpOnly;
-                    options.Cookie.Name = CookieAuthenticationConstants.CookieName;
+                    options.Cookie.Name = AuthenticationConstants.CookieName;
                     options.Cookie.SameSite = SameSiteMode.Strict;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.ExpireTimeSpan = CookieAuthenticationConstants.ExpireTimeSpan;
