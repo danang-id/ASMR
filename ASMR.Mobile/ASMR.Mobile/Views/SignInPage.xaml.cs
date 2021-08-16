@@ -4,12 +4,12 @@ using Xamarin.Forms.Xaml;
 namespace ASMR.Mobile.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class LoginPage
+    public partial class SignInPage
     {
-        public LoginPage()
+        public SignInPage()
         {
             InitializeComponent();
-            this.BindingContext = new LoginViewModel();
+            BindingContext = new SignInViewModel();
         }
     }
 }

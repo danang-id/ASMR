@@ -7,10 +7,11 @@
 //
 // JsonConstants.cs
 //
+
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace ASMR.Web.Constants
+namespace ASMR.Common.Constants
 {
     public static class JsonConstants
     {

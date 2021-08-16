@@ -8,7 +8,7 @@
 // AntiforgeryConstants.cs
 //
 using System;
-namespace ASMR.Web.Constants
+namespace ASMR.Common.Constants
 {
     public static class AntiforgeryConstants
     {
