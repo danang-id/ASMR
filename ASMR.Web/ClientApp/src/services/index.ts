@@ -7,10 +7,10 @@ import { INotificationHandler } from "@asmr/libs/common/notificationHandler"
 import BeanService from "@asmr/services/BeanService"
 import GateService from "@asmr/services/GateService"
 import ProductService from "@asmr/services/ProductService"
+import ReleaseService from "@asmr/services/ReleaseService"
 import StatusService from "@asmr/services/StatusService"
 import UserService from "@asmr/services/UserService"
 import AuthenticationRoutes from "@asmr/pages/Authentication/AuthenticationRoutes"
-
 export type Services = {
 	abort: () => void
 	handleError: (error?: Error, notification?: INotificationHandler, logger?: ILogger) => void
@@ -18,6 +18,7 @@ export type Services = {
 	bean: BeanService
 	gate: GateService
 	product: ProductService
+	release: ReleaseService
 	status: StatusService
 	user: UserService
 }
@@ -78,6 +79,7 @@ export function createServices(controller: AbortController, setProgress?: SetPro
 		bean: new BeanService(controller, setProgress),
 		gate: new GateService(controller, setProgress),
 		product: new ProductService(controller, setProgress),
+		release: new ReleaseService(controller, setProgress),
 		status: new StatusService(controller, setProgress),
 		user: new UserService(controller, setProgress)
 	}

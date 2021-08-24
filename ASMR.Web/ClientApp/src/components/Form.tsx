@@ -35,8 +35,29 @@ export interface FormInputProps {
 
 Form.Input = function({ className, disabled = false, ...props }: FormInputProps): JSX.Element {
 	const [progress] = useProgress()
-	className = combineClassNames(className, "form-input")
+	className = combineClassNames(className, "form-input", "form-input-custom")
 	return <input className={className} disabled={disabled || progress.loading} {...props} />
+}
+
+export interface FormCheckBoxProps {
+	checked?: boolean
+	children: ReactNode
+	className?: string
+	defaultValue?: string
+	disabled?: boolean
+	name?: string
+	onChange?: (event: ChangeEvent<HTMLInputElement>) => void
+	readOnly?: boolean
+	value?: string
+}
+
+Form.CheckBox = function({ children, className, disabled = false, name, ...props }: FormCheckBoxProps): JSX.Element {
+	const [progress] = useProgress()
+	className = combineClassNames(className, "form-checkbox", "form-checkbox-custom")
+	return <label className="form-checkbox-container" htmlFor={name}>
+		<input className={className} disabled={disabled || progress.loading} name={name} type="checkbox" {...props} />
+		<span className="form-checkbox-label">{children}</span>
+	</label>
 }
 
 export interface FormSelectProps {
@@ -46,7 +67,7 @@ export interface FormSelectProps {
 }
 
 Form.Select = function({ children, className, ...props }: FormSelectProps): JSX.Element {
-	className = combineClassNames(className, "form-select")
+	className = combineClassNames(className, "form-select", "form-select-custom")
 	return <select className={className} {...props}>{children}</select>
 }
 
@@ -55,12 +76,14 @@ export interface FormTextAreaProps {
 	className?: string
 	name?: string
 	onChange?: (event: ChangeEvent<HTMLTextAreaElement>) => void
+	rows?: number
 	value?: string
 }
 
-Form.TextArea = function({ children, className, ...props }: FormTextAreaProps): JSX.Element {
-	className = combineClassNames(className, "form-text-area")
-	return <textarea className={className} {...props}>{children}</textarea>
+Form.TextArea = function({ children, className, rows, ...props }: FormTextAreaProps): JSX.Element {
+	className = combineClassNames(className, "form-text-area", "form-text-area-custom")
+
+	return <textarea className={className} rows={rows} {...props}>{children}</textarea>
 }
 
 export default Form

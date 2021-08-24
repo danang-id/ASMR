@@ -30,7 +30,7 @@ namespace ASMR.Web.Controllers.API
 		[HttpGet]
 		public async Task<IActionResult> GetAll([FromQuery] bool showMine)
 		{
-			var authenticatedUser = await _userService.GetAuthenticatedUser(User.Identity);
+			var authenticatedUser = await _userService.GetAuthenticatedUser(User);
 			var incomingGreenBeans = showMine
 				? _beanService.GetIncomingGreenBeansByUser(authenticatedUser.Id)
 				: _beanService.GetAllIncomingGreenBeans();
@@ -64,7 +64,7 @@ namespace ASMR.Web.Controllers.API
 				return BadRequest(new BeanResponseModel(errorModel));
 			}
 
-			var authenticatedUser = await _userService.GetAuthenticatedUser(User.Identity);
+			var authenticatedUser = await _userService.GetAuthenticatedUser(User);
 			var incomingGreenBean = await _beanService.CreateIncomingGreenBean(new IncomingGreenBean
 			{
 				BeanId = bean.Id,

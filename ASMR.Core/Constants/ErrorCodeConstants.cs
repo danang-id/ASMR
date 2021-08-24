@@ -31,6 +31,8 @@ namespace ASMR.Core.Constants
         public const int NotAuthenticated = 2401;
         public const int NotAuthorized = 2402;
         public const int AuthenticationFailed = 2403;
+        public const int RequiresTwoFactor = 2404;
+        public const int InvalidClientPlatform = 2405;
 
     }
 }

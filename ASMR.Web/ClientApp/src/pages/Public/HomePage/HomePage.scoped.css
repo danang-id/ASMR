@@ -2,26 +2,30 @@
 	@apply flex flex-col items-center justify-center;
 
 	.header {
-		@apply flex flex-col sm:flex-row items-center justify-center;
+		@apply flex flex-row items-center justify-center;
 
 		.application-logo {
-			@apply w-32 sm:w-36;
+			@apply w-24;
 		}
 
 		.title {
-			@apply font-bold text-3xl sm:text-4xl mx-4;
+			@apply font-brand font-semibold lowercase text-5xl mx-4 text-primary dark:text-white;
 		}
 	}
 
-	.sub-header {
-		@apply flex items-center justify-center text-center;
-
-		.sub-title {
-			@apply font-medium text-lg sm:text-xl;
-		}
+	.separator {
+		@apply h-10;
 	}
 
 	.call-to-action {
-		@apply flex items-center justify-center mt-16;
+		@apply flex flex-col items-center justify-center gap-2;
+
+		.direct-download {
+			@apply flex flex-wrap items-center justify-center gap-2;
+		}
+
+		.external-store {
+			@apply flex flex-wrap items-center justify-center gap-2;
+		}
 	}
 }

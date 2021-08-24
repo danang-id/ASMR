@@ -20,5 +20,18 @@ namespace ASMR.Web.ReleaseInformation
 			var file = File.OpenRead(path);
 			return JsonSerializer.DeserializeAsync<ASMRMobileReleaseInformation>(file);
 		}
+		
+		public static ValueTask<ASMRWebReleaseInformation> GetASMRWebReleaseInformation()
+		{
+			var path = Path.Combine(Directory.GetCurrentDirectory(),
+				"ReleaseInformation", "ASMR.Web.json");
+			if (!File.Exists(path))
+			{
+				return ValueTask.FromResult<ASMRWebReleaseInformation>(null);
+			}
+
+			var file = File.OpenRead(path);
+			return JsonSerializer.DeserializeAsync<ASMRWebReleaseInformation>(file);
+		}
 	}
 }

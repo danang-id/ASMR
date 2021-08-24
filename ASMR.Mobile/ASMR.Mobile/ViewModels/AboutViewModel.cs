@@ -1,5 +1,4 @@
 ﻿using System.Windows.Input;
-using Xamarin.Essentials;
 using Xamarin.Forms;
 
 namespace ASMR.Mobile.ViewModels
@@ -9,9 +8,40 @@ namespace ASMR.Mobile.ViewModels
         public AboutViewModel()
         {
             Title = "About";
-            OpenWebCommand = new Command(async () => await Browser.OpenAsync("https://aka.ms/xamarin-quickstart"));
+            Name = ApplicationState.User.FirstName ?? "";
+            
+            DataUpdateCommand = new Command(ExecuteDataUpdate);
+        }
+        
+        private string _name = string.Empty;
+        public string Name
+        {
+            get => _name;
+            set => SetProperty(ref _name, value);
         }
 
-        public ICommand OpenWebCommand { get; }
+        public ICommand DataUpdateCommand { get; }
+
+        private async void ExecuteDataUpdate()
+        {
+            IsBusy = true;
+            Name = "Updating...";
+
+            try
+            {
+                var result = await ApplicationState.UpdateUserData();
+                if (result.IsSuccess)
+                {
+                    Name = ApplicationState.User.FirstName ?? "";
+                    return;
+                }
+
+                Name = "Not Authenticated";
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
     }
 }

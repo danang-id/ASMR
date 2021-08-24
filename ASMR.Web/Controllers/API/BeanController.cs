@@ -100,7 +100,7 @@ namespace ASMR.Web.Controllers.API
                 return BadRequest(new ProductResponseModel(errorModel));
             }
 
-            var authenticatedUser = await _userService.GetAuthenticatedUser(User.Identity);
+            var authenticatedUser = await _userService.GetAuthenticatedUser(User);
             var mediaFile = await _mediaFileService.CreateMediaFile(authenticatedUser, formFile);
 
             var bean = await _beanService.CreateBean(new Bean
@@ -159,7 +159,7 @@ namespace ASMR.Web.Controllers.API
                     return BadRequest(new ProductResponseModel(errorModel));
                 }
 
-                var authenticatedUser = await _userService.GetAuthenticatedUser(User.Identity);
+                var authenticatedUser = await _userService.GetAuthenticatedUser(User);
                 mediaFile = await _mediaFileService.CreateMediaFile(authenticatedUser, formFile);
             }
 

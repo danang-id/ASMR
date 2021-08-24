@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react"
+import { Fragment, useEffect, useState } from "react"
 import { useHistory, useLocation } from "react-router-dom"
+import { Menu, Transition } from "@headlessui/react"
 import ApplicationLogo from "@asmr/components/ApplicationLogo"
 import Button from "@asmr/components/Button"
 import UserImage from "@asmr/components/UserImage"
@@ -11,8 +12,8 @@ import "@asmr/components/styles/NavigationHeader.css"
 
 function NavigationHeader(): JSX.Element {
 	const [userFullName, setUserFullName] = useState("")
-	const [profileMenuShown, setProfileMenuShown] = useState(false)
-	const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>(null)
+	// const [profileMenuShown, setProfileMenuShown] = useState(false)
+	// const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>	(null)
 	const authentication = useAuthentication()
 	const history = useHistory()
 	const location = useLocation()
@@ -21,20 +22,20 @@ function NavigationHeader(): JSX.Element {
 		history.push(DashboardRoutes.IndexPage)
 	}
 
-	function onProfileMenuClicked() {
-		setProfileMenuShown(!profileMenuShown)
-	}
+	// function onProfileMenuClicked() {
+	// 	setProfileMenuShown(!profileMenuShown)
+	// }
 
-	function onProfileMenuOverlayMouseEntered() {
-		setProfileMenuShown(true)
-	}
-
-	function onProfileMenuOverlayMouseLeft() {
-		const timeout = setTimeout(() => {
-			setProfileMenuShown(false)
-		}, 200)
-		setHoverTimeout(timeout)
-	}
+	// function onProfileMenuOverlayMouseEntered() {
+	// 	setProfileMenuShown(true)
+	// }
+	//
+	// function onProfileMenuOverlayMouseLeft() {
+	// 	const timeout = setTimeout(() => {
+	// 		setProfileMenuShown(false)
+	// 	}, 200)
+	// 	setHoverTimeout(timeout)
+	// }
 
 	function onProfileClicked() {
 		if (location.pathname.startsWith(DashboardRoutes.ProfilePage)) {
@@ -60,13 +61,13 @@ function NavigationHeader(): JSX.Element {
 		setUserFullName(`${authentication.user.firstName} ${userLastName}`)
 	}, [authentication.user])
 
-	useEffect(() => {
-		return () => {
-			if (hoverTimeout) {
-				clearTimeout(hoverTimeout)
-			}
-		}
-	}, [hoverTimeout])
+	// useEffect(() => {
+	// 	return () => {
+	// 		if (hoverTimeout) {
+	// 			clearTimeout(hoverTimeout)
+	// 		}
+	// 	}
+	// }, [hoverTimeout])
 
 	return (
 		<div className="navigation-header">
@@ -77,8 +78,8 @@ function NavigationHeader(): JSX.Element {
 				</div>
 				{
 					authentication.user && (
-						<div className="navigation-bar-right">
-							<div className="profile-menu" onClick={onProfileMenuClicked}>
+						<Menu as="div" className="navigation-bar-right">
+							<Menu.Button className="profile-menu">
 								<div className="profile-image">
 									<UserImage circular user={authentication.user} />
 								</div>
@@ -87,22 +88,37 @@ function NavigationHeader(): JSX.Element {
 										{userFullName}
 									</p>
 								</div>
-							</div>
-						</div>
+							</Menu.Button>
+							<Transition
+								as={Fragment}
+								enter="transition ease-out duration-100"
+								enterFrom="transform opacity-0 scale-95"
+								enterTo="transform opacity-100 scale-100"
+								leave="transition ease-in duration-75"
+								leaveFrom="transform opacity-100 scale-100"
+								leaveTo="transform opacity-0 scale-95"
+							>
+								<Menu.Items className="profile-menu-overlay">
+									<Menu.Item>
+										<Button className="profile-menu-item"
+												style="outline"
+												onClick={onProfileClicked}>
+											My Profile
+										</Button>
+									</Menu.Item>
+									<Menu.Item>
+										<Button className="profile-menu-item"
+												style="outline"
+												onClick={onSignOutClicked}>
+											Sign Out
+										</Button>
+									</Menu.Item>
+								</Menu.Items>
+							</Transition>
+						</Menu>
 					)
 				}
 			</div>
-			{
-				(authentication.user && profileMenuShown) && (
-					<div className="profile-menu-overlay"
-						onMouseEnter={onProfileMenuOverlayMouseEntered}
-						onMouseLeave={onProfileMenuOverlayMouseLeft}>
-						<Button className="profile-menu-item" inverted onClick={onProfileClicked}>My Profile</Button>
-						<div className="profile-menu-separator" />
-						<Button className="profile-menu-item" inverted onClick={onSignOutClicked}>Sign Out</Button>
-					</div>
-				)
-			}
 		</div>
 	)
 }

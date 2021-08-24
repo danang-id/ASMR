@@ -1,0 +1,23 @@
+.core-information-page {
+	@apply px-4 py-2 min-h-full flex flex-col gap-2;
+
+	.header {
+		@apply flex justify-start items-center w-full font-semibold text-xl px-2;
+	}
+
+	.table-container {
+		@apply flex flex-col justify-center items-start min-w-full rounded-lg overflow-hidden
+		shadow-xl dark:shadow-none
+		bg-lighter dark:bg-darker
+		border-2 border-lighter dark:border-darkless;
+
+		.latest-version {
+			@apply font-semibold;
+		}
+
+		.current-version {
+			@apply italic;
+		}
+	}
+}
+

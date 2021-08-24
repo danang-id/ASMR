@@ -8,6 +8,7 @@
 // ProductController.cs
 //
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using ASMR.Core.Constants;
@@ -20,6 +21,7 @@ using ASMR.Web.Controllers.Generic;
 using ASMR.Web.Extensions;
 using ASMR.Web.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -28,26 +30,32 @@ namespace ASMR.Web.Controllers.API
 {
     public class UserController : DefaultAbstractApiController<UserController>
     {
-        private readonly IHashingService _hashingService;
         private readonly IMediaFileService _mediaFileService;
         private readonly IUserService _userService;
+        private readonly SignInManager<User> _signInManager;
 
         public UserController(
             ILogger<UserController> logger,
-            IHashingService hashingService,
             IMediaFileService mediaFileService,
-            IUserService userService) : base(logger)
+            IUserService userService,
+            SignInManager<User> signInManager) : base(logger)
         {
-            _hashingService = hashingService;
             _mediaFileService = mediaFileService;
             _userService = userService;
+            _signInManager = signInManager;
         }
 
         [Authorize(Roles = "Administrator")]
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var users = _userService.GetAllUsers();
+            var users = new Collection<NormalizedUser>();
+            foreach (var user in _userService.GetAllUsers())
+            {
+                var userRoles = await _userService.GetUserRoles(user);
+                users.Add(user.ToNormalizedUser(userRoles));
+            }
+            
             return Ok(new UsersResponseModel(users));
         }
 
@@ -70,7 +78,9 @@ namespace ASMR.Web.Controllers.API
                 return BadRequest(new UserResponseModel(errorModel));
             }
 
-            return Ok(new UserResponseModel(user));
+            var userRoles = await _userService.GetUserRoles(user);
+
+            return Ok(new UserResponseModel(user.ToNormalizedUser(userRoles)));
         }
 
         [Authorize(Roles = "Administrator")]
@@ -83,7 +93,7 @@ namespace ASMR.Web.Controllers.API
                 return validationActionResult;
             }
 
-            var existingUser = await _userService.GetUserByUsername(model.Username);
+            var existingUser = await _userService.GetUserByName(model.Username);
             if (existingUser is not null)
             {
                 var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
@@ -134,17 +144,18 @@ namespace ASMR.Web.Controllers.API
                 Id = userId,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Username = model.Username,
-                Image = $"/api/mediafile/{mediaFile.Id}",
-                HashedPassword = _hashingService.HashBase64(model.Password)
-            });
+                Email = model.EmailAddress,
+                EmailConfirmed = true,
+                UserName = model.Username,
+                Image = $"/api/mediafile/{mediaFile.Id}"
+            }, model.Password);
+
+            user = await _userService.AssignRolesToUser(user.Id, model.Roles);
+            var userRoles = await _userService.GetUserRoles(user);
+            
             await _userService.CommitAsync();
 
-            user = await _userService
-                .AssignRolesToUser(user.Id, model.Roles);
-            await _userService.CommitAsync();
-
-            return Created(Request.Path, new UserResponseModel(user));
+            return Created(Request.Path, new UserResponseModel(user.ToNormalizedUser(userRoles)));
         }
 
         [Authorize(Roles = "Administrator")]
@@ -172,9 +183,9 @@ namespace ASMR.Web.Controllers.API
                 return BadRequest(new UserResponseModel(errorModel));
             }
             
-            if (user.Username != model.Username)
+            if (user.UserName != model.Username)
             {
-                var existingUser = await _userService.GetUserByUsername(model.Username);
+                var existingUser = await _userService.GetUserByName(model.Username);
                 if (existingUser is not null)
                 {
                     var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
@@ -190,9 +201,11 @@ namespace ASMR.Web.Controllers.API
                 return BadRequest(new UserResponseModel(errorModel));
             }
 
-            if (model.Roles is not null &&
-                !user.Roles.Where(userRole => userRole.Role == Role.Administrator).Any() && 
-                model.Roles.Where(role => role == Role.Administrator).Any())
+            var modelHasRoles = model.Roles is not null && model.Roles.Any();
+            var modelRoleIncludesAdministrator = modelHasRoles && model.Roles.Where(role => role == Role.Administrator).Any();
+            var userIsAdministrator = await _userService.HasRole(user, Role.Administrator);
+            
+            if (modelRoleIncludesAdministrator && !userIsAdministrator)
             {
                 var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
                     "Assigning Administrator role is not allowed.");
@@ -237,29 +250,30 @@ namespace ASMR.Web.Controllers.API
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                Username = model.Username,
+                Email = model.EmailAddress,
+                UserName = model.Username,
                 Image = mediaFile is null ? null : $"/api/mediafile/{mediaFile.Id}"
             });
-            if (model.Roles is not null && model.Roles.Any())
+            if (modelHasRoles)
             {
-                user = await _userService
-                    .AssignRolesToUser(id, model.Roles.Select(role => role));
+                await _userService.AssignRolesToUser(id, model.Roles);
             }
 
-            var authenticatedUser = await _userService.GetAuthenticatedUser(User.Identity);
+            var authenticatedUser = await _userService.GetAuthenticatedUser(User);
             if (user is not null && user.Id == authenticatedUser.Id)
             {
-                await HttpContext.SignOutAsync();
-                await HttpContext.SignInAsync(user);
+                await _signInManager.SignOutAsync();
+                await _signInManager.SignInAsync(user, true);
             }
 
             if (mediaFile is not null && string.IsNullOrEmpty(oldMediaFileId))
             {
                 await _mediaFileService.RemoveMediaFile(oldMediaFileId);
             }
+            var userRoles = await _userService.GetUserRoles(user);
 
             await _userService.CommitAsync();
-            return Ok(new UserResponseModel(user));
+            return Ok(new UserResponseModel(user?.ToNormalizedUser(userRoles)));
         }
 
         [Authorize(Roles = "Administrator")]
@@ -279,10 +293,7 @@ namespace ASMR.Web.Controllers.API
                 return BadRequest(new UserResponseModel(errorModel));
             }
 
-            var user = await _userService.ModifyUser(id, new User
-            {
-                HashedPassword = _hashingService.HashBase64(model.Password)
-            });
+            var user = await _userService.ModifyUserPassword(id, model.Password);
             if (user is null)
             {
                 var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
@@ -290,14 +301,15 @@ namespace ASMR.Web.Controllers.API
                 return BadRequest(new UserResponseModel(errorModel));
             }
             
-            var authenticatedUser = await _userService.GetAuthenticatedUser(User.Identity);
+            var authenticatedUser = await _userService.GetAuthenticatedUser(User);
             if (user.Id == authenticatedUser.Id)
             {
-                await HttpContext.SignOutAsync();
+                await _signInManager.SignOutAsync();
             }
+            var userRoles = await _userService.GetUserRoles(user);
             
             await _userService.CommitAsync();
-            return Ok(new UserResponseModel(user));
+            return Ok(new UserResponseModel(user.ToNormalizedUser(userRoles)));
         }
 
         [Authorize(Roles = "Administrator")]
@@ -324,9 +336,10 @@ namespace ASMR.Web.Controllers.API
             {
                 await _mediaFileService.RemoveMediaFile(mediaFileId);
             }
-
+            var userRoles = await _userService.GetUserRoles(user);
+            
             await _userService.CommitAsync();
-            return Ok(new UserResponseModel(user));
+            return Ok(new UserResponseModel(user.ToNormalizedUser(userRoles)));
         }
     }
 }

@@ -1,34 +1,24 @@
 
-import Image from "@asmr/components/Image"
 import useTheme from "@asmr/libs/hooks/themeHook"
 
-import CoffeeLoadingDarkAnimation from "@asmr/assets/coffee-loading-dark.webp"
-import CoffeeLoadingDarkFallbackAnimation from "@asmr/assets/coffee-loading-dark.gif"
-import CoffeeLoadingLightAnimation from "@asmr/assets/coffee-loading-light.webp"
-import CoffeeLoadingLightFallbackAnimation from "@asmr/assets/coffee-loading-light.gif"
-
-const CoffeeLoadingDark = () => (
-	<Image alt="Please wait..."
-			className="coffee-loading"
-			source={CoffeeLoadingDarkAnimation}
-			type="image/webp"
-			fallback={CoffeeLoadingDarkFallbackAnimation}
-	/>
-)
-
-const CoffeeLoadingLight = () => (
-	<Image alt="Please wait..."
-			className="coffee-loading"
-			source={CoffeeLoadingLightAnimation}
-			type="image/webp"
-			fallback={CoffeeLoadingLightFallbackAnimation}
-	/>
-)
+import CoffeeLoadingAnimation from "@asmr/assets/coffee-loading.gif"
+import CoffeeLoadingInvertedAnimation from "@asmr/assets/coffee-loading-inverted.gif"
 
 function CoffeeLoading(): JSX.Element {
 	const [theme] = useTheme()
 
-	return theme === "dark" ? <CoffeeLoadingDark/> : <CoffeeLoadingLight/>
+	return theme === "dark"
+		? (
+			<img alt="Please wait..."
+					className="coffee-loading"
+					src={CoffeeLoadingInvertedAnimation}
+			/>
+		) : (
+			<img alt="Please wait..."
+					className="coffee-loading"
+					src={CoffeeLoadingAnimation}
+			/>
+		)
 }
 
 export default CoffeeLoading

@@ -51,7 +51,8 @@ function ProfilePage(): JSX.Element {
 					</div>
 					<div className="profile-information">
 						<div className="full-name">{user.firstName} {user.lastName}</div>
-						<div><span className="username">{user.username}</span></div>
+						<div className="email-address">{user.emailAddress}</div>
+						<div className="username">{user.username}</div>
 						<div className="roles">
 							{roles && roles.map(renderRole)}
 						</div>

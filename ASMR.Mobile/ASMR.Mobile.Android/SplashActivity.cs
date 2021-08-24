@@ -1,19 +1,26 @@
-﻿// //
-// // ASMR: Coffee Beans Management Solution
-// // © 2021 Pandora Karya Digital. All right reserved.
-// //
-// // Written by Danang Galuh Tegar Prasetyo [connect@danang.id]
-// // at 8/14/2021 11:09 PM
-// //
-// // ${FileName
-// //
-using System;
+﻿using System.Threading.Tasks;
+using Android.App;
+using Android.Content;
+using Xamarin.Forms.Platform.Android;
+
 namespace ASMR.Mobile.Droid
 {
-    public class SplashActivity
+    [Activity(Theme = "@style/MainTheme.Splash", MainLauncher = true, NoHistory = true)]
+    public class SplashActivity : FormsAppCompatActivity
     {
-        public SplashActivity()
+        // Launches the startup task
+        protected override void OnResume()
         {
+            base.OnResume();
+            Task startupWork = new(SimulateStartup);
+            startupWork.Start();
+        }
+
+        // Simulates background work that happens behind the splash screen
+        private async void SimulateStartup()
+        {
+            await Task.Delay(8000);
+            StartActivity(new Intent(Application.Context, typeof(MainActivity)));
         }
     }
 }

@@ -1,14 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<v:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:v="clr-namespace:ASMR.Mobile.Views;assembly=ASMR.Mobile"
+             xmlns:vm="clr-namespace:ASMR.Mobile.ViewModels;assembly=ASMR.Mobile"
              mc:Ignorable="d"
              x:Class="ASMR.Mobile.Views.SignInPage"
-             Shell.NavBarIsVisible="False">
+             x:DataType="vm:SignInViewModel"
+             Shell.FlyoutBehavior="Disabled"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             Shell.PresentationMode="ModalAnimated"
+             Title="{Binding Title}">
     <ContentPage.Content>
-        <StackLayout Padding="10,0,10,0" VerticalOptions="Center">
-            <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
+        <StackLayout Spacing="16" Margin="16,32" VerticalOptions="CenterAndExpand">
+            <Label Text="asmr"
+                   FontFamily="Quicksand"
+                   FontSize="48" 
+                   FontAttributes="Bold"
+                   TextColor="{StaticResource Primary}"
+                   Margin="0, 0, 0, 32"
+                   HorizontalTextAlignment="Center" />
+            <Entry Text="{Binding Username}"
+                   Placeholder="Username" />
+            <Entry Text="{Binding Password}"
+                   Placeholder="Password"
+                   IsPassword="True" />
+            <Button Text="Sign In"
+                    HorizontalOptions="FillAndExpand"
+                    Command="{Binding SignInCommand}" />
+            <Label Text="{Binding SignInStatus}"
+                   HorizontalOptions="FillAndExpand" />
         </StackLayout>
     </ContentPage.Content>
-</ContentPage>
+</v:BaseContentPage>

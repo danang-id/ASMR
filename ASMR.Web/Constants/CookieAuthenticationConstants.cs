@@ -10,6 +10,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using ASMR.Common.Constants;
 using ASMR.Core.Constants;
 using ASMR.Core.Generic;
 using Microsoft.AspNetCore.Authentication;
@@ -28,9 +29,7 @@ namespace ASMR.Web.Constants
 
         public const bool CookieHttpOnly = true;
 
-        public const string CookieName = "ASMR.Auth-Session";
-
-        public static readonly TimeSpan ExpireTimeSpan = TimeSpan.FromDays(1);
+        public static readonly TimeSpan ExpireTimeSpan = TimeSpan.FromDays(90);
 
         public const string LoginPath = "/gate/signin";
 

@@ -1,3 +1,5 @@
 .google-play-button {
-	@apply h-6 w-auto;
+	img {
+		height: 5rem;
+	}
 }

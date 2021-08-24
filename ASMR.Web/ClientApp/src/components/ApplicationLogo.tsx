@@ -6,29 +6,22 @@ import "@asmr/components/styles/ApplicationLogo.css"
 
 import AsmrLogoImage from "@asmr/assets/asmr-logo.webp"
 import AsmrLogoFallbackImage from "@asmr/assets/asmr-logo.png"
-import AsmrLogoDarkImage from "@asmr/assets/asmr-logo-dark.webp"
-import AsmrLogoDarkFallbackImage from "@asmr/assets/asmr-logo-dark.png"
-import AsmrLogoLightImage from "@asmr/assets/asmr-logo-light.webp"
-import AsmrLogoLightFallbackImage from "@asmr/assets/asmr-logo-light.png"
+import AsmrLogoInvertedImage from "@asmr/assets/asmr-logo-inverted.webp"
+import AsmrLogoInvertedFallbackImage from "@asmr/assets/asmr-logo-inverted.png"
 
 interface ApplicationLogoProps {
 	className?: string
-	withBackground?: boolean
+	allowTheme?: boolean
 }
 
-function ApplicationLogo({ className, withBackground = false, ...props }: ApplicationLogoProps): JSX.Element {
+function ApplicationLogo({ className, allowTheme = true, ...props }: ApplicationLogoProps): JSX.Element {
 	const [theme] = useTheme()
-	const imageSource = withBackground
-		? theme === "dark" ? AsmrLogoLightImage : AsmrLogoDarkImage
-		: AsmrLogoImage
-	const fallbackImageSource = withBackground
-		? theme === "dark" ? AsmrLogoLightFallbackImage : AsmrLogoDarkFallbackImage
-		: AsmrLogoFallbackImage
+	const useInvertedImage = allowTheme && theme === "dark"
+
+	const imageSource = useInvertedImage ? AsmrLogoInvertedImage : AsmrLogoImage
+	const fallbackImageSource = useInvertedImage ? AsmrLogoInvertedFallbackImage : AsmrLogoFallbackImage
 
 	className = combineClassNames(className, "application-logo")
-	if (!withBackground) {
-		className = combineClassNames(className, "application-logo-with-border")
-	}
 
 	return (
 		<Image className={className}

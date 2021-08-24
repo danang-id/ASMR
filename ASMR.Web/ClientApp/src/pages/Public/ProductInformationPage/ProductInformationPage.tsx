@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { IoPrintOutline } from "react-icons/io5"
 import { useReactToPrint } from "react-to-print"
+import BeanDescription from "@asmr/components/BeanDescription"
 import Button from "@asmr/components/Button"
 import QuickResponseCode from "@asmr/components/QuickResponseCode"
 import Bean from "@asmr/data/models/Bean"
@@ -20,6 +21,7 @@ import useProgress from "@asmr/libs/hooks/progressHook"
 import useServices from "@asmr/libs/hooks/servicesHook"
 import PublicRoutes from "@asmr/pages/Public/PublicRoutes"
 import "@asmr/pages/Public/ProductInformationPage/ProductInformationPage.scoped.css"
+import BeanImage from "@asmr/components/BeanImage"
 
 function ProductInformationPage(): JSX.Element {
 	useDocumentTitle("Product Information")
@@ -123,37 +125,44 @@ function ProductInformationPage(): JSX.Element {
 		<BaseLayout>
 			<div className="container" ref={printComponentRef}>
 				<div className="content">
-					{quickResponseCodeValue && (
-						<div className="qr-code">
-							<div className="qr-code-image">
-								<QuickResponseCode value={quickResponseCodeValue} />
+					<div className="top-container">
+						{quickResponseCodeValue && (
+							<div className="qr-code">
+								<div className="qr-code-image">
+									<QuickResponseCode value={quickResponseCodeValue} />
+								</div>
 							</div>
-						</div>
-					)}
-					<div className="information">
-						<div className="product">
-							<div className="name">
-								{ (bean && product) ? bean.name : "The product does not exist" }
-							</div>
-							<div>
+						)}
+						<div className="information">
+							<div className="product">
+								<div className="name">
+									{ (bean && product) ? bean.name : "The product does not exist" }
+								</div>
+								<div>
 								<span className="weight-per-packaging">
 									{toLocaleUnit(product?.weightPerPackaging ?? 0, "gram")}
 								</span>
-								<span> // </span>
-								<span className="price">{toLocalCurrency(product?.price ?? 0)}</span>
+									<span> // </span>
+									<span className="price">{toLocalCurrency(product?.price ?? 0)}</span>
+								</div>
+								<div className="description">
+									<BeanDescription description={bean?.description} />
+								</div>
 							</div>
-							<div className="description">{bean?.description ?? ""}</div>
 						</div>
-						<div className="about">
-							<hr />
-							<div>Product Information</div>
-							<div><strong>{config.application.name}</strong></div>
-						</div>
+					</div>
+					<div className="about">
+						<hr />
+						<div>Product Information</div>
+						<div><strong>{config.application.name}</strong></div>
 					</div>
 				</div>
 			</div>
 			{product && (
 				<div className="product-detail">
+					<div className="bean-image-container">
+						<BeanImage bean={bean} />
+					</div>
 					{authentication.isAuthenticated() && (
 						<div className="actions">
 							<Button onClick={onPrintButtonClicked} icon={IoPrintOutline}>Print</Button>

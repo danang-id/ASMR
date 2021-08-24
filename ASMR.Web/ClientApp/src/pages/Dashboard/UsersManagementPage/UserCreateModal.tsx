@@ -20,6 +20,7 @@ function UserCreateModal({ onClose, onCreateUser, progress, show  }: UserCreateM
 	const emptyRequestModel: CreateUserRequestModel = {
 		firstName: "",
 		lastName: "",
+		emailAddress: "",
 		username: "",
 		password: "",
 		passwordConfirmation: "",
@@ -63,13 +64,11 @@ function UserCreateModal({ onClose, onCreateUser, progress, show  }: UserCreateM
 			return null
 		}
 
-		const roles = requestModel.roles ?? []
-		const checked = roles.includes(Number(role))
 		return (
 			<span key={index} className="role-checkbox">
-				<Form.Input name={`role-${role}`} type="checkbox" onChange={onChange}/>
-				&nbsp;&nbsp;&nbsp;
-				<p className={checked ? "role-checked" : ""}>{Role[Number(role)]}</p>
+				<Form.CheckBox name={`role-${role}`} onChange={onChange}>
+					{Role[Number(role)]}
+				</Form.CheckBox>
 			</span>
 		)
 	}
@@ -109,6 +108,12 @@ function UserCreateModal({ onClose, onCreateUser, progress, show  }: UserCreateM
 						<label className="form-field">Last Name</label>
 						<div className="form-data">
 							<Form.Input name="lastName" onChange={onChange} />
+						</div>
+					</div>
+					<div className="form-row">
+						<label className="form-field">Email Address</label>
+						<div className="form-data">
+							<Form.Input name="emailAddress" type="email" onChange={onChange} />
 						</div>
 					</div>
 					<div className="form-row">
@@ -155,7 +160,7 @@ function UserCreateModal({ onClose, onCreateUser, progress, show  }: UserCreateM
 
 			<Modal.Footer className="modal-actions">
 				<div className="modal-actions">
-					<Button disabled={progress.loading} outline size="sm" onClick={onClose}>
+					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button disabled={progress.loading} size="sm" onClick={() => onCreateUser(requestModel, croppedImageFile)}>

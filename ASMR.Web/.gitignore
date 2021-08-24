@@ -234,5 +234,15 @@ _Pvt_Extensions
 .fake/
 
 # Keys
-[Kk]ey
-[Kk]eys
+[Kk]ey/*
+[Kk]eys/*
+![Kk]ey/.gitkeep
+![Kk]eys/.gitkeep
+
+# Logs
+[Ll]og/*
+[Ll]ogs/*
+![Ll]og/.gitkeep
+![Ll]ogs/.gitkeep
+
+appsettings.Local.json

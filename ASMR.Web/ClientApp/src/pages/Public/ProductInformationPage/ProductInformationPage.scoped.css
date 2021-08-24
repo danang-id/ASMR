@@ -2,45 +2,47 @@
 	@apply flex m-0 p-0 print:p-10 min-w-full w-full;
 
 	.content {
-		@apply flex flex-col print:flex-row sm:flex-row justify-center print:justify-start items-center
-		gap-6 sm:gap-14 print:gap-4 min-w-full w-full px-6 py-10 sm:p-14 print:p-4
-		rounded-lg print:border-4 print:border-opacity-80 print:border-primary;
+		@apply flex flex-col min-w-full w-full min-w-full w-full px-6 py-10 sm:p-14 print:p-4
+		rounded-lg print:border-4 print:border-primary;
 
-		.qr-code {
-			@apply flex justify-center sm:justify-end items-center w-full sm:w-1/2 print:w-auto;
+		.top-container {
+			@apply flex flex-col print:flex-row sm:flex-row justify-center print:justify-start items-start
+			gap-6 sm:gap-14 print:gap-4;
 
-			.qr-code-image {
-				@apply p-4 bg-white rounded-lg border-4 border-opacity-80 border-white shadow-lg;
+			.qr-code {
+				@apply flex justify-center sm:justify-end items-center w-full sm:w-1/2 print:w-auto py-4 print:py-0;
+
+				.qr-code-image {
+					@apply p-4 bg-white rounded-lg border-4 border-opacity-80 border-white shadow-lg;
+				}
+			}
+
+			.information {
+				@apply flex flex-col justify-between items-start h-full w-full sm:w-1/2 print:w-full py-4 print:py-0;
+
+				.product {
+					@apply flex flex-col justify-center items-start h-full w-full;
+
+					.name {
+						@apply font-bold text-2xl;
+					}
+
+					.weight-per-packaging {}
+
+					.price {}
+
+					.description {
+						@apply italic my-4;
+					}
+				}
 			}
 		}
 
-		.information {
-			@apply flex flex-col justify-between items-start h-full w-full sm:w-1/2 print:w-full py-4 print:py-0;
+		.about {
+			@apply text-xs font-medium uppercase tracking-wider text-center print:text-right w-full;
 
-			.product {
-				@apply flex flex-col justify-center items-start h-full w-full;
-
-				.name {
-					@apply font-bold text-2xl;
-				}
-
-				.weight-per-packaging {
-				}
-
-				.price {
-				}
-
-				.description {
-					@apply italic my-4;
-				}
-			}
-
-			.about {
-				@apply text-xs font-medium uppercase tracking-wider print:text-right w-full;
-
-				hr {
-					@apply hidden print:block;
-				}
+			hr {
+				@apply hidden print:block;
 			}
 		}
 	}
@@ -49,8 +51,8 @@
 .product-detail {
 	@apply flex sm:flex-row flex-col w-full justify-center items-center gap-10 pb-10;
 
-	.bean-image {
-		@apply h-auto w-3/4 max-w-md rounded ring ring-primary dark:ring-secondary;
+	.bean-image-container {
+		@apply h-auto w-3/4 max-w-md border-2 border-primary dark:border-white;
 	}
 
 	.actions {

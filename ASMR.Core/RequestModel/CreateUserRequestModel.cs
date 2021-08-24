@@ -25,6 +25,12 @@ namespace ASMR.Core.RequestModel
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please fill in the last name.")]
         public string LastName { get; set; }
 
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "EmailAddress")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Please fill in the email address.")]
+        [EmailAddress(ErrorMessage = "The email address you provided is not a valid email address.")]
+        public string EmailAddress { get; set; }
+        
         [DataType(DataType.Text)]
         [Display(Name = "Username")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please fill in the username.")]

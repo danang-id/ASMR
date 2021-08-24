@@ -7,17 +7,16 @@
 //
 // UserServices.cs
 //
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.Principal;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ASMR.Core.Entities;
 using ASMR.Core.Enumerations;
 using ASMR.Web.Data;
 using ASMR.Web.Services.Generic;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace ASMR.Web.Services
 {
@@ -27,66 +26,63 @@ namespace ASMR.Web.Services
 
         public Task<User> GetUserById(string id);
 
-        public Task<User> GetUserByUsername(string username);
+        public Task<User> GetUserByName(string userName);
 
-        public Task<User> CreateUser(User user);
+        public Task<User> CreateUser(User user, string password);
 
         public Task<User> ModifyUser(string id, User user);
+        
+        public Task<User> ModifyUserPassword(string id, string newPassword);
 
         public Task<User> RemoveUser(string id);
 
+        public Task<IEnumerable<UserRole>> GetUserRoles(User user);
+        
+        public Task<bool> HasRole(User user, Role role); 
+
         public Task<User> AssignRolesToUser(string id, IEnumerable<Role> roles);
 
-        public Task<User> GetAuthenticatedUser(IIdentity identity);
-
-        public Task<User> ValidateSignIn(string username, string password);
+        public Task<User> GetAuthenticatedUser(ClaimsPrincipal principal);
     }
 
     public class UserService : ServiceBase, IUserService
     {
-        private readonly IHashingService _hashingService;
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<UserRole> _roleManager;
 
-        public UserService(ApplicationDbContext dbContext, IHashingService hashingService) : base(dbContext)
+        public UserService(ApplicationDbContext dbContext,
+            UserManager<User> userManager,
+            RoleManager<UserRole> roleManager) : base(dbContext)
         {
-            _hashingService = hashingService;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         public IQueryable<User> GetAllUsers()
         {
-            return DbContext.Users
-                .Include(entity => entity.Roles)
-                .AsQueryable();
+            return _userManager.Users;
         }
 
         public Task<User> GetUserById(string id)
         {
-            return DbContext.Users
-                .Include(e => e.Roles)
-                .Where(e => e.Id == id)
-                .FirstOrDefaultAsync();
+            return _userManager.FindByIdAsync(id);
         }
 
-        public Task<User> GetUserByUsername(string username)
+        public Task<User> GetUserByName(string userName)
         {
-            return DbContext.Users
-                .Include(e => e.Roles)
-                .Where(e => e.Username == username)
-                .FirstOrDefaultAsync();
+            return _userManager.FindByNameAsync(userName);
         }
 
-        public async Task<User> CreateUser(User user)
+        public async Task<User> CreateUser(User user, string password)
         {
-            await DbContext.Users.AddAsync(user);
+            await _userManager.CreateAsync(user, password);
 
             return user;
         }
 
         public async Task<User> ModifyUser(string id, User user)
         {
-            var entity = await DbContext.Users
-                .Include(e => e.Roles)
-                .Where(e => e.Id == id)
-                .FirstOrDefaultAsync();
+            var entity = await _userManager.FindByIdAsync(id);
             if (entity is null)
             {
                 return null;
@@ -101,10 +97,15 @@ namespace ASMR.Web.Services
             {
                 entity.LastName = user.LastName;
             }
-
-            if (!string.IsNullOrEmpty(user.Username))
+            
+            if (!string.IsNullOrEmpty(user.Email))
             {
-                entity.Username = user.Username;
+                entity.Email = user.Email;
+            }
+
+            if (!string.IsNullOrEmpty(user.UserName))
+            {
+                entity.UserName = user.UserName;
             }
 
             if (!string.IsNullOrEmpty(user.Image))
@@ -112,89 +113,88 @@ namespace ASMR.Web.Services
                 entity.Image = user.Image;
             }
 
-            if (!string.IsNullOrEmpty(user.HashedPassword))
-            {
-                entity.HashedPassword = user.HashedPassword;
-            }
-
-            DbContext.Users.Update(entity);
+            await _userManager.UpdateAsync(entity);
 
             return entity;
+        }
+
+        public async Task<User> ModifyUserPassword(string id, string newPassword)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user is null)
+            {
+                return null;
+            }
+
+            var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
+
+            return user;
         }
 
         public async Task<User> RemoveUser(string id)
         {
-            var entity = await DbContext.Users
-                   .Include(e => e.Roles)
-                   .Where(e => e.Id == id)
-                   .FirstOrDefaultAsync();
-            if (entity is null)
+            var user = await _userManager.FindByIdAsync(id);
+            if (user is null)
             {
                 return null;
             }
 
-            DbContext.Users.Remove(entity);
+            await _userManager.DeleteAsync(user);
 
-            return entity;
+            return user;
+        }
+
+        public async Task<IEnumerable<UserRole>> GetUserRoles(User user)
+        {
+            var userRoles = new Collection<UserRole>();
+            if (user is null)
+            {
+                return userRoles;
+            }
+            
+            foreach (var role in await _userManager.GetRolesAsync(user))
+            {
+                var userRole = await _roleManager.FindByNameAsync(role);
+                userRoles.Add(userRole);
+            }
+            
+            return userRoles;
+        }
+
+        public async Task<bool> HasRole(User user, Role role)
+        {
+            if (user is null)
+            {
+                return false;
+            }
+
+            return await _userManager.IsInRoleAsync(user, role.ToString());
         }
 
         public async Task<User> AssignRolesToUser(string id, IEnumerable<Role> roles)
         {
-            var user = await DbContext.Users
-                .Include(e => e.Roles)
-                .Where(e => e.Id == id)
-                .FirstOrDefaultAsync();
+            var user = await _userManager.FindByIdAsync(id);
             if (user is null)
             {
                 return null;
             }
 
-            DbContext.UserRoles.RemoveRange(user.Roles);
-
-            var userRoles = new Collection<UserRole>();
-            foreach (var role in roles)
+            await _userManager.RemoveFromRolesAsync(user, new[]
             {
-                userRoles.Add(new UserRole
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    UserId = user.Id,
-                    Role = role
-                });
-            }
-            await DbContext.UserRoles.AddRangeAsync(userRoles);
+                Role.Administrator.ToString(),
+                Role.Server.ToString(),
+                Role.Roaster.ToString()
+            });
+
+            await _userManager.AddToRolesAsync(user, roles.Select(role => role.ToString()));
 
             return user;
         }
 
-        public Task<User> GetAuthenticatedUser(IIdentity identity)
+        public Task<User> GetAuthenticatedUser(ClaimsPrincipal principal)
         {
-            if (identity is null || !identity.IsAuthenticated)
-            {
-                return null;
-            }
-
-            return DbContext.Users.Include(entity => entity.Roles)
-                .Where(entity => entity.Id == identity.Name)
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<User> ValidateSignIn(string username, string password)
-        {
-            var user = await DbContext.Users.Include(entity => entity.Roles)
-                .Where(entity => entity.Username == username)
-                .FirstOrDefaultAsync();
-            if (user is null)
-            {
-                return null;
-            }
-
-            var passwordVerified = _hashingService.VerifyBase64(password, user.HashedPassword);
-            if (!passwordVerified)
-            {
-                return null;
-            }
-
-            return user;
+            return principal is null ? null : _userManager.GetUserAsync(principal);
         }
     }
 }

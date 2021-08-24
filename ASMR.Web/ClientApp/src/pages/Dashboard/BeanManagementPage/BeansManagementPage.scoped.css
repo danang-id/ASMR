@@ -1,16 +1,18 @@
 .table-container {
-	@apply flex flex-col justify-center items-start min-w-full rounded-lg shadow
-	bg-white dark:bg-black overflow-hidden;
+	@apply flex flex-col justify-center items-start min-w-full rounded-lg overflow-hidden
+		shadow-xl dark:shadow-none
+		bg-lighter dark:bg-darker
+		border-2 border-lighter dark:border-darkless;
 }
 
 .table-data-cell {
 	.information {
-		@apply flex flex-col sm:flex-row justify-center sm:justify-start items-start sm:items-center gap-4 w-full;
+		@apply flex flex-col sm:flex-row justify-center sm:justify-start items-start sm:items-center gap-4;
 
 		.bean-image-container {
-			@apply flex justify-center items-center w-full sm:w-auto max-w-full sm:max-w-2xs;
+			@apply flex justify-center items-center w-full sm:w-auto;
 			.bean-image {
-				@apply max-w-2xs;
+				@apply w-[12rem] sm:w-[10rem] md:w-[8rem] lg:w-[12rem];
 			}
 		}
 
@@ -32,6 +34,9 @@
 	}
 
 	.management-actions {
-		@apply flex flex-col md:flex-row justify-start lg:justify-end items-start md:items-center;
+		@apply flex flex-col md:flex-row lg:flex-col xl:flex-row
+			justify-start lg:justify-end
+			items-start md:items-center lg:items-end xl:items-center
+			min-w-[10rem];
 	}
 }

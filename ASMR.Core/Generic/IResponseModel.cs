@@ -10,6 +10,10 @@
 
 namespace ASMR.Core.Generic
 {
+    public interface IResponseModel : IResponseModel<object>
+    {
+    }
+
     public interface IResponseModel<T> where T : class
     {
         public bool IsSuccess { get; set; }

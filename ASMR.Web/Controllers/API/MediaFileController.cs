@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace ASMR.Web.Controllers.API
 {
@@ -27,7 +28,7 @@ namespace ASMR.Web.Controllers.API
             _mediaFileService = mediaFileService;
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), ResponseCache(CacheProfileName = "MediaFileCache")]
         public async Task<IActionResult> Download(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -52,8 +53,17 @@ namespace ASMR.Web.Controllers.API
                     "The resource file you are looking for is not found.");
                 return BadRequest(new DefaultResponseModel(errorModel));
             }
+
+            var lastModified = mediaFile.LastUpdatedAt ?? mediaFile.CreatedAt;
+            Response.GetTypedHeaders().LastModified = lastModified;
             
-            var file = await System.IO.File.ReadAllBytesAsync(filePath);
+            var requestHeaders = Request.GetTypedHeaders();
+            if (requestHeaders.IfModifiedSince.HasValue && requestHeaders.IfModifiedSince.Value >= lastModified)
+            {
+                return StatusCode(StatusCodes.Status304NotModified);
+            }
+
+            var file = System.IO.File.OpenRead(filePath);
             
             return File(file, mediaFile.MimeType, mediaFile.Name);
         }

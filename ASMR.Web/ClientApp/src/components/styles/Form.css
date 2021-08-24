@@ -9,23 +9,42 @@
 		@apply mr-2;
 	}
 
-	.form-input {
-		@apply w-full p-1 border-2 border-opacity-90 rounded-lg
-		bg-light border-secondary dark:bg-dark dark:border-primary;
+	.form-input-custom {
+		@apply w-full p-1 rounded-lg bg-lighter dark:bg-darker
+			text-black dark:text-white
+			border-2 border-opacity-90 border-lightless dark:border-darkless;
 	}
 
-	.form-input[type="checkbox"] {
-		@apply h-4 w-4 p-1 border-2 border-opacity-90 rounded-xl
-			bg-light border-secondary dark:bg-dark dark:border-primary;
+	.form-input-custom:disabled {
+		@apply bg-lightless dark:bg-darkless;
 	}
 
-	.form-select {
-		@apply w-full p-1 border-2 border-opacity-90 rounded-lg
-			bg-light border-secondary dark:bg-dark dark:border-primary;
+	.form-checkbox-container {
+		@apply inline-flex items-center;
+
+		.form-checkbox-custom {
+			@apply h-4 w-4 p-1 rounded-xl
+				border-2 border-opacity-90 border-lightless dark:border-darkless;
+		}
+
+		.form-checkbox-custom:checked {
+			@apply border-action;
+		}
+
+		.form-checkbox-label {
+			@apply ml-2 text-black dark:text-white;
+		}
 	}
 
-	.form-text-area {
-		@apply w-full p-1 border-2 border-opacity-90 rounded-lg
-		bg-light border-secondary dark:bg-dark dark:border-primary;
+	.form-select-custom {
+		@apply w-full p-1 rounded-lg bg-lighter dark:bg-darker
+			text-black dark:text-white
+			border-2 border-opacity-90 border-lightless dark:border-darkless;
+	}
+
+	.form-text-area-custom {
+		@apply w-full p-1 rounded-lg bg-lighter dark:bg-darker
+			text-black dark:text-white
+			border-2 border-opacity-90 border-lightless dark:border-darkless;
 	}
 }

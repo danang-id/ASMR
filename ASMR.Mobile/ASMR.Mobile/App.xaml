@@ -7,20 +7,32 @@
     -->
     <Application.Resources>
         <ResourceDictionary>
-            <Color x:Key="Primary">#2196F3</Color>
+            <Color x:Key="Primary">#432D27</Color>
+            <Color x:Key="Secondary">#F2EAEA</Color>
+            <Color x:Key="Dark">#2B2B2D</Color>
+            <Color x:Key="Light">#F9FAFB</Color>
+            <Style TargetType="Entry">
+                <Setter Property="FontFamily" Value="TitilliumWeb"></Setter>
+            </Style>
+            <Style TargetType="Label">
+                <Setter Property="FontFamily" Value="TitilliumWeb"></Setter>
+            </Style>
             <Style TargetType="Button">
+                <Setter Property="FontFamily" Value="TitilliumWeb"></Setter>
                 <Setter Property="TextColor" Value="White"></Setter>
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
                         <VisualStateGroup x:Name="CommonStates">
                             <VisualState x:Name="Normal">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+                                    <Setter Property="BackgroundColor" 
+                                            Value="{StaticResource Primary}" />
                                 </VisualState.Setters>
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
-                                    <Setter Property="BackgroundColor" Value="#332196F3" />
+                                    <Setter Property="BackgroundColor"
+                                            Value="#332196F3" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>

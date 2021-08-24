@@ -68,7 +68,7 @@ namespace ASMR.Web.Controllers.API
 			
 			if (!hasReleaseInformation || toVersion is null)
 			{
-				var message = "Release information for mobile applications currently is not available.";
+				const string message = "Release information for mobile applications currently is not available.";
 				return Ok(useStructuredModel ? new DefaultResponseModel
 				{
 					Message = message
@@ -131,6 +131,22 @@ namespace ASMR.Web.Controllers.API
 
 			var applicationFile = System.IO.File.OpenRead(applicationFilePath);
 			return File(applicationFile, platformMimeType, applicationFileName);
+		}
+		
+		[HttpGet("web")]
+		public async Task<IActionResult> GetWebReleaseInformation()
+		{
+			var releaseInformation = await ReleaseInformationManager.GetASMRWebReleaseInformation();
+			// ReSharper disable once InvertIf
+			if (releaseInformation is null)
+			{
+				return Ok(new DefaultResponseModel
+				{
+					Message = "Release information for web applications currently is not available."
+				});
+			}
+
+			return Ok(new DefaultResponseModel<ASMRWebReleaseInformation>(releaseInformation));
 		}
 	}
 }

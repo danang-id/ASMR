@@ -1,16 +1,21 @@
 ﻿using ASMR.Mobile.Models;
-using ASMR.Mobile.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using ASMR.Mobile.Services.Abstraction;
+using ASMR.Mobile.Services.BackEnd;
 using Xamarin.Forms;
 
 namespace ASMR.Mobile.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        protected IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        protected static IApplicationState ApplicationState => DependencyService.Get<IApplicationState>();
+        protected static ILogging Logging => DependencyService.Get<ILogging>();
+        protected static IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        protected static IAuthenticationService AuthenticationService => DependencyService.Get<IAuthenticationService>();
+        protected static IStatusService StatusService => DependencyService.Get<IStatusService>();
 
         private bool _isBusy;
         public bool IsBusy
@@ -26,12 +31,16 @@ namespace ASMR.Mobile.ViewModels
             set => SetProperty(ref _title, value);
         }
 
-        protected bool SetProperty<T>(ref T backingStore, T value,
+        protected bool SetProperty<T>(
+            ref T backingStore,
+            T value,
             [CallerMemberName] string propertyName = "",
             Action onChanged = null)
         {
             if (EqualityComparer<T>.Default.Equals(backingStore, value))
+            {
                 return false;
+            }
 
             backingStore = value;
             onChanged?.Invoke();
@@ -43,9 +52,7 @@ namespace ASMR.Mobile.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            var changed = PropertyChanged;
-
-            changed?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }

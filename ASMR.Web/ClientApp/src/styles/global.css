@@ -3,7 +3,8 @@
 @tailwind utilities;
 
 .ct-toast {
-	@apply bg-white text-primary-dark dark:bg-primary-light dark:text-secondary;
+	@apply bg-lighter text-black
+		dark:bg-darkless dark:text-white;
 }
 
 hr {

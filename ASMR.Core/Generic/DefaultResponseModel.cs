@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.Json;
+using ASMR.Common.Constants;
 using ASMR.Core.Constants;
 
 namespace ASMR.Core.Generic
@@ -78,6 +80,10 @@ namespace ASMR.Core.Generic
 
         public IEnumerable<ResponseError> Errors { get; set; }
 
+        public override string ToString()
+        {
+            return JsonSerializer.Serialize(this, JsonConstants.DefaultJsonSerializerOptions);
+        }
     }
 
     public class DefaultResponseModel : DefaultResponseModel<object> {

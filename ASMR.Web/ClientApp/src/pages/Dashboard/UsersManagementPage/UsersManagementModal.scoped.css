@@ -18,10 +18,6 @@
 			.role-checkbox {
 				@apply flex justify-start items-center;
 			}
-
-			.role-checked {
-				@apply font-semibold;
-			}
 		}
 	}
 

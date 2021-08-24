@@ -1,9 +1,9 @@
-import * as React from "react"
 import { CSSProperties, ReactNode } from "react"
+import { useHistory } from "react-router-dom"
 import config from "@asmr/libs/common/config"
 import { combineClassNames } from "@asmr/libs/common/styles"
+import PublicRoutes from "@asmr/pages/Public/PublicRoutes"
 import "@asmr/layouts/BaseLayout/BaseLayout.css"
-import environment from "@asmr/libs/common/environment"
 
 export interface BaseLayoutProps {
 	children?: ReactNode
@@ -13,19 +13,26 @@ export interface BaseLayoutProps {
 }
 
 function BaseLayout({ children, className, ignoreTheme = false, ...props }: BaseLayoutProps): JSX.Element {
+	const history = useHistory()
 	let addedClassName = combineClassNames("layout")
 	if (!ignoreTheme) {
 		addedClassName = combineClassNames(addedClassName, "layout-theme")
 	}
 	className = combineClassNames(addedClassName, className)
 
+	function onApplicationStatusClicked() {
+		if (history.location.pathname.startsWith(PublicRoutes.CoreInformationPage)) {
+			return
+		}
+
+		history.push(PublicRoutes.CoreInformationPage)
+	}
+
 	return (
 		<div className={className} {...props}>
 			{children}
-			<div className="application-status">
-				{config.application.name} {config.application.version}.{config.build.number}{" "}
-				{environment.isDevelopment && "(Development Environment)"}
-				{environment.isTest && "(Test Environment)"}
+			<div onClick={onApplicationStatusClicked} className="application-status">
+				{config.application.name} {config.application.versionFull}
 			</div>
 		</div>
 	)

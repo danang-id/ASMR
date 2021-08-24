@@ -3,7 +3,6 @@ using ASMR.Mobile.Views;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace ASMR.Mobile.ViewModels
@@ -21,14 +20,12 @@ namespace ASMR.Mobile.ViewModels
         {
             Title = "Browse";
             Items = new ObservableCollection<Item>();
-            LoadItemsCommand = new Command(async () => await ExecuteLoadItemsCommand());
-
+            LoadItemsCommand = new Command(ExecuteLoadItemsCommand);
             ItemTapped = new Command<Item>(OnItemSelected);
-
             AddItemCommand = new Command(OnAddItem);
         }
 
-        async Task ExecuteLoadItemsCommand()
+        private async void ExecuteLoadItemsCommand()
         {
             IsBusy = true;
 
@@ -72,7 +69,7 @@ namespace ASMR.Mobile.ViewModels
             await Shell.Current.GoToAsync(nameof(NewItemPage));
         }
 
-        async void OnItemSelected(Item item)
+        private static async void OnItemSelected(Item item)
         {
             if (item == null)
                 return;

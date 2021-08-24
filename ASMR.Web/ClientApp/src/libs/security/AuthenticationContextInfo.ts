@@ -12,7 +12,7 @@ export type AuthenticationContextInfo = {
 	handleErrors: (errors?: ResponseError[], notification?: INotificationHandler, logger?: ILogger) => void
 	isAuthenticated: () => boolean
 	isAuthorized: (roles: Role[]) => boolean
-	signIn: (username?: string, password?: string) => Promise<AuthenticationResponseModel>
+	signIn: (username?: string, password?: string, rememberMe?: boolean) => Promise<AuthenticationResponseModel>
 	signOut: () => Promise<AuthenticationResponseModel>
 	updateUserData: () => Promise<void>
 }

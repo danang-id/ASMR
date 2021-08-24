@@ -43,7 +43,7 @@ namespace ASMR.Web.Controllers.API
 		[HttpGet]
 		public async Task<IActionResult> GetAll([FromQuery] bool showMine)
 		{
-			var authenticatedUser = await _userService.GetAuthenticatedUser(User.Identity);
+			var authenticatedUser = await _userService.GetAuthenticatedUser(User);
 			var roastedBeanProductions = showMine 
 				? _roastedBeanProductionService
 					.GetRoastedBeanProductionByUser(authenticatedUser.Id)
@@ -118,7 +118,7 @@ namespace ASMR.Web.Controllers.API
 			});
 
 
-			var authenticatedUser = await _userService.GetAuthenticatedUser(User.Identity);
+			var authenticatedUser = await _userService.GetAuthenticatedUser(User);
 			var roastedBeanProduction = await _roastedBeanProductionService
 				.CreateRoastedBeanProduction(new RoastedBeanProduction
 				{
@@ -158,7 +158,7 @@ namespace ASMR.Web.Controllers.API
 				return BadRequest(new ProductionResponseModel(errorModel));
 			}
 
-			var authenticatedUser = await _userService.GetAuthenticatedUser(User.Identity);
+			var authenticatedUser = await _userService.GetAuthenticatedUser(User);
 			var roastedBeanProduction = await _roastedBeanProductionService
 				.GetRoastedBeanProductionById(id);
 			if (roastedBeanProduction is null)
@@ -220,7 +220,7 @@ namespace ASMR.Web.Controllers.API
 				return BadRequest(new ProductionResponseModel(errorModel));
 			}
 
-			var authenticatedUser = await _userService.GetAuthenticatedUser(User.Identity);
+			var authenticatedUser = await _userService.GetAuthenticatedUser(User);
 			var roastedBeanProduction = await _roastedBeanProductionService
 				.GetRoastedBeanProductionById(id);
 			if (roastedBeanProduction is null)

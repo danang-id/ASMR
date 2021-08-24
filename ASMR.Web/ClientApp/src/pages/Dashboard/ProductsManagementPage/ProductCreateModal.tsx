@@ -69,7 +69,7 @@ function ProductCreateModal({ bean, onClose, onCreateProduct, progress, show  }:
 
 			<Modal.Footer className="modal-actions">
 				<div className="modal-actions">
-					<Button disabled={progress.loading} outline size="sm" onClick={onClose}>
+					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button disabled={progress.loading} size="sm" onClick={() => onCreateProduct(requestModel)}>

@@ -29,8 +29,8 @@ function ProductRemoveModal({ bean, onClose, onRemoveProduct, product, progress,
 
 			<Modal.Footer>
 				<div className="modal-actions">
-					<Button disabled={progress.loading} outline size="sm" onClick={onClose}>Cancel</Button>
-					<Button disabled={progress.loading} size="sm" onClick={onRemoveProduct}>Remove</Button>
+					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>Cancel</Button>
+					<Button disabled={progress.loading} style="danger" size="sm" onClick={onRemoveProduct}>Remove</Button>
 				</div>
 			</Modal.Footer>
 		</Modal>

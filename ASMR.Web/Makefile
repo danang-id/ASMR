@@ -100,7 +100,7 @@ migrations:
 	dotnet ef database update;
 
 run:
-	dotnet run
+	dotnet run --launch-profile Production
 
 watch:
 	dotnet watch run

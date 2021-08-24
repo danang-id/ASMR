@@ -52,8 +52,8 @@ function AuthenticationProvider({children, fallbackComponent: fallback}: Authent
 		setInitialized(true)
 	}
 
-	async function signIn(username?: string, password?: string) {
-		const result = await services.gate.authenticate({ username, password })
+	async function signIn(username?: string, password?: string, rememberMe?: boolean) {
+		const result = await services.gate.authenticate({ username, password, rememberMe })
 		if (result.isSuccess && result.data) {
 			setUser(parseUserData(result.data))
 		}

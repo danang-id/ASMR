@@ -1,5 +1,7 @@
 import { ComponentType, MouseEvent, ReactNode } from "react"
+import {IoCogOutline} from "react-icons/io5"
 import { combineClassNames } from "@asmr/libs/common/styles"
+import useProgress from "@asmr/libs/hooks/progressHook"
 import "@asmr/components/styles/Button.css"
 
 interface ButtonProps {
@@ -7,32 +9,26 @@ interface ButtonProps {
 	className?: string
 	disabled?: boolean
 	icon?: ComponentType<any>
-	inverted?: boolean
 	onClick?: (event: MouseEvent<HTMLButtonElement>) => void
-	outline?: boolean
+	style?: "danger" | "filled" | "none" | "outline"
 	size?: "xs" | "sm" | "md" | "lg"
 	type?: "button" | "reset" | "submit"
 }
 
-function Button({
-					children,
-					className, icon: Icon,
-					inverted = false,
-					outline = false,
-					size = "md",
-					...props }: ButtonProps): JSX.Element {
-	className = combineClassNames(className, "button", `button-${size}`)
-	if (outline) {
-		className = combineClassNames(className, "button-outline")
-	} else if (inverted) {
-		className = combineClassNames(className, "button-inverted")
-	} else {
-		className = combineClassNames(className, "button-filled")
-	}
+function Button({ children, className, icon: Icon, size = "md", style = "filled", ...props }: ButtonProps): JSX.Element {
+	className = combineClassNames(className,
+		"button",
+		`button-${size}`,
+		`button-${style}`)
+	const [progress] = useProgress()
+	
+	const ButtonIcon = () => progress.loading 
+		? <IoCogOutline className="animate-spin" /> 
+		: Icon ? <Icon className="button-icon" /> : <></>
 
 	return (
 		<button className={className} {...props}>
-			{ Icon && <Icon className="button-icon" />}
+			{ Icon && <ButtonIcon />}
 			{ (Icon && children) && <>&nbsp;&nbsp;</> }
 			{children}
 		</button>

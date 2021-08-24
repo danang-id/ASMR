@@ -13,7 +13,8 @@ function ProductTransactionsPage(): JSX.Element {
 			<div className="content">
 				<div>
 					<div className="warning-box">
-						Product Transactions feature is not available at the moment. Please try again later.
+						We are sorry, this feature is not currently available at the moment.<br/>
+						Please try again later.
 					</div>
 				</div>
 			</div>

@@ -7,24 +7,34 @@
 //
 // Startup.cs
 //
+using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
+using System.Text;
 using ASMR.Common.Constants;
+using ASMR.Core.Entities;
 using ASMR.Web.Constants;
 using ASMR.Web.Data;
 using ASMR.Web.Extensions;
 using ASMR.Web.Services;
+using ASMR.Web.Services.Options;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
+// ReSharper disable once StringLiteralTypo
 namespace ASMR.Web
 {
     public class Startup
@@ -35,12 +45,14 @@ namespace ASMR.Web
             Environment = environment;
         }
 
-        public IConfiguration Configuration { get; }
-        public IWebHostEnvironment Environment { get; }
+        private IConfiguration Configuration { get; }
+        private IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<IPasswordHasher<User>, Argon2PasswordHashingService>();
+            
             services.AddAntiforgery(options =>
             {
                 options.Cookie.HttpOnly = AntiforgeryConstants.CookieHttpOnly;
@@ -51,22 +63,31 @@ namespace ASMR.Web
                 options.HeaderName = AntiforgeryConstants.HeaderName;
                 options.SuppressXFrameOptionsHeader = AntiforgeryConstants.SuppressXFrameOptionsHeader;
             });
+            
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["JsonWebToken:Issuer"],
+                    ValidAudience = Configuration["JsonWebToken:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(Configuration["JsonWebToken:Key"]))
+                };
+            });
 
-            services.AddAuthentication(CookieAuthenticationConstants.AuthenticationScheme)
-                .AddCookie(CookieAuthenticationConstants.AuthenticationScheme, options => {
-                    options.ClaimsIssuer = CookieAuthenticationConstants.ClaimIssuer;
-                    options.Cookie.HttpOnly = CookieAuthenticationConstants.CookieHttpOnly;
-                    options.Cookie.Name = AuthenticationConstants.CookieName;
-                    options.Cookie.SameSite = SameSiteMode.Strict;
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    options.ExpireTimeSpan = CookieAuthenticationConstants.ExpireTimeSpan;
-                    options.Events.OnRedirectToLogin = CookieAuthenticationConstants.OnRedirectToLogin;
-                    options.Events.OnRedirectToAccessDenied = CookieAuthenticationConstants.OnRedirectToAccessDenied;
-                });
-            services.AddAuthorization();
-
-            services.AddControllersWithViews()
-                .AddJsonOptions((options) => {
+            services.AddControllersWithViews(options =>
+                {
+                    options.CacheProfiles.Add("MediaFileCache", new CacheProfile()
+                    {
+                        Duration = 60 * 60 * 24 * 365,
+                        Location = ResponseCacheLocation.Any
+                    });
+                })
+                .AddJsonOptions(options => {
                     options.JsonSerializerOptions.DefaultIgnoreCondition =
                         JsonConstants.DefaultJsonSerializerOptions.DefaultIgnoreCondition;
                     options.JsonSerializerOptions.PropertyNamingPolicy =
@@ -85,8 +106,9 @@ namespace ASMR.Web
 
             services.AddDataProtection()
                 .SetApplicationName(typeof(Startup).Assembly.GetName().Name ?? "ASMR.Web")
-                .ProtectKeysWithCertificate(
-                    new X509Certificate2(Path.Join("Keys", "DataProtectionCertificate.pfx")))
+                .ProtectKeysWithCertificate(new X509Certificate2(
+                    Path.Join("Keys", Configuration["DataProtection:Certificate:FileName"]),
+                    Configuration["DataProtection:Certificate:Password"]))
                 .PersistKeysToDbContext<ApplicationDbContext>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -99,6 +121,24 @@ namespace ASMR.Web
                         configure.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
                     });
             });
+            
+            services.AddIdentity<User, UserRole>(options =>
+                {
+                    options.SignIn.RequireConfirmedEmail = true;
+                    options.User.RequireUniqueEmail = true;
+                    options.User.AllowedUserNameCharacters =
+                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+
+                    // Identity : Default password settings
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireNonAlphanumeric = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequiredLength = 6;
+                    options.Password.RequiredUniqueChars = 1;
+                })
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddResponseCaching();
             services.AddResponseCompression();
@@ -115,19 +155,27 @@ namespace ASMR.Web
             {
                 configuration.RootPath = "ClientApp/build";
             });
-
-            services.AddWebOptimizer(pipeline =>
-            {
-                pipeline.AddCssBundle("/global.style.css", "styles/global/**/*.css");
-                pipeline.AddJavaScriptBundle("/global.script.js", "scripts/global/**/*.js");
-            });
-
+            
             services.Configure<FormOptions>(options => {
                 options.ValueLengthLimit = int.MaxValue;
                 options.MultipartBodyLengthLimit = int.MaxValue;
                 options.MemoryBufferThreshold = int.MaxValue;
             });
-
+            
+            services.Configure<JsonWebTokenOptions>(Configuration.GetSection("JsonWebToken"));
+            
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.ClaimsIssuer = CookieAuthenticationConstants.ClaimIssuer;
+                options.Cookie.HttpOnly = CookieAuthenticationConstants.CookieHttpOnly;
+                options.Cookie.Name = AuthenticationConstants.CookieName;
+                options.Cookie.SameSite = SameSiteMode.Strict;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.ExpireTimeSpan = CookieAuthenticationConstants.ExpireTimeSpan;
+                options.Events.OnRedirectToLogin = CookieAuthenticationConstants.OnRedirectToLogin;
+                options.Events.OnRedirectToAccessDenied = CookieAuthenticationConstants.OnRedirectToAccessDenied;
+            });
+            
             //
             // Custom Services
             //
@@ -144,8 +192,8 @@ namespace ASMR.Web
             services.AddScoped<IMediaFileService, MediaFileService>();
             services.AddScoped<IRoastedBeanProductionService, RoastedBeanProductionService>();
             services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IUserService, UserService>();
-            services.AddSingleton<IHashingService, HashingService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -162,30 +210,29 @@ namespace ASMR.Web
                 app.UseSecurityHeaders(SecurityHeadersConstants.DefaultHeaderPolicyCollection);
                 // The default HSTS value is 30 days.
                 // You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                // app.UseHsts();
+                app.UseHsts();
             }
 
-            app.UseSelfMigration();
+            app.UseSerilogRequestLogging();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
             {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
             app.UseHttpsRedirection();
-
             app.UseHttpStatusHandler();
-
-            app.UseWebOptimizer();
+            
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
             app.UseRouting();
-
             app.UseCors();
+            app.UseResponseCaching();
+            app.UseResponseCompression();
 
+            app.UseClientPlatformVerification();
             app.UseAntiforgery();
             app.UseAuthentication();
-            app.UseUserAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -200,11 +247,11 @@ namespace ASMR.Web
             {
                 spa.Options.SourcePath = "ClientApp";
 
-                // if (Environment.IsDevelopment())
-                // {
-                //     spa.UseProxyToSpaDevelopmentServer(new Uri("http://127.0.0.1:3000/"));
-                //     //spa.UseReactDevelopmentServer(npmScript: "start");
-                // }
+                if (Environment.IsDevelopment())
+                {
+                    spa.UseProxyToSpaDevelopmentServer(new Uri("http://127.0.0.1:3000/"));
+                    //spa.UseReactDevelopmentServer(npmScript: "start");
+                }
             });
         }
     }

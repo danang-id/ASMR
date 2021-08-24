@@ -65,3 +65,4 @@ $RECYCLE.BIN/
 # JetBrains Rider
 .idea/
 *.sln.iml
+ASMR.Web/ClientApp/src/build.json

@@ -1,5 +1,6 @@
 /* eslint-disable */
 module.exports = {
+	mode: "jit",
 	purge: [
 		"./public/**/*.html",
 		"./src/**/*.{js,jsx,ts,tsx}",
@@ -7,6 +8,7 @@ module.exports = {
 	darkMode: "class", // or "media" or "class"
 	theme: {
 		fontFamily: {
+			brand: ["Quicksand"],
 			serif: ["ui-serif", "Georgia", "Cambria", "'Times New Roman'", "Times", "serif"],
 			sans: [
 				"'Titillium Web'",
@@ -29,28 +31,25 @@ module.exports = {
 		},
 		extend: {
 			colors: {
-				primary: {
-					light: "#846A3E",
-					DEFAULT: "#4A3C23",
-					dark: "#2F2616",
-				},
-				secondary: {
-					light: "#FBF9F9",
-					DEFAULT: "#F2EAEA",
-					dark: "#CBAAAA"
-				},
-				dark: "#2B2B2D",
-				light: "#F9FAFB"
+				action: "#1D71F9",
+				"action-accent": "#2F7DFA",
+				danger: "#F32013",
+				bean: "#794028",
+				primary: "#432D27",
+				secondary: "#D7B7A3",
+				darkless: "#3A3A3D",
+				dark: "#222224",
+				darker: "#161617",
+				lightless: "#D4CFCF",
+				light: "#EAE7E7",
+				lighter: "#F5F2F2"
 			},
-			backgroundColor: ["disabled"],
-			borderColor: ["disabled"],
 			maxWidth: {
 				"2xs": "10rem",
 			},
 			screens: {
 				"print": { raw: "print" },
 			},
-			textColor: ["disabled"],
 		},
 
 	},

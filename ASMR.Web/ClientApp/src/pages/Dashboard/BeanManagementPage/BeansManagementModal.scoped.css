@@ -15,7 +15,7 @@
 
 	.image-preview {
 		img {
-			@apply rounded-lg ring ring-secondary dark:ring-primary;
+			@apply rounded-lg border border-primary dark:border-white;
 		}
 	}
 }

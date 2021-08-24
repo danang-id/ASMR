@@ -3,7 +3,7 @@
 	transition: 400ms linear all;
 
 	.bar {
-		@apply bg-primary dark:bg-secondary;
+		@apply bg-primary dark:bg-white;
 
 		position: fixed;
 		top: 0;
@@ -31,13 +31,13 @@
 .loading-bar-spinner {
 	position: fixed;
 	top: 1rem;
-	left: 1rem;
+	left: 0.5rem;
 	z-index: 1000;
 	pointer-events: none;
 	transition: 350ms linear all;
 
 	.icon {
-		@apply border-primary dark:border-secondary;
+		@apply border-primary dark:border-white;
 
 		width: 1rem;
 		height: 1rem;

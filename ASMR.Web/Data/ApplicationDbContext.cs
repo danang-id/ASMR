@@ -13,10 +13,12 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
+// ReSharper disable UnusedAutoPropertyAccessor.Global
 namespace ASMR.Web.Data
 {
-    public class ApplicationDbContext : DbContext, IDataProtectionKeyContext
+    public class ApplicationDbContext : IdentityDbContext<User, UserRole, string>, IDataProtectionKeyContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -36,31 +38,49 @@ namespace ASMR.Web.Data
         public DbSet<RoastedBeanProduction> RoastedBeanProductions { get; set; }
         public DbSet<Transaction> Transactions { get; set; }
         public DbSet<TransactionItem> TransactionItems { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
 
         private void MarkEntities()
         {
             foreach (var entry in ChangeTracker.Entries())
             {
-                var entityType = entry.Entity.GetType();
-                if (entityType == typeof(DataProtectionKey))
-                {
-                    continue;
-                }
+                var identifierProperty = entry.Metadata.FindProperty("Id");
+                var createdAtProperty = entry.Metadata.FindProperty("CreatedAt");
+                var lastUpdatedAtProperty = entry.Metadata.FindProperty("LastUpdatedAt");
+                
+                var hasIdentifierProperty = identifierProperty is not null && 
+                                            identifierProperty.ClrType == typeof(string);
+                var hasCreatedAtProperty = createdAtProperty is not null && 
+                                           createdAtProperty.ClrType == typeof(string);
+                var hasLastUpdatedAtProperty = lastUpdatedAtProperty is not null && 
+                                               lastUpdatedAtProperty.ClrType == typeof(string);
                 
                 switch (entry.State)
                 {
                     case EntityState.Added:
-                        if (entry.CurrentValues["Id"].ToString() == Guid.Empty.ToString())
+
+                        if (hasIdentifierProperty)
                         {
-                            entry.CurrentValues["Id"] = Guid.NewGuid().ToString();
+                            if (entry.CurrentValues["Id"].ToString() == Guid.Empty.ToString())
+                            {
+                                entry.CurrentValues["Id"] = Guid.NewGuid().ToString();
+                            }
                         }
-                        entry.CurrentValues["CreatedAt"] = DateTimeOffset.Now;
-                        entry.CurrentValues["LastUpdatedAt"] = null;
+
+                        if (hasCreatedAtProperty)
+                        {
+                            entry.CurrentValues["CreatedAt"] = DateTimeOffset.Now;
+                        }
+                        
+                        if (hasLastUpdatedAtProperty)
+                        {
+                            entry.CurrentValues["LastUpdatedAt"] = null;
+                        }
                         break;
                     case EntityState.Modified:
-                        entry.CurrentValues["LastUpdatedAt"] = DateTimeOffset.Now;
+                        if (hasLastUpdatedAtProperty)
+                        {
+                            entry.CurrentValues["LastUpdatedAt"] = DateTimeOffset.Now;
+                        }
                         break;
                     case EntityState.Deleted:
                         break;

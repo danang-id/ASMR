@@ -26,8 +26,8 @@ function UserRemoveModal({ onClose, onRemoveUser, progress, show, user }: UserRe
 
 			<Modal.Footer>
 				<div className="modal-actions">
-					<Button disabled={progress.loading} outline size="sm" onClick={onClose}>Cancel</Button>
-					<Button disabled={progress.loading} size="sm" onClick={onRemoveUser}>Remove</Button>
+					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>Cancel</Button>
+					<Button disabled={progress.loading} style="danger" size="sm" onClick={onRemoveUser}>Remove</Button>
 				</div>
 			</Modal.Footer>
 		</Modal>

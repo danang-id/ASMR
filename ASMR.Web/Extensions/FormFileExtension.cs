@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ASMR.Core.Entities;
 using ASMR.Web.Constants;
+using Microsoft.Extensions.Logging;
 
 namespace ASMR.Web.Extensions
 {
@@ -12,7 +13,7 @@ namespace ASMR.Web.Extensions
     {
         private const int ImageMinimumBytes = 512;
 
-        public static bool IsImage(this IFormFile formFile)
+        public static bool IsImage(this IFormFile formFile, ILogger logger = null)
         {
             //-------------------------------------------
             //  Check the image mime types
@@ -67,8 +68,9 @@ namespace ASMR.Web.Extensions
                     return false;
                 }
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                logger?.LogError(exception, exception.Message);
                 return false;
             }
             finally
@@ -76,20 +78,19 @@ namespace ASMR.Web.Extensions
                 formFile.OpenReadStream().Position = 0;
             }
 
-            //-------------------------------------------
-            //  Try to instantiate new Bitmap, if .NET will throw exception
-            //  we can assume that it's not a valid image
-            //-------------------------------------------
+            if (OperatingSystem.IsMacOS())
+            {
+                return true;
+            }
+
             try
             {
                 using var bitmap = new System.Drawing.Bitmap(formFile.OpenReadStream());
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                // TODO: Return true for now. There is a problem with Blob Form uploading.
-
-                //return false;
-                return true;
+                logger?.LogError(exception, exception.Message);
+                return false;
             }
             finally
             {
@@ -112,7 +113,7 @@ namespace ASMR.Web.Extensions
                 var fileName = $"{timeStamp}_{Path.GetRandomFileName()}.resource";
                 var filePath = Path.Combine(ResourceContants.DirectoryPath, fileName);
                 var absoluteFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
-                using (var fileStream = File.Create(absoluteFilePath))
+                await using (var fileStream = File.Create(absoluteFilePath))
                 {
                     await formFile.CopyToAsync(fileStream);
                 }

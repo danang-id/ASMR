@@ -1,6 +1,8 @@
 .table-container {
-	@apply flex flex-col justify-center items-start min-w-full rounded-lg shadow
-		bg-white dark:bg-black overflow-hidden;
+	@apply flex flex-col justify-center items-start min-w-full rounded-lg overflow-hidden
+		shadow-xl dark:shadow-none
+		bg-lighter dark:bg-darker
+		border-2 border-lighter dark:border-darkless;
 }
 
 .table-data-cell {
@@ -15,6 +17,10 @@
 			.full-name {
 				@apply font-semibold;
 			}
+			
+			.email-address {
+				@apply text-sm font-normal;
+			}
 
 			.username {
 				@apply text-sm font-light;
@@ -27,7 +33,7 @@
 
 		.role {
 			@apply px-2 inline-flex text-sm leading-5 font-semibold rounded-full
-			bg-primary dark:bg-secondary text-secondary dark:text-primary uppercase;
+			bg-primary dark:bg-white text-white dark:text-primary uppercase;
 		}
 	}
 

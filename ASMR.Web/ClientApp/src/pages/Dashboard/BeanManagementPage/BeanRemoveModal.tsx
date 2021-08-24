@@ -24,8 +24,8 @@ function BeanRemoveModal({ bean, onClose, onRemoveBean, progress, show }: BeanRe
 
 			<Modal.Footer>
 				<div className="modal-actions">
-					<Button disabled={progress.loading} outline size="sm" onClick={onClose}>Cancel</Button>
-					<Button disabled={progress.loading} size="sm" onClick={onRemoveBean}>Remove</Button>
+					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>Cancel</Button>
+					<Button disabled={progress.loading} style="danger" size="sm" onClick={onRemoveBean}>Remove</Button>
 				</div>
 			</Modal.Footer>
 		</Modal>

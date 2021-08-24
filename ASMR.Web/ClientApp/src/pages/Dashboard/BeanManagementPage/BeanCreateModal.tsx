@@ -70,7 +70,7 @@ function BeanCreateModal({ onClose, onCreateBean, progress, show  }: BeanCreateM
 					<div className="form-row">
 						<label className="form-field">Description</label>
 						<div className="form-data">
-							<Form.TextArea name="description" onChange={onChange} />
+							<Form.TextArea name="description" rows={6} onChange={onChange} />
 						</div>
 					</div>
 					<div className="form-row">
@@ -92,7 +92,7 @@ function BeanCreateModal({ onClose, onCreateBean, progress, show  }: BeanCreateM
 
 			<Modal.Footer className="modal-actions">
 				<div className="modal-actions">
-					<Button disabled={progress.loading} outline size="sm" onClick={onClose}>
+					<Button disabled={progress.loading} size="sm" style="outline" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button disabled={progress.loading} size="sm" onClick={() => onCreateBean(requestModel, imageFile)}>

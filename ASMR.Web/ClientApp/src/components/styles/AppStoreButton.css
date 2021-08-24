@@ -1,3 +1,5 @@
 .app-store-button {
-	@apply h-6 w-auto;
+	img {
+		height: 3.5rem;
+	}
 }

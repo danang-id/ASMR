@@ -5,9 +5,11 @@
 .feature-card {
 	@apply flex flex-row sm:flex-col justify-start sm:justify-center items-center gap-4
 		h-16 sm:h-36 w-full sm:w-36 mx-4 my-2 sm:m-2 px-4 py-2 sm:p-2
-		border-2 cursor-pointer rounded-lg shadow-xl
-		bg-white dark:bg-black border-secondary dark:border-primary
-		hover:bg-secondary-dark dark:hover:bg-primary-light;
+		cursor-pointer rounded-lg shadow-lg dark:shadow-none
+		border-0 dark:border dark:border-darkless
+		bg-lighter dark:bg-darker
+		hover:bg-primary dark:hover:bg-action
+		hover:text-white dark:hover:text-white;
 
 	.feature-icon {
 		@apply text-4xl;

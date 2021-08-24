@@ -20,6 +20,7 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 	const emptyRequestModel: UpdateUserRequestModel = {
 		firstName: "",
 		lastName: "",
+		emailAddress: "",
 		username: "",
 		roles: []
 	}
@@ -56,9 +57,9 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 		const readOnly = Number(role) === Role.Administrator && roles.includes(Role.Administrator)
 		return (
 			<span key={index} className="role-checkbox">
-				<Form.Input checked={checked} name={`role-${role}`} readOnly={readOnly} type="checkbox" onChange={onChange}/>
-				&nbsp;&nbsp;&nbsp;
-				<p className={checked ? "role-checked" : ""}>{Role[Number(role)]}</p>
+				<Form.CheckBox checked={checked} name={`role-${role}`} readOnly={readOnly} onChange={onChange}>
+					{Role[Number(role)]}
+				</Form.CheckBox>
 			</span>
 		)
 	}
@@ -73,6 +74,7 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 			const newRequestModel: UpdateUserRequestModel = {
 				firstName: user.firstName,
 				lastName: user.lastName,
+				emailAddress: user.emailAddress,
 				username: user.username,
 				roles: user.roles.map(userRole => userRole.role)
 			}
@@ -98,6 +100,12 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 						</div>
 					</div>
 					<div className="form-row">
+						<label className="form-field">Email Address</label>
+						<div className="form-data">
+							<Form.Input name="emailAddress" type="email" value={requestModel.emailAddress} onChange={onChange} />
+						</div>
+					</div>
+					<div className="form-row">
 						<label className="form-field">Username</label>
 						<div className="form-data">
 							<Form.Input name="username" value={requestModel.username} onChange={onChange} />
@@ -116,7 +124,7 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 
 			<Modal.Footer>
 				<div className="modal-actions">
-					<Button disabled={progress.loading} outline size="sm" onClick={onClose}>
+					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button disabled={progress.loading} size="sm" onClick={() => onUpdateUser(requestModel, null)}>

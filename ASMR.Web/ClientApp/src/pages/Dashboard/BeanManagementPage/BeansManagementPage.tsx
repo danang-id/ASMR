@@ -9,6 +9,7 @@ import {
 	IoTrashOutline
 } from "react-icons/io5"
 import BackButton from "@asmr/components/BackButton"
+import BeanDescription from "@asmr/components/BeanDescription"
 import BeanImage from "@asmr/components/BeanImage"
 import BreakpointRenderer from "@asmr/components/BreakpointRenderer"
 import Button from "@asmr/components/Button"
@@ -27,9 +28,9 @@ import useLogger from "@asmr/libs/hooks/loggerHook"
 import useNotification from "@asmr/libs/hooks/notificationHook"
 import useProgress from "@asmr/libs/hooks/progressHook"
 import useServices from "@asmr/libs/hooks/servicesHook"
+import DashboardRoutes from "@asmr/pages/Dashboard/DashboardRoutes"
 import PublicRoutes from "@asmr/pages/Public/PublicRoutes"
 import "@asmr/pages/Dashboard/BeanManagementPage/BeansManagementPage.scoped.css"
-import DashboardRoutes from "@asmr/pages/Dashboard/DashboardRoutes"
 
 const BeanCreateModal = lazy(() => import("@asmr/pages/Dashboard/BeanManagementPage/BeanCreateModal"))
 const BeanUpdateModal = lazy(() => import("@asmr/pages/Dashboard/BeanManagementPage/BeanUpdateModal"))
@@ -194,15 +195,15 @@ function BeansManagementPage(): JSX.Element {
 	function renderBeanTableRow(bean: Bean, index: number): JSX.Element {
 		function ManagementActions() {
 			return <>
-				<Button disabled={progress.loading} key={0} icon={IoQrCodeOutline} size="xs"
+				<Button disabled={progress.loading} key={0} icon={IoQrCodeOutline} size="xs" style="filled"
 						onClick={() => onShowBeanInformationPageButtonClicked(bean)}>Show QR Code</Button>
-				<Button disabled={progress.loading} key={1} icon={IoBagOutline} size="xs"
+				<Button disabled={progress.loading} key={1} icon={IoBagOutline} size="xs" style="outline"
 						onClick={() => onShowProductManagementPageButtonClicked(bean)}>Manage Products</Button>
-				<Button disabled={progress.loading} key={2} icon={IoCreateOutline} size="xs"
+				<Button disabled={progress.loading} key={2} icon={IoCreateOutline} size="xs" style="outline"
 						onClick={() => onShowBeanUpdateModalButtonClicked(bean)}>Modify</Button>
-				<Button disabled={progress.loading} key={3} icon={IoImageOutline} size="xs"
+				<Button disabled={progress.loading} key={3} icon={IoImageOutline} size="xs" style="outline"
 						onClick={() => onShowBeanUpdateImageModalButtonClicked(bean)}>Change Image</Button>
-				<Button disabled={progress.loading} key={4} icon={IoTrashOutline} size="xs"
+				<Button disabled={progress.loading} key={4} icon={IoTrashOutline} size="xs" style="danger"
 						onClick={() => onShowBeanRemoveModalButtonClicked(bean)}>Remove</Button>
 			</>
 		}
@@ -218,7 +219,9 @@ function BeansManagementPage(): JSX.Element {
 						</div>
 						<div className="detail">
 							<div className="name">{bean.name}</div>
-							<div className="description">{bean.description}</div>
+							<div className="description">
+								<BeanDescription description={bean.description} />
+							</div>
 							<BreakpointRenderer max="md">
 								{renderBeanInventory(bean.inventory)}
 								<div className="management-actions">

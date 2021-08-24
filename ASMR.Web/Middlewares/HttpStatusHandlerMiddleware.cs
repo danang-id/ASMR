@@ -11,9 +11,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.Net;
 using System.Threading.Tasks;
+using ASMR.Common.Constants;
 using ASMR.Core.Constants;
 using ASMR.Core.Generic;
-using ASMR.Web.Constants;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
@@ -48,7 +48,7 @@ namespace ASMR.Web.Middlewares
                 return;
             }
 
-            context.Request.Path = "/error/pagenotfound";
+            context.Request.Path = "/error/not-found";
             await _next(context);
         }
 
@@ -130,6 +130,13 @@ namespace ASMR.Web.Middlewares
                 {
                     errorModels.Add(new ResponseError(ErrorCodeConstants.GenericServerError,
                         "Something went wrong."));
+                    // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                    _logger.LogError(exception, exception.Message);
+                    if (exception.InnerException is not null)
+                    {
+                        // ReSharper disable once TemplateIsNotCompileTimeConstantProblem
+                        _logger.LogError(exception.InnerException, exception.InnerException.Message);
+                    }
                 }
                 
                 await context.Response.WriteAsJsonAsync(new DefaultResponseModel(errorModels),

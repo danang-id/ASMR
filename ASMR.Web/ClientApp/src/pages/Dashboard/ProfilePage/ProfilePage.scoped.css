@@ -11,9 +11,13 @@
 		.full-name {
 			@apply font-bold text-2xl;
 		}
-
+		
 		.username {
 			@apply font-mono;
+		}
+		
+		.email-address {
+			@apply font-normal;
 		}
 
 		.roles {
@@ -21,7 +25,7 @@
 
 			.role {
 				@apply px-2 inline-flex text-sm leading-5 font-semibold rounded-full
-					bg-primary dark:bg-secondary text-secondary dark:text-primary uppercase;
+					bg-primary dark:bg-white text-white dark:text-primary uppercase;
 			}
 		}
 	}

@@ -11,6 +11,13 @@ namespace ASMR.Core.Generic
 {
     public class ResponseError
     {
+        public ResponseError()
+        {
+            Code = 0;
+            Reason = string.Empty;
+            SupportId = null;
+        }
+
         public ResponseError(int code, string reason)
         {
             Code = code;

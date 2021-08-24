@@ -212,11 +212,11 @@ function ProductsManagementPage(): JSX.Element {
 	function renderProductTableRow(product: Product, index: number): JSX.Element {
 		function ManagementActions() {
 			return <>
-				<Button disabled={progress.loading} key={0} icon={IoQrCodeOutline} size="xs"
+				<Button disabled={progress.loading} key={0} icon={IoQrCodeOutline} size="xs" style="filled"
 						onClick={() => onShowProductInformationPageButtonClicked(product)}>Show QR Code</Button>
-				<Button disabled={progress.loading} key={1} icon={IoCreateOutline} size="xs"
+				<Button disabled={progress.loading} key={1} icon={IoCreateOutline} size="xs" style="outline"
 						onClick={() => onShowProductUpdateModalButtonClicked(product)}>Modify</Button>
-				<Button disabled={progress.loading} key={2} icon={IoTrashOutline} size="xs"
+				<Button disabled={progress.loading} key={2} icon={IoTrashOutline} size="xs" style="danger"
 						onClick={() => onShowProductRemoveModalButtonClicked(product)}>Remove</Button>
 			</>
 		}
@@ -271,14 +271,18 @@ function ProductsManagementPage(): JSX.Element {
 
 			<div className="click-to-actions">
 				{bean && (
-					<Button disabled={progress.loading} size={breakpoint.includes("sm") ? "sm" : "md"}
+					<Button disabled={progress.loading}
+							size={breakpoint.includes("sm") ? "sm" : "md"}
+							style="filled"
 							onClick={onShowProductCreateModalButtonClicked}>
 						<IoAddCircleOutline/>
 						<BreakpointRenderer min="sm">&nbsp;Add Product</BreakpointRenderer>
 					</Button>
 				)}
 				{bean && (
-					<Button disabled={progress.loading} size={breakpoint.includes("sm") ? "sm" : "md"}
+					<Button disabled={progress.loading}
+							size={breakpoint.includes("sm") ? "sm" : "md"}
+							style="outline"
 							onClick={onShowBeanInformationPageButtonClicked}>
 						<IoInformation/>
 						<BreakpointRenderer min="sm">&nbsp;Bean Information</BreakpointRenderer>

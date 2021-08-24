@@ -221,15 +221,15 @@ function UsersManagementPage(): JSX.Element {
 
 		function ManagementActions() {
 			return <>
-				<Button disabled={progress.loading} key={0} icon={IoCreateOutline} size="xs"
+				<Button disabled={progress.loading} key={0} icon={IoCreateOutline} size="xs" style="outline"
 						onClick={() => onShowUpdateUserModalButtonClicked(user)}>Modify</Button>
-				<Button disabled={progress.loading} key={1} icon={IoImageOutline} size="xs"
+				<Button disabled={progress.loading} key={1} icon={IoImageOutline} size="xs" style="outline"
 						onClick={() => onShowUpdateUserImageModalButtonClicked(user)}>Change Image</Button>
-				<Button disabled={progress.loading} key={2} icon={IoKeyOutline} size="xs"
+				<Button disabled={progress.loading} key={2} icon={IoKeyOutline} size="xs" style="outline"
 						onClick={() => onShowUpdateUserPasswordModalButtonClicked(user)}>Change Password</Button>
 				{
 					(user.id !== authentication.user?.id) && (
-						<Button disabled={progress.loading} key={3} icon={IoTrashOutline} size="xs"
+						<Button disabled={progress.loading} key={3} icon={IoTrashOutline} size="xs" style="danger"
 								onClick={() => onShowRemoveUserModalButtonClicked(user)}>Remove</Button>
 					)
 				}
@@ -249,6 +249,7 @@ function UsersManagementPage(): JSX.Element {
 						</div>
 						<div className="user-names-container">
 							<p className="full-name">{user.firstName} {user.lastName}</p>
+							<p className="email-address">{user.emailAddress}</p>
 							<p className="username">{user.username}</p>
 						</div>
 					</div>

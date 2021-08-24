@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { useHistory } from "react-router-dom"
 import { IoPrintOutline } from "react-icons/io5"
 import { useReactToPrint } from "react-to-print"
+import BeanDescription from "@asmr/components/BeanDescription"
 import Button from "@asmr/components/Button"
 import QuickResponseCode from "@asmr/components/QuickResponseCode"
 import BeanImage from "@asmr/components/BeanImage"
@@ -98,25 +99,29 @@ function BeanInformationPage(): JSX.Element {
 		<BaseLayout>
 			<div className="container" ref={printComponentRef}>
 				<div className="content">
-					{quickResponseCodeValue && (
-						<div className="qr-code">
-							<div className="qr-code-image">
-								<QuickResponseCode value={quickResponseCodeValue} />
+					<div className="top-container">
+						{quickResponseCodeValue && (
+							<div className="qr-code">
+								<div className="qr-code-image">
+									<QuickResponseCode value={quickResponseCodeValue} />
+								</div>
+							</div>
+						)}
+						<div className="information">
+							<div className="bean">
+								<div className="name">
+									{ bean ? bean.name : "The bean does not exist"}
+								</div>
+								<div className="description">
+									<BeanDescription description={bean?.description} />
+								</div>
 							</div>
 						</div>
-					)}
-					<div className="information">
-						<div className="bean">
-							<div className="name">
-								{ bean ? bean.name : "The bean does not exist"}
-							</div>
-							<div className="description">{bean?.description}</div>
-						</div>
-						<div className="about">
-							<hr />
-							<div>Bean Information</div>
-							<div><strong>{config.application.name}</strong></div>
-						</div>
+					</div>
+					<div className="about">
+						<hr />
+						<div>Bean Information</div>
+						<div><strong>{config.application.name}</strong></div>
 					</div>
 				</div>
 			</div>

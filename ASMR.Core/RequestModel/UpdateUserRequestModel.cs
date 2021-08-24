@@ -21,6 +21,10 @@ namespace ASMR.Core.RequestModel
         [DataType(DataType.Text)]
         public string LastName { get; set; }
 
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage = "The email address you provided is not a valid email address.")]
+        public string EmailAddress { get; set; }
+        
         [DataType(DataType.Text)]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 4)]
         public string Username { get; set; }

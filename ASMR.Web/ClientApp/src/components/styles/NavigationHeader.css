@@ -3,8 +3,10 @@
 		flex justify-center items-center;
 
 	.navigation-bar {
-		@apply flex justify-start items-center h-14 w-full z-10
-			bg-white dark:bg-black rounded-xl shadow-xl;
+		@apply flex justify-start items-center h-14 w-full z-40 rounded-xl
+			bg-lighter dark:bg-darker
+			border-0 dark:border dark:border-darkless
+			shadow-xl dark:shadow-none;
 
 		width: calc(100% - 2rem);
 	}
@@ -18,7 +20,8 @@
 	}
 
 	.application-name {
-		@apply hidden sm:block font-bold text-xl;
+		@apply hidden sm:inline-block font-brand font-medium text-3xl lowercase pb-1
+			text-primary dark:text-white;
 	}
 }
 
@@ -27,7 +30,8 @@
 
 	.profile-menu {
 		@apply flex justify-end items-center gap-2 h-14 px-3
-			rounded cursor-pointer hover:bg-secondary-dark dark:hover:bg-primary-dark;
+			rounded cursor-pointer
+			hover:bg-lightless dark:hover:bg-darkless;
 
 		.profile-image {
 			@apply h-10 w-10;
@@ -48,16 +52,12 @@
 }
 
 .profile-menu-overlay {
-	@apply fixed right-8 z-20 p-2 w-36 rounded-lg shadow-lg
-		bg-secondary dark:bg-primary border-secondary dark:border-primary;
+	@apply fixed right-8 z-50 p-2 w-36 rounded-lg shadow-lg
+		bg-lightless dark:bg-darkless flex flex-col gap-1;
 
 	top: 4.25rem;
 
 	.profile-menu-item {
 		@apply w-full m-0 rounded shadow-none;
-	}
-
-	.profile-menu-separator {
-		@apply h-1;
 	}
 }

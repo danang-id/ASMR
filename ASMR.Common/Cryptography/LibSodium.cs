@@ -10,6 +10,7 @@
 
 // ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace ASMR.Common.Cryptography
@@ -30,15 +31,15 @@ namespace ASMR.Common.Cryptography
 		}
 
 		[DllImport(Name, CallingConvention = CallingConvention.Cdecl)]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+		[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
 		private static extern void sodium_init();
 
 		[DllImport(Name, CallingConvention = CallingConvention.Cdecl)]
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+		[SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
 		internal static extern void randombytes_buf(byte[] buffer, int size);
 
 		[DllImport(Name, CallingConvention = CallingConvention.Cdecl)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
+        [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "<Pending>")]
         internal static extern int crypto_pwhash(byte[] buffer, long bufferLen, byte[] password, long passwordLen, byte[] salt, long opsLimit, int memLimit, int alg);
 
 	}

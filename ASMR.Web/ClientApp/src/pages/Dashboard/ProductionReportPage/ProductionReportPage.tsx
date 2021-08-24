@@ -12,7 +12,8 @@ function ProductionReportPage(): JSX.Element {
 			<div className="content">
 				<div>
 					<div className="warning-box">
-						Production Report feature is not available at the moment. Please try again later.
+						We are sorry, this feature is not currently available at the moment.<br/>
+						Please try again later.
 					</div>
 				</div>
 			</div>

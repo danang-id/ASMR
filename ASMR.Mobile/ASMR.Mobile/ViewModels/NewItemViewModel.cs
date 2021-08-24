@@ -13,8 +13,8 @@ namespace ASMR.Mobile.ViewModels
         {
             SaveCommand = new Command(OnSave, ValidateSave);
             CancelCommand = new Command(OnCancel);
-            this.PropertyChanged +=
-                (_, __) => SaveCommand.ChangeCanExecute();
+            PropertyChanged +=
+                (_, _) => SaveCommand.ChangeCanExecute();
         }
 
         private bool ValidateSave()

@@ -2,7 +2,7 @@
 	@apply relative;
 
 	.selector-button {
-		@apply relative w-full py-2 pl-3 pr-10 text-left bg-white dark:bg-black rounded-lg shadow-md cursor-default
+		@apply w-full py-2 pl-3 pr-10 text-left bg-white dark:bg-black rounded-lg shadow-md cursor-default
 			focus:outline-none sm:text-sm;
 
 		.selector-button-value {

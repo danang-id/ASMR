@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<v:BaseContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:v="clr-namespace:ASMR.Mobile.Views;assembly=ASMR.Mobile"
+             xmlns:vm="clr-namespace:ASMR.Mobile.ViewModels;assembly=ASMR.Mobile"
              x:Class="ASMR.Mobile.Views.ItemDetailPage"
+             x:DataType="vm:ItemDetailViewModel"
              Title="{Binding Title}">
 
     <StackLayout Spacing="20" Padding="15">
@@ -11,4 +14,4 @@
         <Label Text="{Binding Description}" FontSize="Small"/>
     </StackLayout>
     
-</ContentPage>
+</v:BaseContentPage>

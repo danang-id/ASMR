@@ -42,6 +42,8 @@ namespace ASMR.Web.Controllers
                 new DefaultResponseModel(errorModel));
         }
 
+        [HttpGet("not-found")]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult PageNotFound()
         {
             return View();

@@ -13,13 +13,13 @@ using ASMR.Core.Generic;
 
 namespace ASMR.Core.ResponseModel
 {
-    public class UserResponseModel : DefaultResponseModel<User>
+    public class UserResponseModel : DefaultResponseModel<NormalizedUser>
     {
         public UserResponseModel()
         {
         }
 
-        public UserResponseModel(User user) : base(user)
+        public UserResponseModel(NormalizedUser user) : base(user)
         {
         }
 

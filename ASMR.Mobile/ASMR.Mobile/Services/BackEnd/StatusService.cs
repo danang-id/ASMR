@@ -1,9 +1,8 @@
 ﻿using System.Threading.Tasks;
 using ASMR.Core.ResponseModel;
 using ASMR.Mobile.Services.Abstraction;
-using ASMR.Mobile.Services.BackEnd;
 
-namespace ASMR.Mobile.Services
+namespace ASMR.Mobile.Services.BackEnd
 {
 	public interface IStatusService : IBackEndService
 	{

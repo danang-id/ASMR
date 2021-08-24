@@ -5,6 +5,7 @@ export const EmptyUser: User = {
 	id: "",
 	firstName: "",
 	lastName: "",
+	emailAddress: "",
 	username: "",
 	image: "",
 	roles: [],
@@ -15,6 +16,7 @@ export const EmptyUser: User = {
 interface User extends DefaultModel {
 	firstName: string
 	lastName: string
+	emailAddress: string
 	username: string
 	image: string
 	roles: UserRole[]

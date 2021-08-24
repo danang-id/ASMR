@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ASMR.Mobile.Services
+namespace ASMR.Mobile.Services.Abstraction
 {
     public interface IDataStore<T>
     {

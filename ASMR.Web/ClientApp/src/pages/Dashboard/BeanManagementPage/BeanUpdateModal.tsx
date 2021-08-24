@@ -57,7 +57,7 @@ function BeanUpdateModal({ bean, onClose, onUpdateBean, progress, show }: BeanUp
 					<div className="form-row">
 						<label className="form-field">Description</label>
 						<div className="form-data">
-							<Form.TextArea name="description" value={requestModel.description} onChange={onChange} />
+							<Form.TextArea name="description" rows={6} value={requestModel.description} onChange={onChange} />
 						</div>
 					</div>
 				</Form>
@@ -65,7 +65,7 @@ function BeanUpdateModal({ bean, onClose, onUpdateBean, progress, show }: BeanUp
 
 			<Modal.Footer>
 				<div className="modal-actions">
-					<Button disabled={progress.loading} outline size="sm" onClick={onClose}>
+					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button disabled={progress.loading} size="sm" onClick={() => onUpdateBean(requestModel, null)}>

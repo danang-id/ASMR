@@ -67,7 +67,7 @@ function ProductUpdateModal({ bean, product, onClose, onUpdateProduct, progress,
 
 			<Modal.Footer>
 				<div className="modal-actions">
-					<Button disabled={progress.loading} outline size="sm" onClick={onClose}>
+					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>
 						Cancel
 					</Button>
 					<Button disabled={progress.loading} size="sm" onClick={() => onUpdateProduct(requestModel)}>
