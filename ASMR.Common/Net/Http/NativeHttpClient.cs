@@ -16,8 +16,7 @@ namespace ASMR.Common.Net.Http
 			{
 				if (_defaultClientHandler is not null)
 				{
-					
-					throw new Exception($"{nameof(DefaultClientHandler)} has been set");
+					return;
 				}
 
 				if (value is not HttpMessageHandler)

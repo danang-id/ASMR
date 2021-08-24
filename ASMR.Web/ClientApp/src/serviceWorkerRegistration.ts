@@ -10,7 +10,12 @@
 // To learn more about the benefits of this model and instructions on how to
 // opt-in, read https://cra.link/PWA
 
+declare global {
+	interface Window { serviceWorkerUpdateReady?: boolean; }
+}
+
 import Logger from "@asmr/libs/common/logger"
+
 
 const isLocalhost = Boolean(
 	window.location.hostname === "localhost" ||
@@ -58,6 +63,16 @@ export function register(config?: Config) {
 }
 
 function registerValidServiceWorker(swUrl: string, config?: Config) {
+	navigator.serviceWorker
+		.getRegistration(swUrl)
+		.then(registration => {
+			if (registration) {
+				navigator.serviceWorker.addEventListener("controllerchange", () => {
+					window.serviceWorkerUpdateReady = true;
+				});
+			}
+		});
+
 	navigator.serviceWorker
 		.register(swUrl)
 		.then(registration => {

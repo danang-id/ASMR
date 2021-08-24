@@ -1,7 +1,20 @@
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-[assembly: ExportFont("Quicksand.ttf", Alias = "Quicksand")]
+[assembly: ExportFont("Quicksand-Light.ttf", Alias = "Quicksand-Light")]
+[assembly: ExportFont("Quicksand-Medium.ttf", Alias = "Quicksand-Medium")]
+[assembly: ExportFont("Quicksand-Regular.ttf", Alias = "Quicksand")]
+[assembly: ExportFont("Quicksand-SemiBold.ttf", Alias = "Quicksand-SemiBold")]
+[assembly: ExportFont("Quicksand-Bold.ttf", Alias = "Quicksand-Bold")]
+[assembly: ExportFont("TitilliumWeb-ExtraLight.ttf", Alias = "TitilliumWeb-ExtraLight")]
+[assembly: ExportFont("TitilliumWeb-ExtraLightItalic.ttf", Alias = "TitilliumWeb-ExtraLightItalic")]
+[assembly: ExportFont("TitilliumWeb-Light.ttf", Alias = "TitilliumWeb-Light")]
+[assembly: ExportFont("TitilliumWeb-LightItalic.ttf", Alias = "TitilliumWeb-LightItalic")]
 [assembly: ExportFont("TitilliumWeb-Regular.ttf", Alias = "TitilliumWeb")]
 [assembly: ExportFont("TitilliumWeb-Italic.ttf", Alias = "TitilliumWeb-Italic")]
+[assembly: ExportFont("TitilliumWeb-SemiBold.ttf", Alias = "TitilliumWeb-SemiBold")]
+[assembly: ExportFont("TitilliumWeb-SemiBoldItalic.ttf", Alias = "TitilliumWeb-SemiBoldItalic")]
+[assembly: ExportFont("TitilliumWeb-Bold.ttf", Alias = "TitilliumWeb-Bold")]
+[assembly: ExportFont("TitilliumWeb-BoldItalic.ttf", Alias = "TitilliumWeb-BoldItalic")]
+[assembly: ExportFont("TitilliumWeb-Black.ttf", Alias = "TitilliumWeb-Black")]
 [assembly: XamlCompilation(XamlCompilationOptions.Compile)]

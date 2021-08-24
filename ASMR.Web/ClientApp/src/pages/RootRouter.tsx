@@ -1,3 +1,7 @@
+declare global {
+	interface Window { serviceWorkerUpdateReady?: boolean; }
+}
+
 import ReactGA from "react-ga"
 import { Route, Switch, useHistory } from "react-router-dom"
 import { Location } from "history"
@@ -25,6 +29,12 @@ function RootRouter(): JSX.Element {
 			const pathname = logLocation(location)
 			ReactGA.set({ page: pathname })
 			ReactGA.pageview((location as any).pathname);
+
+			if (window.serviceWorkerUpdateReady) {
+				window.serviceWorkerUpdateReady = false;
+				window.stop();
+				window.location.reload();
+            }
 		})
 		logLocation(history.location)
 	}

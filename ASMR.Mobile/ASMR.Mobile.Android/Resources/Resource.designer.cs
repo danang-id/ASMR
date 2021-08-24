@@ -10224,13 +10224,13 @@ namespace ASMR.Mobile.Droid
 			public const int checkbox_themeable_attribute_color = 2131034161;
 			
 			// aapt resource value: 0x7F050032
-			public const int colorAccent = 2131034162;
+			public const int colorPrimary = 2131034162;
 			
 			// aapt resource value: 0x7F050033
-			public const int colorPrimary = 2131034163;
+			public const int colorPrimaryDark = 2131034163;
 			
 			// aapt resource value: 0x7F050034
-			public const int colorPrimaryDark = 2131034164;
+			public const int colorSecondary = 2131034164;
 			
 			// aapt resource value: 0x7F050035
 			public const int design_bottom_navigation_shadow_color = 2131034165;
@@ -12206,10 +12206,10 @@ namespace ASMR.Mobile.Droid
 			public const int preference_list_divider_material = 2131165328;
 			
 			// aapt resource value: 0x7F070091
-			public const int splash_logo = 2131165329;
+			public const int splash_image = 2131165329;
 			
 			// aapt resource value: 0x7F070092
-			public const int splash_logo_land = 2131165330;
+			public const int splash_image_land = 2131165330;
 			
 			// aapt resource value: 0x7F070093
 			public const int splash_screen = 2131165331;
@@ -20807,25 +20807,28 @@ namespace ASMR.Mobile.Droid
 		{
 			
 			// aapt resource value: 0x7F110000
-			public const int image_share_filepaths = 2131820544;
+			public const int auto_backup_rules = 2131820544;
 			
 			// aapt resource value: 0x7F110001
-			public const int standalone_badge = 2131820545;
+			public const int image_share_filepaths = 2131820545;
 			
 			// aapt resource value: 0x7F110002
-			public const int standalone_badge_gravity_bottom_end = 2131820546;
+			public const int standalone_badge = 2131820546;
 			
 			// aapt resource value: 0x7F110003
-			public const int standalone_badge_gravity_bottom_start = 2131820547;
+			public const int standalone_badge_gravity_bottom_end = 2131820547;
 			
 			// aapt resource value: 0x7F110004
-			public const int standalone_badge_gravity_top_start = 2131820548;
+			public const int standalone_badge_gravity_bottom_start = 2131820548;
 			
 			// aapt resource value: 0x7F110005
-			public const int standalone_badge_offset = 2131820549;
+			public const int standalone_badge_gravity_top_start = 2131820549;
 			
 			// aapt resource value: 0x7F110006
-			public const int xamarin_essentials_fileprovider_file_paths = 2131820550;
+			public const int standalone_badge_offset = 2131820550;
+			
+			// aapt resource value: 0x7F110007
+			public const int xamarin_essentials_fileprovider_file_paths = 2131820551;
 			
 			static Xml()
 			{

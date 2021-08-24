@@ -7,10 +7,18 @@
     -->
     <Application.Resources>
         <ResourceDictionary>
+            <Color x:Key="Action">#1D71F9</Color>
+            <Color x:Key="ActionAccent">#2F7DFA</Color>
+            <Color x:Key="Danger">#F32013</Color>
+            <Color x:Key="Bean">#794028</Color>
             <Color x:Key="Primary">#432D27</Color>
-            <Color x:Key="Secondary">#F2EAEA</Color>
-            <Color x:Key="Dark">#2B2B2D</Color>
-            <Color x:Key="Light">#F9FAFB</Color>
+            <Color x:Key="Secondary">#D7B7A3</Color>
+            <Color x:Key="Darkless">#3A3A3D</Color>
+            <Color x:Key="Dark">#222224</Color>
+            <Color x:Key="Darker">#161617</Color>
+            <Color x:Key="Lightless">#D4CFCF</Color>
+            <Color x:Key="Light">#EAE7E7</Color>
+            <Color x:Key="Lighter">#F5F2F2</Color>
             <Style TargetType="Entry">
                 <Setter Property="FontFamily" Value="TitilliumWeb"></Setter>
             </Style>
@@ -26,13 +34,13 @@
                             <VisualState x:Name="Normal">
                                 <VisualState.Setters>
                                     <Setter Property="BackgroundColor" 
-                                            Value="{StaticResource Primary}" />
+                                            Value="{StaticResource Action}" />
                                 </VisualState.Setters>
                             </VisualState>
                             <VisualState x:Name="Disabled">
                                 <VisualState.Setters>
                                     <Setter Property="BackgroundColor"
-                                            Value="#332196F3" />
+                                            Value="{StaticResource Lightless}" />
                                 </VisualState.Setters>
                             </VisualState>
                         </VisualStateGroup>

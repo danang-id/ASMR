@@ -19,7 +19,7 @@ namespace ASMR.Mobile.Droid
         // Simulates background work that happens behind the splash screen
         private async void SimulateStartup()
         {
-            await Task.Delay(8000);
+            await Task.Delay(2000);
             StartActivity(new Intent(Application.Context, typeof(MainActivity)));
         }
     }

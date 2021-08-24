@@ -1,10 +1,14 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using ASMR.Common.Constants;
 using ASMR.Core.Entities;
+using ASMR.Core.Enumerations;
 using ASMR.Core.RequestModel;
 using ASMR.Core.ResponseModel;
+using ASMR.Mobile.Common;
 using ASMR.Mobile.Extensions;
 using ASMR.Mobile.Services.Abstraction;
 using ASMR.Mobile.Services.BackEnd;
@@ -42,14 +46,14 @@ namespace ASMR.Mobile.Services
                     var isAnalyticsEnabled = await Analytics.IsEnabledAsync();
                     if (!isAnalyticsEnabled)
                     {
-                        Debug.WriteLine($"[{GetType()}] Warning: AppCenter Analytics is not available.");
+                        Debug.WriteLine("[WARN] AppCenter Analytics is not available", GetType().Name);
                         isAppCenterEnabled = false;
                     }
  
                     var isCrashEnabled = await Crashes.IsEnabledAsync();
                     if (!isCrashEnabled)
                     {
-                        Debug.WriteLine($"[{GetType()}] Warning: AppCenter Crash Reporting is not available.");
+                        Debug.WriteLine("[WARN] AppCenter Crash Reporting is not available.", GetType().Name);
                         isAppCenterEnabled = false;
                     }
                 }
@@ -60,8 +64,8 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception exception)
             {
-                Debug.WriteLine(
-                    $"[{GetType()}] Exception while checking if AppCenter is enabled {exception.Message} {exception.StackTrace}");
+                Debug.WriteLine($"[WARN] Exception while checking if AppCenter is enabled {exception.Message} {exception.StackTrace}",
+                    GetType().Name);
                 isAppCenterEnabled = false;
             }
             
@@ -105,16 +109,29 @@ namespace ASMR.Mobile.Services
                     Password = password,
                     RememberMe = true
                 });
-                if (result.IsSuccess && result.Data is not null)
+                if (!result.IsSuccess || result.Data is null)
                 {
-                    User = result.Data;
+                    Debug.WriteLine("Sign In Failed: API Operation Not Success", GetType().Name);
+                    return result;
+                }
+
+                if (result.Data.Roles is null || !result.Data.Roles.Where(role => role.Role == Role.Roaster).Any())
+                {
+                    Debug.WriteLine("Sign In Failed: Insufficient Role", GetType().Name);
+                    throw new Exception("You do not have sufficient role to access this application (required role: Roaster).");
+                }
+                
+                User = result.Data;
+                if (!string.IsNullOrEmpty(result.Data.Token))
+                {
+                    await TokenManager.SetAsync(ApplicationConstants.JsonWebTokenStorageKey, result.Data.Token);
                 }
 
                 return result;
             }
             catch (Exception exception)
             {
-                return await exception.ToResponseModelAsync<AuthenticationResponseModel>();
+                return exception.ToResponseModel<AuthenticationResponseModel>();
             }
         }
 
@@ -123,16 +140,21 @@ namespace ASMR.Mobile.Services
             try
             {
                 var result = await AuthenticationService.SignOut();
-                if (result.IsSuccess)
+                if (!result.IsSuccess)
                 {
-                    User = null;
+                    Debug.WriteLine("Sign Out Failed: API Operation Not Success", GetType().Name);
+                    return result;
                 }
-
+                
+                User = null;
+                TokenManager.Remove(AuthenticationConstants.CookieName);
+                TokenManager.Remove(ApplicationConstants.JsonWebTokenStorageKey);
+                
                 return result;
             }
             catch (Exception exception)
             {
-                return await exception.ToResponseModelAsync<AuthenticationResponseModel>();
+                return exception.ToResponseModel<AuthenticationResponseModel>();
             }
         }
 
@@ -150,7 +172,7 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception exception)
             {
-                return await exception.ToResponseModelAsync<AuthenticationResponseModel>();
+                return exception.ToResponseModel<AuthenticationResponseModel>();
             }
         }
 

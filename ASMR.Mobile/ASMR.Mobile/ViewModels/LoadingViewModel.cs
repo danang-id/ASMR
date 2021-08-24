@@ -7,7 +7,7 @@ namespace ASMR.Mobile.ViewModels
 	{
 		public LoadingViewModel()
 		{
-			Title = "Loading";
+			Title = "ASMR";
 		}
 		
 		public static async void Init()
@@ -15,7 +15,7 @@ namespace ASMR.Mobile.ViewModels
 			await ApplicationState.UpdateUserData();
 			if (ApplicationState.IsAuthenticated)
 			{
-				await Shell.Current.GoToAsync($"//{nameof(AboutPage)}");
+				await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
 			}
 			else
 			{

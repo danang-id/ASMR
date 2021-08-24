@@ -87,7 +87,7 @@ namespace ASMR.Mobile.Services.BackEnd
 			catch (Exception exception)
 			{
 				Debug.WriteLine($"[{GetType().Name}] {exception}");
-				return await exception.ToResponseModelAsync<TResponse>();
+				return exception.ToResponseModel<TResponse>();
 			}
 		}
 		

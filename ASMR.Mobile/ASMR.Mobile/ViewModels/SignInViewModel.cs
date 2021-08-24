@@ -45,7 +45,7 @@ namespace ASMR.Mobile.ViewModels
                 {
                     SignInStatus = string.Empty;
                     Password = string.Empty;
-                    await Shell.Current.GoToAsync($"//{nameof(AboutPage)}");
+                    await Shell.Current.GoToAsync($"//{nameof(HomePage)}");
                     return;
                 }
 

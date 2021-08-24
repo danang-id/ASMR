@@ -28,19 +28,19 @@ namespace ASMR.Web.Services
 
         public Task<User> GetUserByName(string userName);
 
-        public Task<User> CreateUser(User user, string password);
+        public Task<IdentityResult> CreateUser(User user, string password);
 
-        public Task<User> ModifyUser(string id, User user);
+        public Task<IdentityResult> ModifyUser(string id, User user);
         
-        public Task<User> ModifyUserPassword(string id, string newPassword);
+        public Task<IdentityResult> ModifyUserPassword(string id, string newPassword);
 
-        public Task<User> RemoveUser(string id);
+        public Task<IdentityResult> RemoveUser(string id);
 
         public Task<IEnumerable<UserRole>> GetUserRoles(User user);
         
         public Task<bool> HasRole(User user, Role role); 
 
-        public Task<User> AssignRolesToUser(string id, IEnumerable<Role> roles);
+        public Task<IdentityResult> AssignRolesToUser(string id, IEnumerable<Role> roles);
 
         public Task<User> GetAuthenticatedUser(ClaimsPrincipal principal);
     }
@@ -73,14 +73,12 @@ namespace ASMR.Web.Services
             return _userManager.FindByNameAsync(userName);
         }
 
-        public async Task<User> CreateUser(User user, string password)
+        public Task<IdentityResult> CreateUser(User user, string password)
         {
-            await _userManager.CreateAsync(user, password);
-
-            return user;
+            return _userManager.CreateAsync(user, password);
         }
 
-        public async Task<User> ModifyUser(string id, User user)
+        public async Task<IdentityResult> ModifyUser(string id, User user)
         {
             var entity = await _userManager.FindByIdAsync(id);
             if (entity is null)
@@ -113,12 +111,10 @@ namespace ASMR.Web.Services
                 entity.Image = user.Image;
             }
 
-            await _userManager.UpdateAsync(entity);
-
-            return entity;
+            return await _userManager.UpdateAsync(entity);
         }
 
-        public async Task<User> ModifyUserPassword(string id, string newPassword)
+        public async Task<IdentityResult> ModifyUserPassword(string id, string newPassword)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user is null)
@@ -127,12 +123,10 @@ namespace ASMR.Web.Services
             }
 
             var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
-
-            return user;
+            return await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
         }
 
-        public async Task<User> RemoveUser(string id)
+        public async Task<IdentityResult> RemoveUser(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user is null)
@@ -140,9 +134,7 @@ namespace ASMR.Web.Services
                 return null;
             }
 
-            await _userManager.DeleteAsync(user);
-
-            return user;
+            return await _userManager.DeleteAsync(user);
         }
 
         public async Task<IEnumerable<UserRole>> GetUserRoles(User user)
@@ -172,7 +164,7 @@ namespace ASMR.Web.Services
             return await _userManager.IsInRoleAsync(user, role.ToString());
         }
 
-        public async Task<User> AssignRolesToUser(string id, IEnumerable<Role> roles)
+        public async Task<IdentityResult> AssignRolesToUser(string id, IEnumerable<Role> roles)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user is null)
@@ -180,16 +172,14 @@ namespace ASMR.Web.Services
                 return null;
             }
 
-            await _userManager.RemoveFromRolesAsync(user, new[]
+            var userRoles = await _userManager.GetRolesAsync(user);
+            var removeResult = await _userManager.RemoveFromRolesAsync(user, userRoles);
+            if (!removeResult.Succeeded || removeResult.Errors.Any())
             {
-                Role.Administrator.ToString(),
-                Role.Server.ToString(),
-                Role.Roaster.ToString()
-            });
+                return removeResult;
+            }
 
-            await _userManager.AddToRolesAsync(user, roles.Select(role => role.ToString()));
-
-            return user;
+            return await _userManager.AddToRolesAsync(user, roles.Select(role => role.ToString()));
         }
 
         public Task<User> GetAuthenticatedUser(ClaimsPrincipal principal)

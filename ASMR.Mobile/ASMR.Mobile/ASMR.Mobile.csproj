@@ -26,10 +26,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <None Remove="Services\Events\" />
-    <None Remove="Resources\Quicksand.ttf" />
-    <EmbeddedResource Include="Resources\Quicksand.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
     <None Remove="Resources\TitilliumWeb-Italic.ttf" />
     <EmbeddedResource Include="Resources\TitilliumWeb-Italic.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -72,6 +68,26 @@
     </EmbeddedResource>
     <None Remove="Resources\TitilliumWeb-SemiBoldItalic.ttf" />
     <EmbeddedResource Include="Resources\TitilliumWeb-SemiBoldItalic.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Remove="Resources\Quicksand-Bold.ttf" />
+    <EmbeddedResource Include="Resources\Quicksand-Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Remove="Resources\Quicksand-Medium.ttf" />
+    <EmbeddedResource Include="Resources\Quicksand-Medium.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Remove="Resources\Quicksand-Regular.ttf" />
+    <EmbeddedResource Include="Resources\Quicksand-Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Remove="Resources\Quicksand-SemiBold.ttf" />
+    <EmbeddedResource Include="Resources\Quicksand-SemiBold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Remove="Resources\Quicksand-Light.ttf" />
+    <EmbeddedResource Include="Resources\Quicksand-Light.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

@@ -6,11 +6,6 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <array key="Quicksand-VariableFont_wght.ttf">
-            <string>Quicksand-SemiBold</string>
-        </array>
-    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="gAE-YM-kbH">
@@ -29,26 +24,12 @@
                                 <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
                                 <variation key="heightClass=compact" image="LaunchImageLandscape"/>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="asmr" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TvT-ub-ZGr">
-                                <rect key="frame" x="0.0" y="685" width="390" height="45"/>
-                                <fontDescription key="fontDescription" name="Quicksand-SemiBold" family="Quicksand" pointSize="36"/>
-                                <color key="textColor" red="0.2627450980392157" green="0.1764705882352941" blue="0.15294117647058825" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                                <variation key="heightClass=compact">
-                                    <fontDescription key="fontDescription" name="Quicksand-SemiBold" family="Quicksand" pointSize="42"/>
-                                </variation>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="23" firstAttribute="top" secondItem="yd7-JS-zBw" secondAttribute="top" id="AZi-hB-L0k"/>
-                            <constraint firstItem="9ZL-r4-8FZ" firstAttribute="top" secondItem="TvT-ub-ZGr" secondAttribute="bottom" constant="80" id="EFW-cp-Hlm">
-                                <variation key="heightClass=compact" constant="30"/>
-                            </constraint>
-                            <constraint firstAttribute="trailing" secondItem="TvT-ub-ZGr" secondAttribute="trailing" id="fzS-z5-vQL"/>
                             <constraint firstAttribute="trailing" secondItem="23" secondAttribute="trailing" id="mAd-v5-vzd"/>
                             <constraint firstAttribute="bottom" secondItem="23" secondAttribute="bottom" id="mJF-77-Z8K"/>
-                            <constraint firstItem="TvT-ub-ZGr" firstAttribute="leading" secondItem="yd7-JS-zBw" secondAttribute="leading" id="q1W-UF-dIc"/>
                             <constraint firstItem="23" firstAttribute="leading" secondItem="yd7-JS-zBw" secondAttribute="leading" id="r5H-cu-lTC"/>
                         </constraints>
                     </view>

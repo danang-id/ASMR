@@ -139,7 +139,7 @@ namespace ASMR.Web.Controllers.API
             var userId = Guid.NewGuid().ToString();
             var mediaFile = await _mediaFileService.CreateMediaFile(userId, formFile);
 
-            var user = await _userService.CreateUser(new User
+            var user = new User
             {
                 Id = userId,
                 FirstName = model.FirstName,
@@ -148,9 +148,26 @@ namespace ASMR.Web.Controllers.API
                 EmailConfirmed = true,
                 UserName = model.Username,
                 Image = $"/api/mediafile/{mediaFile.Id}"
-            }, model.Password);
+            };
+            var createUserResult = await _userService.CreateUser(user, model.Password);
+            if (!createUserResult.Succeeded && createUserResult.Errors.Any())
+            {
+                var errorModels = createUserResult.Errors
+                    .Select(error => new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+                        error.Description));
+                return BadRequest(new UserResponseModel(errorModels));
+            }
 
-            user = await _userService.AssignRolesToUser(user.Id, model.Roles);
+            var assignRolesResult = await _userService.AssignRolesToUser(user.Id, model.Roles);
+            if (!assignRolesResult.Succeeded && assignRolesResult.Errors.Any())
+            {
+                var errorModels = assignRolesResult.Errors
+                    .Select(error => new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+                        error.Description));
+                return BadRequest(new UserResponseModel(errorModels));
+            }
+
+            user = await _userService.GetUserById(userId);
             var userRoles = await _userService.GetUserRoles(user);
             
             await _userService.CommitAsync();
@@ -194,17 +211,18 @@ namespace ASMR.Web.Controllers.API
                 }
             }
 
-            if (model.Roles is not null && !model.Roles.Any())
+
+            var modelHasRoles = model.Roles is not null && model.Roles.Any();
+            var modelRoleIncludesAdministrator = modelHasRoles && model.Roles.Where(role => role == Role.Administrator).Any();
+            var userIsAdministrator = await _userService.HasRole(user, Role.Administrator);
+
+            if (!modelHasRoles)
             {
                 var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
                     "Please assign minimal a role.");
                 return BadRequest(new UserResponseModel(errorModel));
             }
 
-            var modelHasRoles = model.Roles is not null && model.Roles.Any();
-            var modelRoleIncludesAdministrator = modelHasRoles && model.Roles.Where(role => role == Role.Administrator).Any();
-            var userIsAdministrator = await _userService.HasRole(user, Role.Administrator);
-            
             if (modelRoleIncludesAdministrator && !userIsAdministrator)
             {
                 var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
@@ -246,7 +264,7 @@ namespace ASMR.Web.Controllers.API
             var oldMediaFileId = user.Image.Split("/")
                 .LastOrDefault();
 
-            user = await _userService.ModifyUser(id, new User
+            var modifyUserResult = await _userService.ModifyUser(id, new User
             {
                 FirstName = model.FirstName,
                 LastName = model.LastName,
@@ -254,10 +272,27 @@ namespace ASMR.Web.Controllers.API
                 UserName = model.Username,
                 Image = mediaFile is null ? null : $"/api/mediafile/{mediaFile.Id}"
             });
+            if (!modifyUserResult.Succeeded && modifyUserResult.Errors.Any())
+            {
+                var errorModels = modifyUserResult.Errors
+                    .Select(error => new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+                        error.Description));
+                return BadRequest(new UserResponseModel(errorModels));
+            }
+
             if (modelHasRoles)
             {
-                await _userService.AssignRolesToUser(id, model.Roles);
+                var assignRolesResult = await _userService.AssignRolesToUser(id, model.Roles);
+                if (!assignRolesResult.Succeeded && assignRolesResult.Errors.Any())
+                {
+                    var errorModels = assignRolesResult.Errors
+                        .Select(error => new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+                            error.Description));
+                    return BadRequest(new UserResponseModel(errorModels));
+                }
             }
+
+            user = await _userService.GetUserById(id);
 
             var authenticatedUser = await _userService.GetAuthenticatedUser(User);
             if (user is not null && user.Id == authenticatedUser.Id)
@@ -293,14 +328,25 @@ namespace ASMR.Web.Controllers.API
                 return BadRequest(new UserResponseModel(errorModel));
             }
 
-            var user = await _userService.ModifyUserPassword(id, model.Password);
+            var user = await _userService.GetUserById(id);
             if (user is null)
             {
                 var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
                     "The user you are trying to modify is not found.");
                 return BadRequest(new UserResponseModel(errorModel));
             }
-            
+
+            var modifyUserPasswordResult = await _userService.ModifyUserPassword(id, model.Password);
+            if (!modifyUserPasswordResult.Succeeded && modifyUserPasswordResult.Errors.Any())
+            {
+                var errorModels = modifyUserPasswordResult.Errors
+                    .Select(error => new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+                        error.Description));
+                return BadRequest(new UserResponseModel(errorModels));
+            }
+
+            user = await _userService.GetUserById(id);
+
             var authenticatedUser = await _userService.GetAuthenticatedUser(User);
             if (user.Id == authenticatedUser.Id)
             {
@@ -323,12 +369,21 @@ namespace ASMR.Web.Controllers.API
                 return BadRequest(new UserResponseModel(errorModel));
             }
 
-            var user = await _userService.RemoveUser(id);
+            var user = await _userService.GetUserById(id);
             if (user is null)
             {
                 var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
                     "The user you are trying to remove is not found.");
                 return BadRequest(new UserResponseModel(errorModel));
+            }
+
+            var removeUserResult = await _userService.RemoveUser(id);
+            if (!removeUserResult.Succeeded && removeUserResult.Errors.Any())
+            {
+                var errorModels = removeUserResult.Errors
+                    .Select(error => new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+                        error.Description));
+                return BadRequest(new UserResponseModel(errorModels));
             }
 
             var mediaFileId = user.Image.Split("/").LastOrDefault();
