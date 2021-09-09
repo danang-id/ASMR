@@ -14,6 +14,12 @@ namespace ASMR.Core.Entities
 		public string Username { get; set; }
 
 		public string Image { get; set; }
+
+		public bool IsEmailConfirmed { get; set; }
+
+		public bool IsApproved { get; set; }
+        
+		public bool IsWaitingForApproval { get; set; }
 		
 		public IEnumerable<NormalizedUserRole> Roles { get; set; }
 	}

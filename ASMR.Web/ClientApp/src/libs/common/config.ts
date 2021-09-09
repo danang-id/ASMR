@@ -28,6 +28,8 @@ const config = {
 	backEndVersion: process.env.REACT_APP_BACK_END_VERSION,
 	nodeEnv: process.env.NODE_ENV as "production" | "development" | "test",
 	publicUrl: process.env.PUBLIC_URL,
+	administratorId: "07d60e85-2111-43d4-95f3-80864bd71ce5",
+	googleRecaptchaSiteKey: process.env.REACT_APP_GOOGLE_RECAPTCHA_SITE_KEY ?? "",
 	googleAnalyticsMeasurementID: process.env.REACT_APP_GOOGLE_ANALYTICS_MEASUREMENT_ID,
 	sentryDSN: process.env.REACT_APP_SENTRY_DSN,
 }

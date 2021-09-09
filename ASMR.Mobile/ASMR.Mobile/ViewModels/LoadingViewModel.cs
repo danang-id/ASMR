@@ -12,7 +12,7 @@ namespace ASMR.Mobile.ViewModels
 		
 		public static async void Init()
 		{
-			await ApplicationState.UpdateUserData();
+			await ApplicationState.UpdateUserDataAsync();
 			if (ApplicationState.IsAuthenticated)
 			{
 				await Shell.Current.GoToAsync($"//{nameof(HomePage)}");

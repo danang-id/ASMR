@@ -1,9 +1,10 @@
 import CreateUserRequestModel from "@asmr/data/request/CreateUserRequestModel"
 import UpdateUserRequestModel from "@asmr/data/request/UpdateUserRequestModel"
-import UpdateUserPasswordRequestModel from "@asmr/data/request/UpdateUserPasswordRequestModel"
+import ApproveRegistrationRequestModel from "@asmr/data/request/ApproveRegistrationRequestModel"
 import UserResponseModel from "@asmr/data/response/UserResponseModel"
 import UsersResponseModel from "@asmr/data/response/UsersResponseModel"
 import ServiceBase from "@asmr/services/ServiceBase"
+import DefaultResponseModel from "@asmr/data/generic/DefaultResponseModel"
 
 class UserService extends ServiceBase {
 	public getAll() {
@@ -38,15 +39,27 @@ class UserService extends ServiceBase {
 		))
 	}
 
-	public modifyPassword(id: string, body: UpdateUserPasswordRequestModel) {
-		return this.request<UserResponseModel>(() => (
-			this.httpClient.patch(`/api/user/${id}/password`, body)
+	public resetPassword(id: string) {
+		return this.request<DefaultResponseModel<undefined>>(() => (
+			this.httpClient.post(`/api/user/${id}/password-reset`)
 		))
 	}
 
 	public remove(id: string) {
 		return this.request<UserResponseModel>(() => (
 			this.httpClient.delete(`/api/user/${id}`)
+		))
+	}
+
+	public approve(id: string, body: ApproveRegistrationRequestModel) {
+		return this.request<UserResponseModel>(() => (
+			this.httpClient.post(`/api/user/${id}/approve`, body)
+		))
+	}
+
+	public reject(id: string) {
+		return this.request<UserResponseModel>(() => (
+			this.httpClient.post(`/api/user/${id}/reject`)
 		))
 	}
 }

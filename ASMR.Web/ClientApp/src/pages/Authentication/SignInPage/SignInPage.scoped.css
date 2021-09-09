@@ -1,3 +1,31 @@
+.page {
+	@apply flex flex-col items-center justify-center;
+
+	.header {
+		@apply flex flex-row items-center justify-center;
+
+		.application-logo {
+			@apply w-24;
+		}
+
+		.title {
+			@apply font-brand font-semibold lowercase text-5xl mx-4 text-primary dark:text-white;
+		}
+	}
+
+	.description {
+		@apply flex flex-col justify-center items-center text-center px-4;
+	}
+
+	.separator {
+		@apply h-10;
+	}
+
+	.call-to-action {
+		@apply flex flex-col sm:flex-row items-center justify-center gap-2;
+	}
+}
+
 .layout {
 	@apply flex items-center justify-center
 		bg-lighter dark:bg-darker sm:bg-light sm:dark:bg-dark;
@@ -25,29 +53,34 @@
 }
 
 .card-body {
-	@apply flex flex-col items-center justify-center w-full py-6
-}
+	@apply flex flex-col items-center justify-center w-full py-6;
 
-.sign-in-form {
-	@apply flex flex-col items-center justify-center w-full px-4;
+	.sign-in-form {
+		@apply flex flex-col items-center justify-center w-full px-4;
 
-	.form-row {
-		@apply py-2 w-full;
+		.form-row {
+			@apply py-2 w-full;
 
-		input {
-			@apply w-full py-1 border border-lightless dark:border-darkless
-			bg-white dark:bg-black focus:bg-secondary dark:focus:bg-primary;
+			input {
+				@apply w-full py-1 border border-lightless dark:border-darkless
+				bg-white dark:bg-black focus:bg-secondary dark:focus:bg-primary;
+			}
+		}
+
+		.remember-me {
 		}
 	}
 
-	.remember-me {
+	.call-to-action {
+		@apply flex items-center justify-end w-full px-1 pt-10;
+
+		.sign-in-button {
+			@apply w-full sm:w-32;
+		}
+	}
+
+	.other-actions {
+		@apply flex flex-col items-center sm:items-end justify-center w-full px-1 pt-5;
 	}
 }
 
-.call-to-action {
-	@apply flex flex-col-reverse sm:flex-row items-center justify-end w-full px-1 pt-10;
-
-	.sign-in-button {
-		@apply w-full sm:w-32;
-	}
-}

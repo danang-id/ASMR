@@ -9,6 +9,9 @@ namespace ASMR.Mobile.Services.BackEnd
 	{
 		public Task<AuthenticationResponseModel> GetProfile();
 
+		public Task<AuthenticationResponseModel> ResendEmailAddressConfirmation(
+			ResendEmailAddressConfirmationRequestModel model);
+		
 		public Task<AuthenticationResponseModel> SignIn(SignInRequestModel model);
 
 		public Task<AuthenticationResponseModel> SignOut();
@@ -18,17 +21,23 @@ namespace ASMR.Mobile.Services.BackEnd
 	{
 		public Task<AuthenticationResponseModel> GetProfile()
 		{
-			return Get<AuthenticationResponseModel>("gate/passport");
+			return GetAsync<AuthenticationResponseModel>("gate/passport");
+		}
+
+		public Task<AuthenticationResponseModel> ResendEmailAddressConfirmation(
+			ResendEmailAddressConfirmationRequestModel model)
+		{
+			return PostAsync<AuthenticationResponseModel>("gate/email-address/resend-confirmation", model);
 		}
 
 		public Task<AuthenticationResponseModel> SignIn(SignInRequestModel model)
 		{
-			return Post<AuthenticationResponseModel>("gate/authenticate", model);
+			return PostAsync<AuthenticationResponseModel>("gate/authenticate", model);
 		}
 		
 		public Task<AuthenticationResponseModel> SignOut()
 		{
-			return Post<AuthenticationResponseModel>("gate/exit");
+			return PostAsync<AuthenticationResponseModel>("gate/exit");
 		}
 	}
 }

@@ -89,7 +89,7 @@ function AuthenticationProvider({children, fallbackComponent: fallback}: Authent
 				}
 			}
 		} catch (error) {
-			services.handleError(error)
+			services.handleError(error as Error)
 		}
 	}
 

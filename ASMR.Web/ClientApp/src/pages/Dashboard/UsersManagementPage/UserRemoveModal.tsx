@@ -16,12 +16,17 @@ function UserRemoveModal({ onClose, onRemoveUser, progress, show, user }: UserRe
 	return (
 		<Modal onClose={onClose} show={show} title={`Remove ${user?.firstName ?? ""} ${user?.lastName ?? ""}`}>
 			<Modal.Body>
-				<p className="remove-user-modal-body">
-					Are you sure you would like to remove{" "}
-					the user <span className="full-name">{user?.firstName} {user?.lastName}</span>{" "}
-					with username <span className="username">{user?.username}</span>{" "}
-					from the user list?
-				</p>
+				<div className="remove-user-modal-body">
+					<p>
+						The following user account will be removed.<br/>
+						<span className="full-name">{user?.firstName} {user?.lastName}</span><br/>
+						<span className="username">{user?.emailAddress}</span>
+					</p>
+					<br/>
+					<p>
+						Are you sure you would like to continue?
+					</p>
+				</div>
 			</Modal.Body>
 
 			<Modal.Footer>

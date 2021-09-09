@@ -10,12 +10,13 @@
 using System.Threading.Tasks;
 using ASMR.Core.Constants;
 using ASMR.Core.Entities;
+using ASMR.Core.Enumerations;
 using ASMR.Core.Generic;
 using ASMR.Core.RequestModel;
 using ASMR.Core.ResponseModel;
+using ASMR.Web.Controllers.Attributes;
 using ASMR.Web.Controllers.Generic;
 using ASMR.Web.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -39,7 +40,7 @@ namespace ASMR.Web.Controllers.API
 			_userService = userService;
 		}
 		
-		[Authorize(Roles = "Administrator,Server,Roaster")]
+		[AllowAccess(Role.Administrator, Role.Roaster, Role.Server)]
 		[HttpGet]
 		public async Task<IActionResult> GetAll([FromQuery] bool showMine)
 		{
@@ -53,7 +54,7 @@ namespace ASMR.Web.Controllers.API
 			return Ok(new ProductionsResponseModel(roastedBeanProductions));
 		}
 		
-		[Authorize(Roles = "Administrator,Server,Roaster")]
+		[AllowAccess(Role.Administrator, Role.Roaster, Role.Server)]
 		[HttpGet("{id}")]
 		public async Task<IActionResult> GetById(string id)
 		{
@@ -76,7 +77,8 @@ namespace ASMR.Web.Controllers.API
 			return Ok(new ProductionResponseModel(roastedBeanProduction));
 		}
 		
-		[Authorize(Roles = "Roaster")]
+		[AllowAccess(Role.Roaster)]
+		[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
 		[HttpPost("start")]
 		public async Task<IActionResult> Start([FromBody] StartProductionRequestModel model)
 		{
@@ -131,10 +133,14 @@ namespace ASMR.Web.Controllers.API
 				});
 
 			await _roastedBeanProductionService.CommitAsync();
-			return Created(Request.Path, new ProductionResponseModel(roastedBeanProduction));
+			return Created(Request.Path, new ProductionResponseModel(roastedBeanProduction)
+			{
+				Message = $"Successfully started production session for bean '{bean.Name}'."
+			});
 		}
 
-		[Authorize(Roles = "Roaster")]
+		[AllowAccess(Role.Roaster)]
+		[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
 		[HttpPost("finalize/{id}")]
 		public async Task<IActionResult> Finalize(string id, [FromBody] FinalizeProductionRequestModel model)
 		{
@@ -206,10 +212,14 @@ namespace ASMR.Web.Controllers.API
 				});
 			
 			await _roastedBeanProductionService.CommitAsync();
-			return Ok(new ProductionResponseModel(roastedBeanProduction));
+			return Ok(new ProductionResponseModel(roastedBeanProduction)
+			{
+				Message = $"Successfully finalize production session for bean '{roastedBeanProduction.Bean.Name}'."
+			});
 		}
 		
-		[Authorize(Roles = "Roaster")]
+		[AllowAccess(Role.Roaster)]
+		[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
 		[HttpDelete("cancel/{id}")]
 		public async Task<IActionResult> Cancel(string id)
 		{
@@ -260,7 +270,10 @@ namespace ASMR.Web.Controllers.API
 				});
 			
 			await _roastedBeanProductionService.CommitAsync();
-			return Ok(new ProductionResponseModel(roastedBeanProduction));
+			return Ok(new ProductionResponseModel(roastedBeanProduction)
+			{
+				Message = $"Successfully cancelled production session for bean '{roastedBeanProduction.Bean.Name}'."
+			});
 		}
 	}
 }

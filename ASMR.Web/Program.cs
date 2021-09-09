@@ -8,8 +8,6 @@
 // Program.cs
 //
 using System;
-using System.Threading.Tasks;
-using ASMR.Common.Threading;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -26,17 +24,16 @@ namespace ASMR.Web
     {
         public static void Main(string[] args)
         {
+            
             try
             { 
                 using var host = CreateHostBuilder(args).Build();
                 using var scope = host.Services.CreateScope();
-
-                // ReSharper disable once AccessToDisposedClosure
-                Task<bool> MigrateAsync() => SelfMigrator.Migrate(scope.ServiceProvider);
-                var migrationResult = TaskHelpers.RunSync(MigrateAsync);
+                
+                var migrationResult = SelfMigrator.Migrate(scope.ServiceProvider);
                 if (!migrationResult)
                 {
-                    throw new Exception("Application data migration failed, cannot start host.");
+                    throw new Exception("Data migration execution failed.");
                 }
                 
                 host.Run();

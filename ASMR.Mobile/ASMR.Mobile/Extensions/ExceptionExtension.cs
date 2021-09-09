@@ -12,7 +12,7 @@ namespace ASMR.Mobile.Extensions
         public static TResponse ToResponseModel<TResponse>(this Exception exception)
             where TResponse : class
         {
-            Debug.WriteLine(exception.Message, typeof(Exception).Name);
+            Debug.WriteLine(exception.Message, nameof(Exception));
             var error = new ResponseError(ErrorCodeConstants.GenericClientError, exception.Message);
             var jsonError = JsonSerializer.Serialize(new DefaultResponseModel(error),
                     JsonConstants.DefaultJsonSerializerOptions);

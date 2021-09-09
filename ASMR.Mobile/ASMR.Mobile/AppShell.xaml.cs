@@ -28,13 +28,13 @@ namespace ASMR.Mobile
         private void OnAuthenticationChanged(object sender, AuthenticationEventArgs e)
         {
             var user = JsonSerializer.Serialize(e.User, JsonConstants.DefaultJsonSerializerOptions);
-            Debug.WriteLine($"[{GetType().Name}] Auth State: {e.PreviousState} => {e.State}");
-            Debug.WriteLine($"[{GetType().Name}] Auth User: {user}");
+            Debug.WriteLine($"Auth State: {e.PreviousState} => {e.State}", GetType().Name);
+            Debug.WriteLine($"Auth User: {user}", GetType().Name);
         }
 
         private async void ExecuteSignOut()
         {
-            var result = await ApplicationState.SignOut();
+            var result = await ApplicationState.SignOutAsync();
             if (result.IsSuccess)
             {
                 await Current.GoToAsync($"//{nameof(SignInPage)}");

@@ -42,9 +42,9 @@ registerRoute(
 		if (
 			url.pathname.startsWith("/_") ||
 			url.pathname.startsWith("/api") ||
-			url.pathname.startsWith("/manifest.json") ||
+			url.pathname.startsWith("/site.webmanifest") ||
 			url.pathname.startsWith("/robots.txt") ||
-			url.pathname.startsWith("/browserconfig.xml") 
+			url.pathname.startsWith("/browserconfig.xml")
 		) {
 			return false
 		}

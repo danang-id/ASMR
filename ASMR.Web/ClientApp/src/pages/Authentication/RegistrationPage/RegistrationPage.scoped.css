@@ -1,0 +1,98 @@
+.page {
+	@apply flex flex-col items-center justify-center;
+
+	.header {
+		@apply flex flex-row items-center justify-center;
+
+		.application-logo {
+			@apply w-24;
+		}
+
+		.title {
+			@apply font-brand font-semibold lowercase text-5xl mx-4 text-primary dark:text-white;
+		}
+	}
+
+	.description {
+		@apply flex flex-col justify-center items-center text-center px-4;
+	}
+
+	.separator {
+		@apply h-10;
+	}
+}
+
+
+.layout {
+	@apply flex items-center justify-center
+		bg-lighter dark:bg-darker sm:bg-light sm:dark:bg-dark;
+}
+
+.card {
+	@apply flex flex-col items-center justify-center sm:w-[32rem] w-full p-4 m-4
+		rounded-none sm:rounded-2xl
+		shadow-none sm:shadow-xl sm:dark:shadow-none
+		border-2 border-lighter dark:border-darker sm:dark:border-darkless
+		bg-lighter dark:bg-darker;
+}
+
+.card-header {
+	@apply flex items-center justify-center w-full py-6
+		font-semibold text-2xl;
+
+	.application-logo {
+		@apply w-24;
+	}
+
+	p {
+		@apply hidden sm:block px-6;
+	}
+}
+
+.card-body {
+	@apply flex flex-col items-center justify-center w-full py-6;
+
+	.registration-form {
+		@apply flex flex-col items-center justify-center w-full px-4;
+
+		.form-row {
+			@apply flex justify-start items-center w-full px-2 py-1;
+
+			.form-field {
+				@apply w-1/2 md:w-1/3;
+			}
+
+			.form-data {
+				@apply w-1/2 md:w-2/3;
+			}
+
+			.role-checkboxes {
+				@apply flex flex-col;
+
+				.role-checkbox {
+					@apply flex justify-start items-center;
+				}
+			}
+		}
+
+		.recaptcha-row {
+			@apply flex justify-end items-center w-full px-2 pt-10;
+		}
+
+		.image-preview {
+			@apply ring ring-secondary dark:ring-primary p-0 my-2;
+		}
+	}
+
+	.call-to-action {
+		@apply flex items-center justify-end w-full p-1;
+
+		.register-button {
+			@apply w-full sm:w-32;
+		}
+	}
+
+	.other-actions {
+		@apply flex flex-col items-center sm:items-end justify-center w-full px-1 pt-5;
+	}
+}

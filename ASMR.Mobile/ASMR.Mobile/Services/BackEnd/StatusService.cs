@@ -13,7 +13,7 @@ namespace ASMR.Mobile.Services.BackEnd
 	{
 		public Task<StatusResponseModel> GetStatus()
 		{
-			return Get<StatusResponseModel>("status");
+			return GetAsync<StatusResponseModel>("status");
 		}
 	}
 }

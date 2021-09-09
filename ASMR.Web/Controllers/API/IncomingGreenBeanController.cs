@@ -1,12 +1,13 @@
 using System.Threading.Tasks;
 using ASMR.Core.Constants;
 using ASMR.Core.Entities;
+using ASMR.Core.Enumerations;
 using ASMR.Core.Generic;
 using ASMR.Core.RequestModel;
 using ASMR.Core.ResponseModel;
+using ASMR.Web.Controllers.Attributes;
 using ASMR.Web.Controllers.Generic;
 using ASMR.Web.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -26,7 +27,7 @@ namespace ASMR.Web.Controllers.API
 			_userService = userService;
 		}
 
-		[Authorize(Roles = "Administrator,Server,Roaster")]
+		[AllowAccess(Role.Administrator, Role.Roaster, Role.Server)]
 		[HttpGet]
 		public async Task<IActionResult> GetAll([FromQuery] bool showMine)
 		{
@@ -38,7 +39,8 @@ namespace ASMR.Web.Controllers.API
 			return Ok(new IncomingGreenBeansResponseModel(incomingGreenBeans));
 		}
 		
-		[Authorize(Roles = "Roaster")]
+		[AllowAccess(Role.Administrator, Role.Roaster, Role.Server)]
+		[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
 		[HttpPost("{id}")]
 		public async Task<IActionResult> Create(string id, [FromBody] CreateIncomingGreenBeanRequestModel model)
 		{
@@ -80,7 +82,11 @@ namespace ASMR.Web.Controllers.API
 			});
             
 			await _beanService.CommitAsync();
-			return Created(Request.Path, new BeanResponseModel(bean));
+			return Created(Request.Path, new BeanResponseModel(bean)
+			{
+				Message = $"Successfully added {incomingGreenBean.WeightAdded} gram(s) of bean '{bean.Name}' " +
+				          $"to the inventory."
+			});
 		}
 		
 	}

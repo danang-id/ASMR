@@ -28,6 +28,7 @@ export interface FormInputProps {
 	onChange?: (event: ChangeEvent<HTMLInputElement>) => void
 	placeholder?: string
 	readOnly?: boolean
+	required?: boolean
 	type?: "text" | "password" | "email" | "number" | "url" | "date" | "datetime-local" | "month" | "week" | "time"
 		| "search" | "tel" | "checkbox" | "radio" | "file"
 	value?: string

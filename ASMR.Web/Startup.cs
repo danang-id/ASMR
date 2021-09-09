@@ -7,17 +7,16 @@
 //
 // Startup.cs
 //
-using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using ASMR.Common.Constants;
 using ASMR.Core.Entities;
+using ASMR.Web.Configurations;
 using ASMR.Web.Constants;
 using ASMR.Web.Data;
 using ASMR.Web.Extensions;
 using ASMR.Web.Services;
-using ASMR.Web.Services.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.DataProtection;
@@ -51,7 +50,35 @@ namespace ASMR.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add options
+            services.AddOptions<CaptchaOptions>()
+                .BindConfiguration("Google:reCAPTCHA");
+            services.AddOptions<JsonWebTokenOptions>()
+                .BindConfiguration("JsonWebToken");
+            services.AddOptions<MailOptions>()
+                .BindConfiguration("SendGrid");
+            
+            //
+            // Custom Services
+            //
+            // Transient lifetime services are created each time they are requested.
+            // This lifetime works best for lightweight, stateless services.
+            //
+            // Scoped lifetime services are created once per request.
+            //
+            // Singleton lifetime services are created the first time they are requested
+            // (or when ConfigureServices is run if you specify an instance there) and
+            // then every subsequent request will use the same instance.
+            //
             services.AddScoped<IPasswordHasher<User>, Argon2PasswordHashingService>();
+            services.AddScoped<ICaptchaService, CaptchaService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IBeanService, BeanService>();
+            services.AddScoped<IMediaFileService, MediaFileService>();
+            services.AddScoped<IRoastedBeanProductionService, RoastedBeanProductionService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IUserService, UserService>();
             
             services.AddAntiforgery(options =>
             {
@@ -104,13 +131,6 @@ namespace ASMR.Web
                 });
             });
 
-            services.AddDataProtection()
-                .SetApplicationName(typeof(Startup).Assembly.GetName().Name ?? "ASMR.Web")
-                .ProtectKeysWithCertificate(new X509Certificate2(
-                    Path.Join("Keys", Configuration["DataProtection:Certificate:FileName"]),
-                    Configuration["DataProtection:Certificate:Password"]))
-                .PersistKeysToDbContext<ApplicationDbContext>();
-
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.EnableSensitiveDataLogging(Environment.IsDevelopment());
@@ -124,11 +144,10 @@ namespace ASMR.Web
             
             services.AddIdentity<User, UserRole>(options =>
                 {
-                    options.SignIn.RequireConfirmedEmail = true;
                     options.User.RequireUniqueEmail = true;
                     options.User.AllowedUserNameCharacters =
-                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-
+                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
+                    
                     // Identity : Default password settings
                     options.Password.RequireDigit = true;
                     options.Password.RequireLowercase = true;
@@ -139,6 +158,13 @@ namespace ASMR.Web
                 })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddDataProtection()
+                .SetApplicationName(typeof(Startup).Assembly.GetName().Name ?? "ASMR.Web")
+                .ProtectKeysWithCertificate(new X509Certificate2(
+                    Path.Join("Keys", Configuration["DataProtection:Certificate:FileName"]),
+                    Configuration["DataProtection:Certificate:Password"]))
+                .PersistKeysToDbContext<ApplicationDbContext>();
 
             services.AddResponseCaching();
             services.AddResponseCompression();
@@ -162,8 +188,6 @@ namespace ASMR.Web
                 options.MemoryBufferThreshold = int.MaxValue;
             });
             
-            services.Configure<JsonWebTokenOptions>(Configuration.GetSection("JsonWebToken"));
-            
             services.ConfigureApplicationCookie(options =>
             {
                 options.ClaimsIssuer = CookieAuthenticationConstants.ClaimIssuer;
@@ -175,25 +199,6 @@ namespace ASMR.Web
                 options.Events.OnRedirectToLogin = CookieAuthenticationConstants.OnRedirectToLogin;
                 options.Events.OnRedirectToAccessDenied = CookieAuthenticationConstants.OnRedirectToAccessDenied;
             });
-            
-            //
-            // Custom Services
-            //
-            // Transient lifetime services are created each time they are requested.
-            // This lifetime works best for lightweight, stateless services.
-            //
-            // Scoped lifetime services are created once per request.
-            //
-            // Singleton lifetime services are created the first time they are requested
-            // (or when ConfigureServices is run if you specify an instance there) and
-            // then every subsequent request will use the same instance.
-            //
-            services.AddScoped<IBeanService, BeanService>();
-            services.AddScoped<IMediaFileService, MediaFileService>();
-            services.AddScoped<IRoastedBeanProductionService, RoastedBeanProductionService>();
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -243,16 +248,7 @@ namespace ASMR.Web
             });
             app.UseApiRouting();
 
-            app.UseSpa(spa =>
-            {
-                spa.Options.SourcePath = "ClientApp";
-
-                if (Environment.IsDevelopment())
-                {
-                    spa.UseProxyToSpaDevelopmentServer(new Uri("http://127.0.0.1:3000/"));
-                    //spa.UseReactDevelopmentServer(npmScript: "start");
-                }
-            });
+            app.UseClientApp(Environment);
         }
     }
 }

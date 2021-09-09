@@ -1,4 +1,4 @@
-namespace ASMR.Web.Services.Options
+namespace ASMR.Web.Configurations
 {
 	public class JsonWebTokenOptions
 	{

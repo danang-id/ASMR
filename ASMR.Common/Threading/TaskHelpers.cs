@@ -51,13 +51,13 @@ namespace ASMR.Common.Threading
         var oldContext = SynchronizationContext.Current;
         var syncContext = new ExclusiveSynchronizationContext();
         SynchronizationContext.SetSynchronizationContext(syncContext);
-        var ret = default(T);
+        var result = default(T);
 
         async void SendOrPostCallback(object _)
         {
             try
             {
-                ret = await task();
+                result = await task();
             }
             catch (Exception e)
             {
@@ -73,7 +73,7 @@ namespace ASMR.Common.Threading
         syncContext.Post(SendOrPostCallback, null);
         syncContext.BeginMessageLoop();
         SynchronizationContext.SetSynchronizationContext(oldContext);
-        return ret;
+        return result;
     }
 
     private class ExclusiveSynchronizationContext : SynchronizationContext
@@ -120,7 +120,8 @@ namespace ASMR.Common.Threading
                     task.Item1(task.Item2);
                     if (InnerException != null) // the method threw an exception
                     {
-                        throw new AggregateException("TaskHelpers.Run method threw an exception.", InnerException);
+                        // throw InnerException;
+                        throw new AggregateException("Error executing asynchronous task.", InnerException);
                     }
                 }
                 else

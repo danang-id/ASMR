@@ -7,17 +7,14 @@
 //
 // User.cs
 //
-
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.Serialization;
 using Microsoft.AspNetCore.Identity;
 
 namespace ASMR.Core.Entities
 {
-    [DataContract]
     public class User : IdentityUser
     {
         public User()
@@ -25,27 +22,27 @@ namespace ASMR.Core.Entities
             CreatedAt = DateTimeOffset.Now;
         }
 
-        [DataMember]
         [Required]
         public override string UserName { get; set; }
 
-        [DataMember]
         [Required]
         public string FirstName { get; set; }
 
-        [DataMember]
         [Required]
         public string LastName { get; set; }
 
-        [DataMember]
         [Required]
         public string Image { get; set; }
+
+        [Required]
+        public bool IsApproved { get; set; }
         
-        [DataMember]
+        [Required]
+        public bool IsWaitingForApproval { get; set; }
+
         [Required]
         public DateTimeOffset CreatedAt { get; set; }
 
-        [DataMember]
         public DateTimeOffset? LastUpdatedAt { get; set; }
 
         public NormalizedUser ToNormalizedUser()
@@ -58,6 +55,9 @@ namespace ASMR.Core.Entities
                 EmailAddress = Email,
                 Username = UserName,
                 Image = Image,
+                IsEmailConfirmed = EmailConfirmed,
+                IsApproved = IsApproved,
+                IsWaitingForApproval = IsWaitingForApproval,
                 CreatedAt = CreatedAt,
                 LastUpdatedAt = LastUpdatedAt
             };
@@ -73,6 +73,9 @@ namespace ASMR.Core.Entities
                 EmailAddress = Email,
                 Username = UserName,
                 Image = Image,
+                IsEmailConfirmed = EmailConfirmed,
+                IsApproved = IsApproved,
+                IsWaitingForApproval = IsWaitingForApproval,
                 Roles = roles.Select(role => role.ToNormalizedUserRole()),
                 CreatedAt = CreatedAt,
                 LastUpdatedAt = LastUpdatedAt
@@ -89,6 +92,9 @@ namespace ASMR.Core.Entities
                 EmailAddress = Email,
                 Username = UserName,
                 Image = Image,
+                IsEmailConfirmed = EmailConfirmed,
+                IsApproved = IsApproved,
+                IsWaitingForApproval = IsWaitingForApproval,
                 Token = token,
                 CreatedAt = CreatedAt,
                 LastUpdatedAt = LastUpdatedAt
@@ -105,6 +111,9 @@ namespace ASMR.Core.Entities
                 EmailAddress = Email,
                 Username = UserName,
                 Image = Image,
+                IsEmailConfirmed = EmailConfirmed,
+                IsApproved = IsApproved,
+                IsWaitingForApproval = IsWaitingForApproval,
                 Roles = roles.Select(role => role.ToNormalizedUserRole()),
                 Token = token,
                 CreatedAt = CreatedAt,

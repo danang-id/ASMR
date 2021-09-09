@@ -9,13 +9,13 @@ namespace ASMR.Mobile.Services.Abstraction
 {
 	public interface IApplicationState
 	{
-		public Task Init();
+		public Task InitAsync();
 
-		public Task<AuthenticationResponseModel> SignIn(string username, string password);
+		public Task<AuthenticationResponseModel> SignInAsync(string username, string password);
 
-		public Task<AuthenticationResponseModel> SignOut();
+		public Task<AuthenticationResponseModel> SignOutAsync();
 
-		public Task<AuthenticationResponseModel> UpdateUserData();
+		public Task<AuthenticationResponseModel> UpdateUserDataAsync();
 
 
 		public event EventHandler<AuthenticationEventArgs> AuthenticationChangedEvent;

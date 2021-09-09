@@ -16,23 +16,28 @@ using ASMR.Core.Entities;
 using ASMR.Core.Enumerations;
 using ASMR.Web.Data;
 using ASMR.Web.Services.Generic;
+using Flurl;
 using Microsoft.AspNetCore.Identity;
 
 namespace ASMR.Web.Services
 {
     public interface IUserService : IServiceBase
     {
-        public IQueryable<User> GetAllUsers();
+        public IEnumerable<User> GetAllUsers();
 
         public Task<User> GetUserById(string id);
 
+        public Task<User> GetUserByEmailAddress(string emailAddress);
+        
         public Task<User> GetUserByName(string userName);
 
         public Task<IdentityResult> CreateUser(User user, string password);
 
         public Task<IdentityResult> ModifyUser(string id, User user);
+
+        public Task<IdentityResult> ModifyUserPassword(string id, string currentPassword, string newPassword);
         
-        public Task<IdentityResult> ModifyUserPassword(string id, string newPassword);
+        public Task<IdentityResult> ResetUserPassword(string id, string newPassword, string resetPasswordToken = null);
 
         public Task<IdentityResult> RemoveUser(string id);
 
@@ -43,6 +48,18 @@ namespace ASMR.Web.Services
         public Task<IdentityResult> AssignRolesToUser(string id, IEnumerable<Role> roles);
 
         public Task<User> GetAuthenticatedUser(ClaimsPrincipal principal);
+        
+        public Task<IdentityResult> ApproveUser(string id);
+        
+        public Task<IdentityResult> DisapproveUser(string id);
+        
+        public Task<IdentityResult> AddUserToWaitingList(string id);
+
+        public Task<Url> GenerateEmailAddressConfirmationUrl(User user, Url baseUrl);
+
+        public Task<Url> GeneratePasswordResetUrl(User user, Url baseUrl);
+        
+        public Task<IdentityResult> ConfirmEmailAddress(User user, string emailAddressConfirmationToken);
     }
 
     public class UserService : ServiceBase, IUserService
@@ -58,7 +75,7 @@ namespace ASMR.Web.Services
             _roleManager = roleManager;
         }
 
-        public IQueryable<User> GetAllUsers()
+        public IEnumerable<User> GetAllUsers()
         {
             return _userManager.Users;
         }
@@ -68,6 +85,11 @@ namespace ASMR.Web.Services
             return _userManager.FindByIdAsync(id);
         }
 
+        public Task<User> GetUserByEmailAddress(string emailAddress)
+        {
+            return _userManager.FindByEmailAsync(emailAddress);
+        }
+        
         public Task<User> GetUserByName(string userName)
         {
             return _userManager.FindByNameAsync(userName);
@@ -99,6 +121,7 @@ namespace ASMR.Web.Services
             if (!string.IsNullOrEmpty(user.Email))
             {
                 entity.Email = user.Email;
+                entity.EmailConfirmed = entity.Email == user.Email && entity.EmailConfirmed;
             }
 
             if (!string.IsNullOrEmpty(user.UserName))
@@ -113,8 +136,8 @@ namespace ASMR.Web.Services
 
             return await _userManager.UpdateAsync(entity);
         }
-
-        public async Task<IdentityResult> ModifyUserPassword(string id, string newPassword)
+        
+        public async Task<IdentityResult> ModifyUserPassword(string id, string currentPassword, string newPassword)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user is null)
@@ -122,7 +145,22 @@ namespace ASMR.Web.Services
                 return null;
             }
 
-            var passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        }
+
+        public async Task<IdentityResult> ResetUserPassword(string id, string newPassword, string passwordResetToken = null)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user is null)
+            {
+                return null;
+            }
+
+            if (string.IsNullOrEmpty(passwordResetToken))
+            {
+                passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            }
+            
             return await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
         }
 
@@ -185,6 +223,77 @@ namespace ASMR.Web.Services
         public Task<User> GetAuthenticatedUser(ClaimsPrincipal principal)
         {
             return principal is null ? null : _userManager.GetUserAsync(principal);
+        }
+
+        public async Task<IdentityResult> ApproveUser(string id)
+        {
+            var entity = await _userManager.FindByIdAsync(id);
+            if (entity is null)
+            {
+                return null;
+            }
+
+            entity.IsApproved = true;
+            entity.IsWaitingForApproval = false;
+            
+            return await _userManager.UpdateAsync(entity);
+        }
+
+        public async Task<IdentityResult> DisapproveUser(string id)
+        {
+            var entity = await _userManager.FindByIdAsync(id);
+            if (entity is null)
+            {
+                return null;
+            }
+
+            entity.IsApproved = false;
+            entity.IsWaitingForApproval = false;
+            
+            return await _userManager.UpdateAsync(entity);
+        }
+
+        public async Task<IdentityResult> AddUserToWaitingList(string id)
+        {
+            var entity = await _userManager.FindByIdAsync(id);
+            if (entity is null)
+            {
+                return null;
+            }
+
+            entity.IsApproved = false;
+            entity.IsWaitingForApproval = true;
+            
+            return await _userManager.UpdateAsync(entity);
+        }
+
+        public async Task<Url> GenerateEmailAddressConfirmationUrl(User user, Url baseUrl)
+        {
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            return baseUrl.AppendPathSegments("authentication", "email-address", "confirm")
+                .SetQueryParams(new
+                {
+                    id = user.Id,
+                    emailAddress = user.Email,
+                    token
+                });
+        }
+
+        public async Task<Url> GeneratePasswordResetUrl(User user, Url baseUrl)
+        {
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            return baseUrl.AppendPathSegments("authentication", "password", "reset")
+                .SetQueryParams(new
+                {
+                    id = user.Id,
+                    emailAddress = user.Email,
+                    token
+                });
+        }
+
+        public Task<IdentityResult> ConfirmEmailAddress(User user, string emailAddressConfirmationToken)
+        {
+            return _userManager.ConfirmEmailAsync(user, emailAddressConfirmationToken);
         }
     }
 }

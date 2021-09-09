@@ -27,7 +27,7 @@ function SignOutPage():JSX.Element {
 
 			authentication.handleErrors(result.errors, notification, logger)
 		} catch(error) {
-			authentication.handleError(error, notification, logger)
+			authentication.handleError(error as Error, notification, logger)
 		}
 	}
 

@@ -147,7 +147,7 @@ class HttpClient extends EventEmitter {
 
 			return await this.interceptResponse(new HttpResponse<TResponse>(response, responseBody))
 		} catch (error) {
-			throw await this.interceptError(error)
+			throw await this.interceptError(error as Error)
 		}
 	}
 

@@ -15,6 +15,7 @@ namespace ASMR.Common.Net.Http
 		public JsonContent(TContent value)
 		{
 			_value = value;
+			
 			Headers.ContentType = new MediaTypeHeaderValue("application/json");
 		}
 
@@ -26,11 +27,8 @@ namespace ASMR.Common.Net.Http
 
 		protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
 		{
-			return Task.Factory.StartNew(() =>
-			{
-				using var writer = new Utf8JsonWriter(stream);
-				JsonSerializer.Serialize(writer, _value, JsonConstants.DefaultJsonSerializerOptions);
-			});
+			return JsonSerializer.SerializeAsync(stream, _value, JsonConstants.DefaultJsonSerializerOptions);
+			
 		}
 	}
 }

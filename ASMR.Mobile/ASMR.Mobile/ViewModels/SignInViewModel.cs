@@ -40,7 +40,7 @@ namespace ASMR.Mobile.ViewModels
 
             try
             {
-                var result = await ApplicationState.SignIn(Username, Password);
+                var result = await ApplicationState.SignInAsync(Username, Password);
                 if (result.IsSuccess)
                 {
                     SignInStatus = string.Empty;

@@ -31,7 +31,29 @@
 	@apply flex justify-end items-center;
 }
 
+.reset-user-password-modal-body {
+	.email-address {
+		@apply font-bold;
+	}
+}
+
 .remove-user-modal-body {
+	.full-name {
+		@apply font-bold;
+	}
+
+	.username {
+		@apply font-mono;
+	}
+}
+
+.approve-registration-modal-body {
+	 .full-name {
+		 @apply font-bold;
+	 }
+ }
+
+.reject-registration-modal-body {
 	.full-name {
 		@apply font-bold;
 	}

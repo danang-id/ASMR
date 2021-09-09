@@ -2,13 +2,13 @@
 import { ChangeEvent, useEffect, useState } from "react"
 import Button from "@asmr/components/Button"
 import Form from "@asmr/components/Form"
+import ImageCropper from "@asmr/components/ImageCropper"
 import Modal from "@asmr/components/Modal"
 import Role from "@asmr/data/enumerations/Role"
 import CreateUserRequestModel from "@asmr/data/request/CreateUserRequestModel"
 import { ProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.css"
-import ImageCropper from "@asmr/components/ImageCropper"
 import { getFileFromCanvas } from "@asmr/libs/common/canvas"
+import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.css"
 
 interface UserCreateModalProps {
 	onClose: () => void
@@ -43,7 +43,7 @@ function UserCreateModal({ onClose, onCreateUser, progress, show  }: UserCreateM
 				roles.splice(roleIndex, 1)
 				newRequestModel.roles = [...roles, roleIndex]
 			}
-		} if (event.target.name === "image" && event.target.files) {
+		} else if (event.target.name === "image" && event.target.files) {
 			setImageFile(event.target.files[0])
 		} else {
 			// @ts-ignore

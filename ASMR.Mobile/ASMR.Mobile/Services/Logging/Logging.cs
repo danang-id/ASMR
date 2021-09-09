@@ -52,7 +52,7 @@ namespace ASMR.Mobile.Services.Logging
 			properties = properties.Concat(GetDefaultProperties()) as Dictionary<string, string>;
 			
 #if DEBUG
-			Debug.WriteLine($"[{GetType().Name}] {exception}");
+			Debug.WriteLine(exception, GetType().Name);
 #endif
 			
 			Crashes.TrackError(exception, properties);

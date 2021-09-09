@@ -34,6 +34,7 @@ module.exports = {
 				action: "#1D71F9",
 				"action-accent": "#2F7DFA",
 				danger: "#F32013",
+				warning: "#FFAE3D",
 				bean: "#794028",
 				primary: "#432D27",
 				secondary: "#D7B7A3",

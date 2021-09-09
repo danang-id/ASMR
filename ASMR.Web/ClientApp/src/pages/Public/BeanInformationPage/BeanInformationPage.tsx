@@ -65,7 +65,7 @@ function BeanInformationPage(): JSX.Element {
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		} finally {
 			setInitialized(true)
 		}

@@ -6,11 +6,11 @@ export interface INotificationOption {
 }
 
 export interface INotificationHandler {
-	error(message: string, options?: INotificationOption): CTReturn
-	info(message: string, options?: INotificationOption): CTReturn
-	loading(message: string, options?: INotificationOption): CTReturn
-	success(message: string, options?: INotificationOption): CTReturn
-	warn(message: string, options?: INotificationOption): CTReturn
+	error(message?: string, options?: INotificationOption): CTReturn
+	info(message?: string, options?: INotificationOption): CTReturn
+	loading(message?: string, options?: INotificationOption): CTReturn
+	success(message?: string, options?: INotificationOption): CTReturn
+	warn(message?: string, options?: INotificationOption): CTReturn
 }
 
 const defaultCogoToastOptions: CTOptions = {
@@ -29,7 +29,7 @@ class NotificationHandler implements INotificationHandler {
 		this.options = { ...defaultCogoToastOptions, ...options }
 	}
 
-	public error(message: string, { title, permanent }: INotificationOption = defaultNotificationOptions) {
+	public error(message?: string, { title, permanent }: INotificationOption = defaultNotificationOptions) {
 		const notification = cogoToast.error(message, {
 			...this.options,
 			hideAfter: permanent ? 0 : this.options.hideAfter,
@@ -39,7 +39,7 @@ class NotificationHandler implements INotificationHandler {
 		return notification
 	}
 
-	public info(message: string, { title, permanent }: INotificationOption = defaultNotificationOptions) {
+	public info(message?: string, { title, permanent }: INotificationOption = defaultNotificationOptions) {
 		const notification = cogoToast.info(message, {
 			...this.options,
 			hideAfter: permanent ? 0 : this.options.hideAfter,
@@ -49,7 +49,7 @@ class NotificationHandler implements INotificationHandler {
 		return notification
 	}
 
-	public loading(message: string, { title, permanent }: INotificationOption = defaultNotificationOptions) {
+	public loading(message?: string, { title, permanent }: INotificationOption = defaultNotificationOptions) {
 		const notification = cogoToast.loading(message, {
 			...this.options,
 			hideAfter: permanent ? 0 : this.options.hideAfter,
@@ -59,7 +59,7 @@ class NotificationHandler implements INotificationHandler {
 		return notification
 	}
 
-	public success(message: string, { title, permanent }: INotificationOption = defaultNotificationOptions) {
+	public success(message?: string, { title, permanent }: INotificationOption = defaultNotificationOptions) {
 		const notification = cogoToast.success(message, {
 			...this.options,
 			hideAfter: permanent ? 0 : this.options.hideAfter,
@@ -69,7 +69,7 @@ class NotificationHandler implements INotificationHandler {
 		return notification
 	}
 
-	public warn(message: string, { title, permanent }: INotificationOption = defaultNotificationOptions) {
+	public warn(message?: string, { title, permanent }: INotificationOption = defaultNotificationOptions) {
 		const notification = cogoToast.warn(message, {
 			...this.options,
 			hideAfter: permanent ? 0 : this.options.hideAfter,

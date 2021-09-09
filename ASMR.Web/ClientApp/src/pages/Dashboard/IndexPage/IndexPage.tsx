@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react"
 import { useHistory } from "react-router-dom"
-import { IoAnalytics, IoBag, IoCash, IoPeople } from "react-icons/io5"
+import { IoAnalytics, IoBag, IoCash, IoPeople, IoPerson } from "react-icons/io5"
 import { GiCoffeeBeans } from "react-icons/gi"
 import Role from "@asmr/data/enumerations/Role"
 import DashboardLayout from "@asmr/layouts/DashboardLayout"
@@ -29,45 +29,53 @@ function getFeaturePagesBasedOnRole(featurePages: FeaturePage[], role: Role): Fe
 	switch (role) {
 		case Role.Administrator:
 			featurePages = addFeaturePage(featurePages, {
-				id: 0,
+				id: 1,
 				name: "Manage Users",
 				icon: <IoPeople />,
 				pathname: DashboardRoutes.UsersManagementPage
 			})
 			featurePages = addFeaturePage(featurePages, {
-				id: 1,
+				id: 2,
 				name: "Manage Beans",
 				icon: <GiCoffeeBeans />,
 				pathname: DashboardRoutes.BeansManagementPage
-			})
-			featurePages = addFeaturePage(featurePages, {
-				id: 2,
-				name: "Manage Products",
-				icon: <IoBag />,
-				pathname: DashboardRoutes.ProductsManagementPage
 			})
 			featurePages = addFeaturePage(featurePages, {
 				id: 3,
-				name: "Production Report",
-				icon: <IoAnalytics />,
-				pathname: DashboardRoutes.ProductionReportPage
-			})
-			break;
-		case Role.Server:
-			featurePages = addFeaturePage(featurePages, {
-				id: 1,
-				name: "Manage Beans",
-				icon: <GiCoffeeBeans />,
-				pathname: DashboardRoutes.BeansManagementPage
-			})
-			featurePages = addFeaturePage(featurePages, {
-				id: 2,
 				name: "Manage Products",
 				icon: <IoBag />,
 				pathname: DashboardRoutes.ProductsManagementPage
 			})
 			featurePages = addFeaturePage(featurePages, {
 				id: 4,
+				name: "Production Report",
+				icon: <IoAnalytics />,
+				pathname: DashboardRoutes.ProductionReportPage
+			})
+			break;
+		case Role.Roaster:
+			featurePages = addFeaturePage(featurePages, {
+				id: 0,
+				name: "My Profile",
+				icon: <IoPerson />,
+				pathname: DashboardRoutes.ProfilePage
+			})
+			break;
+		case Role.Server:
+			featurePages = addFeaturePage(featurePages, {
+				id: 2,
+				name: "Manage Beans",
+				icon: <GiCoffeeBeans />,
+				pathname: DashboardRoutes.BeansManagementPage
+			})
+			featurePages = addFeaturePage(featurePages, {
+				id: 3,
+				name: "Manage Products",
+				icon: <IoBag />,
+				pathname: DashboardRoutes.ProductsManagementPage
+			})
+			featurePages = addFeaturePage(featurePages, {
+				id: 5,
 				name: "Product Transactions",
 				icon: <IoCash />,
 				pathname: DashboardRoutes.ProductTransactionsPage

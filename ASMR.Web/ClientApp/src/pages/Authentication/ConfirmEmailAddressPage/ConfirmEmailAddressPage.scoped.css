@@ -1,0 +1,27 @@
+.page {
+	@apply flex flex-col items-center justify-center;
+
+	.header {
+		@apply flex flex-row items-center justify-center;
+
+		.application-logo {
+			@apply w-24;
+		}
+
+		.title {
+			@apply font-brand font-semibold lowercase text-5xl mx-4 text-primary dark:text-white;
+		}
+	}
+
+	.description {
+		@apply flex justify-center items-center text-center px-4;
+	}
+
+	.separator {
+		@apply h-10;
+	}
+
+	.call-to-action {
+		@apply flex flex-col items-center justify-center gap-2;
+	}
+}

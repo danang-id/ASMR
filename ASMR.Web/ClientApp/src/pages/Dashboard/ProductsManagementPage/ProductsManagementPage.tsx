@@ -111,15 +111,13 @@ function ProductsManagementPage(): JSX.Element {
 		try {
 			const result = await services.product.create(requestModel)
 			if (result.isSuccess) {
-				if (result.data) {
-					notification.success(`Successfully added new product for ${bean.name} bean.`)
-				}
+				notification.success(result.message)
 				await Promise.all([retrieveProducts(), onCloseModals()])
 			}
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
@@ -131,15 +129,13 @@ function ProductsManagementPage(): JSX.Element {
 		try {
 			const result = await services.product.modify(selectedProduct.id, requestModel)
 			if (result.isSuccess) {
-				if (result.data) {
-					notification.success(`Successfully updated product for ${bean.name} bean.`)
-				}
+				notification.success(result.message)
 				await Promise.all([retrieveProducts(), onCloseModals()])
 			}
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
@@ -151,15 +147,13 @@ function ProductsManagementPage(): JSX.Element {
 		try {
 			const result = await services.product.remove(selectedProduct.id)
 			if (result.isSuccess) {
-				if (result.data) {
-					notification.success(`Successfully removed product for ${bean.name} bean.`)
-				}
+				notification.success(result.message)
 				await Promise.all([retrieveProducts(), onCloseModals()])
 			}
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
@@ -179,7 +173,7 @@ function ProductsManagementPage(): JSX.Element {
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
@@ -197,7 +191,7 @@ function ProductsManagementPage(): JSX.Element {
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 

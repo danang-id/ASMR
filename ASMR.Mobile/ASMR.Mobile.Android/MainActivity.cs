@@ -18,7 +18,8 @@ namespace ASMR.Mobile.Droid
             NativeHttpClient.DefaultClientHandler = new AndroidClientHandler
             {
                 CookieContainer = NativeHttpClient.CookieContainer,
-                UseCookies = true
+                UseCookies = true,
+                UseDefaultCredentials = true
             };
             
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);

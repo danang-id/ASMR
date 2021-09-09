@@ -5,9 +5,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using ASMR.Core.Entities;
+using ASMR.Web.Configurations;
 using ASMR.Web.Data;
 using ASMR.Web.Services.Generic;
-using ASMR.Web.Services.Options;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 

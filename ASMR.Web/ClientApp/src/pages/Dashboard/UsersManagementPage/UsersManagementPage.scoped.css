@@ -17,7 +17,7 @@
 			.full-name {
 				@apply font-semibold;
 			}
-			
+
 			.email-address {
 				@apply text-sm font-normal;
 			}
@@ -31,9 +31,25 @@
 	.user-roles {
 		@apply flex flex-row lg:flex-col justify-start items-start my-3 lg:m-0 gap-2;
 
+		.approval {
+			@apply px-2 inline-flex text-sm leading-5 font-semibold rounded-full uppercase;
+		}
+
+		.approval-email {
+			@apply bg-primary dark:bg-white text-white dark:text-primary uppercase;
+		}
+
+		.approval-rejected {
+			@apply bg-danger dark:bg-danger text-white dark:text-white;
+		}
+
+		.approval-waiting {
+			@apply bg-warning dark:bg-warning text-dark dark:text-dark;
+		}
+
 		.role {
 			@apply px-2 inline-flex text-sm leading-5 font-semibold rounded-full
-			bg-primary dark:bg-white text-white dark:text-primary uppercase;
+				bg-primary dark:bg-white text-white dark:text-primary uppercase;
 		}
 	}
 

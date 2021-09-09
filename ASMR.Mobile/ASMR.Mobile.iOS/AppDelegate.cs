@@ -21,10 +21,10 @@ namespace ASMR.Mobile.iOS
         //
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
-            NativeHttpClient.DefaultClientHandler = new NSUrlSessionHandler()
+            NativeHttpClient.DefaultClientHandler = new NSUrlSessionHandler
             {
                 CookieContainer = NativeHttpClient.CookieContainer,
-                UseCookies = true
+                UseCookies = true,
             };
             
             Xamarin.Forms.Forms.Init();

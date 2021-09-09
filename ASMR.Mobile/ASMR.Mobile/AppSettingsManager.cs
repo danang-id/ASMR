@@ -26,7 +26,7 @@ namespace ASMR.Mobile
 			}
 			catch (Exception exception)
 			{
-				Debug.WriteLine($"[{GetType().Name}] {exception}");
+				Debug.WriteLine(exception, GetType().Name);
 			}
 		}
 

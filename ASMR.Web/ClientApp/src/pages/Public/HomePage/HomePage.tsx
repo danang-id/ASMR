@@ -41,7 +41,7 @@ function HomePage(): JSX.Element {
 
 			services.handleErrors(result.errors, void 0, logger)
 		} catch (error) {
-			services.handleError(error, void 0, logger)
+			services.handleError(error as Error, void 0, logger)
 		}
 	}
 

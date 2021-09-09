@@ -29,7 +29,7 @@ namespace ASMR.Mobile.ViewModels
 
             try
             {
-                var result = await ApplicationState.UpdateUserData();
+                var result = await ApplicationState.UpdateUserDataAsync();
                 if (result.IsSuccess)
                 {
                     Name = ApplicationState.User.FirstName ?? "";

@@ -1,215 +1,110 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+		<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+		<IsPackable>false</IsPackable>
+		<ReleasesRoot>Releases\</ReleasesRoot>
+		<SpaRoot>ClientApp\</SpaRoot>
+		<DefaultItemExcludes>$(DefaultItemExcludes);$(ReleasesRoot)\**;$(SpaRoot)node_modules\**</DefaultItemExcludes>
+		<ReleaseVersion>1.0.0</ReleaseVersion>
+		<StartupObject>ASMR.Web.Program</StartupObject>
+		<ApplicationIcon>ASMR.Web.ico</ApplicationIcon>
+		<AssemblyName>ASMR</AssemblyName>
+		<Authors>Danang Galuh Tegar Prasetyo</Authors>
+		<PackageId>ASMR</PackageId>
+		<Company>Pandora Karya Digital</Company>
+		<Product>ASMR Web Server</Product>
+		<AssemblyVersion>1.0.0</AssemblyVersion>
+		<FileVersion>1.0.0</FileVersion>
+		<NeutralLanguage>en</NeutralLanguage>
+		<Platforms>AnyCPU;x64</Platforms>
+		<UserSecretsId>0cbf764f-a4ec-415a-afc2-282464b4f718</UserSecretsId>
+	</PropertyGroup>
 
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-        <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-        <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-        <IsPackable>false</IsPackable>
-        <ReleasesRoot>Releases\</ReleasesRoot>
-        <SpaRoot>ClientApp\</SpaRoot>
-        <DefaultItemExcludes>$(DefaultItemExcludes);$(ReleasesRoot)\**;$(SpaRoot)node_modules\**</DefaultItemExcludes>
-        <ReleaseVersion>1.0.0</ReleaseVersion>
-        <StartupObject>ASMR.Web.Program</StartupObject>
-        <ApplicationIcon>ASMR.Web.ico</ApplicationIcon>
-        <AssemblyName>ASMR</AssemblyName>
-        <Authors>Danang Galuh Tegar Prasetyo</Authors>
-        <PackageId>ASMR</PackageId>
-        <Company>Pandora Karya Digital</Company>
-        <Product>ASMR Web Server</Product>
-        <AssemblyVersion>1.0.0</AssemblyVersion>
-        <FileVersion>1.0.0</FileVersion>
-        <NeutralLanguage>en</NeutralLanguage>
-        <Platforms>AnyCPU;x64</Platforms>
-    </PropertyGroup>
+	<PropertyGroup Condition=" '$(RunConfiguration)' == 'Production' " />
+	<ItemGroup>
+		<PackageReference Include="Flurl" Version="3.0.2" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="5.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.9" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9" />
+		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.16.0" />
+		<PackageReference Include="Serilog" Version="2.10.0" />
+		<PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
+		<PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
+		<PackageReference Include="Serilog.Exceptions" Version="7.0.0" />
+		<PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
+		<PackageReference Include="Serilog.Settings.Configuration" Version="3.2.0" />
+		<PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
+		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />
+		<PackageReference Include="SendGrid" Version="9.24.2" />
+	</ItemGroup>
 
-    <PropertyGroup Condition=" '$(RunConfiguration)' == 'Production' " />
-    <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.9" />
-        <PackageReference Include="Microsoft.AspNetCore.DataProtection.EntityFrameworkCore" Version="5.0.9" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.9" />
-        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="5.0.9" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.9" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.9">
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-            <PrivateAssets>all</PrivateAssets>
-        </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.9" />
-        <PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.16.0" />
-        <PackageReference Include="Serilog" Version="2.10.0" />
-        <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
-        <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
-        <PackageReference Include="Serilog.Exceptions" Version="7.0.0" />
-        <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.1" />
-        <PackageReference Include="Serilog.Settings.Configuration" Version="3.2.0" />
-        <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
-        <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
-        <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.12.2" />
-    </ItemGroup>
+	<ItemGroup>
+		<!-- Don't publish the SPA source files, but do show them in the project files list -->
+		<Content Remove="$(ReleasesRoot)**" />
+		<Content Remove="$(SpaRoot)**" />
+		<None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\ASMR.Core\ASMR.Core.csproj">
+			<GlobalPropertiesToRemove>
+			</GlobalPropertiesToRemove>
+		</ProjectReference>
+		<ProjectReference Include="..\ASMR.Common\ASMR.Common.csproj">
+			<GlobalPropertiesToRemove>
+			</GlobalPropertiesToRemove>
+		</ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+		<!-- Make sure all of the necessary appsettings are included with the application. -->
+		<Content Update="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+		</Content>
+		<Content Update="ReleaseInformation\ASMR*.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+		</Content>
+	</ItemGroup>
+	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
+		<!-- Ensure NodeJS is installed -->
+		<Exec Command="node --version" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+		</Exec>
+		<!-- Ensure Yarn Package Manager is installed -->
+		<Exec Command="yarn --version" ContinueOnError="true">
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+		</Exec>
+		<Error Condition="'$(ErrorCode)' != '0'" Text="NodeJS and npm is required to build and run this project. To continue, please install NodeJS and YarnPkg, and then restart your command prompt or IDE." />
+		<Message Importance="high" Text="Restoring dependencies using 'node'. This may take several minutes..." />
+		<Exec WorkingDirectory="$(SpaRoot)" Command="yarn install" />
+	</Target>
 
-    <ItemGroup>
-        <!-- Don't publish the SPA source files, but do show them in the project files list -->
-        <Content Remove="$(ReleasesRoot)**" />
-        <Content Remove="$(SpaRoot)**" />
-        <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-        <Content Remove="wwwroot\mstile-310x310.png" />
-        <Content Remove="wwwroot\safari-pinned-tab.svg" />
-        <Content Remove="wwwroot\favicon.ico" />
-        <Content Remove="wwwroot\apple-touch-icon-120x120.png" />
-        <Content Remove="wwwroot\android-chrome-192x192.png" />
-        <Content Remove="wwwroot\apple-touch-icon.png" />
-        <Content Remove="wwwroot\mstile-70x70.png" />
-        <Content Remove="wwwroot\apple-touch-icon-152x152.png" />
-        <Content Remove="wwwroot\apple-touch-icon-180x180.png" />
-        <Content Remove="wwwroot\mstile-310x150.png" />
-        <Content Remove="wwwroot\apple-touch-icon-114x114.png" />
-        <Content Remove="wwwroot\apple-touch-icon-76x76.png" />
-        <Content Remove="wwwroot\android-chrome-512x512.png" />
-        <Content Remove="wwwroot\apple-touch-icon-57x57.png" />
-        <Content Remove="wwwroot\apple-touch-icon-72x72.png" />
-        <Content Remove="wwwroot\mstile-150x150.png" />
-        <Content Remove="wwwroot\apple-touch-icon-60x60.png" />
-        <Content Remove="wwwroot\apple-touch-icon-144x144.png" />
-        <Content Remove="wwwroot\favicon-32x32.png" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\ASMR.Core\ASMR.Core.csproj">
-            <GlobalPropertiesToRemove>
-            </GlobalPropertiesToRemove>
-        </ProjectReference>
-        <ProjectReference Include="..\ASMR.Common\ASMR.Common.csproj">
-            <GlobalPropertiesToRemove>
-            </GlobalPropertiesToRemove>
-        </ProjectReference>
-    </ItemGroup>
-    <ItemGroup>
-        <!-- Make sure all of the necessary appsettings are included with the application. -->
-        <Content Update="appsettings*.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-        </Content>
-        <Content Update="appsettings.Local.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-        </Content>
-        <Content Update="ReleaseInformation\*.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
-        </Content>
-        <Folder Include="Keys\" />
-        <Folder Include="Logs\" />
-    </ItemGroup>
-    <ItemGroup>
-      <TypeScriptCompile Include="ClientApp\src\data\release\ASMRWebReleaseInformation.ts" />
-      <TypeScriptCompile Include="ClientApp\src\data\release\common\GenericReleaseInformation.ts" />
-      <TypeScriptCompile Include="ClientApp\src\data\release\common\WebReleaseInformation.ts" />
-      <TypeScriptCompile Include="ClientApp\src\pages\Authentication\SignInPage\RegistrationModal.tsx" />
-    </ItemGroup>
-    <ItemGroup>
-      <None Remove="ClientApp\build\index.html" />
-      <None Remove="ClientApp\build\service-worker.js" />
-      <None Remove="ClientApp\build\static\css\7.9845e8a7.chunk.css" />
-      <None Remove="ClientApp\build\static\css\29.e664ee25.chunk.css" />
-      <None Remove="ClientApp\build\static\css\16.02e9c98a.chunk.css" />
-      <None Remove="ClientApp\build\static\css\10.0fc935bb.chunk.css" />
-      <None Remove="ClientApp\build\static\css\25.ef3481d9.chunk.css" />
-      <None Remove="ClientApp\build\static\css\23.31683773.chunk.css" />
-      <None Remove="ClientApp\build\static\css\28.82f491e2.chunk.css" />
-      <None Remove="ClientApp\build\static\css\27.9485b91b.chunk.css" />
-      <None Remove="ClientApp\build\static\css\3.640da394.chunk.css" />
-      <None Remove="ClientApp\build\static\css\18.d8f81c10.chunk.css" />
-      <None Remove="ClientApp\build\static\css\8.b1a74270.chunk.css" />
-      <None Remove="ClientApp\build\static\css\main.bb1e5610.chunk.css" />
-      <None Remove="ClientApp\build\static\css\22.8f5eff0b.chunk.css" />
-      <None Remove="ClientApp\build\static\css\9.ecebd109.chunk.css" />
-      <None Remove="ClientApp\build\static\css\20.2c7a1427.chunk.css" />
-      <None Remove="ClientApp\build\static\css\32.e7c74ab9.chunk.css" />
-      <None Remove="ClientApp\build\static\css\13.45af8894.chunk.css" />
-      <None Remove="ClientApp\build\static\css\19.e84f876b.chunk.css" />
-      <None Remove="ClientApp\build\static\css\30.2e732d4e.chunk.css" />
-      <None Remove="ClientApp\build\static\css\17.7c02c1ef.chunk.css" />
-      <None Remove="ClientApp\build\static\css\14.b808f77e.chunk.css" />
-      <None Remove="ClientApp\build\static\css\15.8e83c223.chunk.css" />
-      <None Remove="ClientApp\build\static\css\24.3857286d.chunk.css" />
-      <None Remove="ClientApp\build\static\css\21.371e450b.chunk.css" />
-      <None Remove="ClientApp\build\static\css\11.19c36fba.chunk.css" />
-      <None Remove="ClientApp\build\static\css\26.2a02b619.chunk.css" />
-      <None Remove="ClientApp\build\static\js\32.c20fbc30.chunk.js" />
-      <None Remove="ClientApp\build\static\js\38.5369a773.chunk.js" />
-      <None Remove="ClientApp\build\static\js\15.7ed3059b.chunk.js" />
-      <None Remove="ClientApp\build\static\js\36.3babdee0.chunk.js" />
-      <None Remove="ClientApp\build\static\js\9.4b7c6967.chunk.js" />
-      <None Remove="ClientApp\build\static\js\21.612ddf25.chunk.js" />
-      <None Remove="ClientApp\build\static\js\0.ecb974f2.chunk.js" />
-      <None Remove="ClientApp\build\static\js\27.cad03da0.chunk.js" />
-      <None Remove="ClientApp\build\static\js\7.8eef612d.chunk.js" />
-      <None Remove="ClientApp\build\static\js\23.ba68f978.chunk.js" />
-      <None Remove="ClientApp\build\static\js\39.fff2a4fb.chunk.js" />
-      <None Remove="ClientApp\build\static\js\2.4c01142c.chunk.js" />
-      <None Remove="ClientApp\build\static\js\6.7a84235d.chunk.js.LICENSE.txt" />
-      <None Remove="ClientApp\build\static\js\18.7a408a2e.chunk.js" />
-      <None Remove="ClientApp\build\static\js\28.da148cbc.chunk.js" />
-      <None Remove="ClientApp\build\static\js\8.5f2c6583.chunk.js" />
-      <None Remove="ClientApp\build\static\js\37.9b2f67a3.chunk.js" />
-      <None Remove="ClientApp\build\static\js\10.75ed53bf.chunk.js" />
-      <None Remove="ClientApp\build\static\js\3.b4e44dda.chunk.js.LICENSE.txt" />
-      <None Remove="ClientApp\build\static\js\34.8e549436.chunk.js" />
-      <None Remove="ClientApp\build\static\js\30.269491a0.chunk.js" />
-      <None Remove="ClientApp\build\static\js\22.93608739.chunk.js" />
-      <None Remove="ClientApp\build\static\js\17.b6593bc7.chunk.js" />
-      <None Remove="ClientApp\build\static\js\20.96196d46.chunk.js" />
-      <None Remove="ClientApp\build\static\js\33.c1524e6c.chunk.js" />
-      <None Remove="ClientApp\build\static\js\26.5a96b9df.chunk.js" />
-      <None Remove="ClientApp\build\static\js\14.c336d6e3.chunk.js" />
-      <None Remove="ClientApp\build\static\js\1.99ec024c.chunk.js" />
-      <None Remove="ClientApp\build\static\js\16.12b40c7b.chunk.js" />
-      <None Remove="ClientApp\build\static\js\29.f699b9a8.chunk.js" />
-      <None Remove="ClientApp\build\static\js\35.9531deed.chunk.js" />
-      <None Remove="ClientApp\build\static\js\13.1d864996.chunk.js" />
-      <None Remove="ClientApp\build\static\js\19.d43017a2.chunk.js" />
-      <None Remove="ClientApp\build\static\js\25.ac321bad.chunk.js" />
-      <None Remove="ClientApp\build\static\js\24.71a45631.chunk.js" />
-      <None Remove="ClientApp\build\static\js\6.7a84235d.chunk.js" />
-      <None Remove="ClientApp\build\static\js\11.42808ece.chunk.js" />
-      <None Remove="ClientApp\build\static\js\3.b4e44dda.chunk.js" />
-      <None Remove="ClientApp\build\static\media\asmr-logo-inverted.d15f8ba4.png" />
-      <None Remove="ClientApp\build\static\media\asmr-logo.2cfc3337.webp" />
-      <None Remove="ClientApp\build\static\media\coffee-loading.b331c688.gif" />
-      <None Remove="ClientApp\build\static\media\google-play-button.f902960a.png" />
-      <None Remove="ClientApp\build\static\media\asmr-logo-inverted.f59d0253.webp" />
-      <None Remove="ClientApp\build\static\media\coffee-loading-inverted.72f1d904.gif" />
-      <None Remove="ClientApp\build\static\media\app-store-button.4f1122f8.png" />
-      <None Remove="ClientApp\build\static\media\asmr-logo.5c0e03db.png" />
-    </ItemGroup>
-    <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
-        <!-- Ensure NodeJS is installed -->
-        <Exec Command="node --version" ContinueOnError="true">
-            <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-        </Exec>
-        <!-- Ensure Yarn Package Manager is installed -->
-        <Exec Command="yarn --version" ContinueOnError="true">
-            <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-        </Exec>
-        <Error Condition="'$(ErrorCode)' != '0'" Text="NodeJS and npm is required to build and run this project. To continue, please install NodeJS and YarnPkg, and then restart your command prompt or IDE." />
-        <Message Importance="high" Text="Restoring dependencies using 'node'. This may take several minutes..." />
-        <Exec WorkingDirectory="$(SpaRoot)" Command="yarn install" />
-    </Target>
+	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+		<!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+		<Exec WorkingDirectory="$(SpaRoot)" Command="yarn install" />
+		<Exec WorkingDirectory="$(SpaRoot)" Command="yarn run build" />
 
-    <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-        <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-        <Exec WorkingDirectory="$(SpaRoot)" Command="yarn install" />
-        <Exec WorkingDirectory="$(SpaRoot)" Command="yarn run build" />
-
-        <!-- Include the newly-built files in the publish output -->
-        <ItemGroup>
-            <DistFiles Include="$(SpaRoot)build\**" />
-            <ResolvedFileToPublish Include="@(DistFiles-&gt;'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-                <RelativePath>%(DistFiles.Identity)</RelativePath>
-                <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-                <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-            </ResolvedFileToPublish>
-        </ItemGroup>
-    </Target>
+		<!-- Include the newly-built files in the publish output -->
+		<ItemGroup>
+			<DistFiles Include="$(SpaRoot)build\**" />
+			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+				<RelativePath>%(DistFiles.Identity)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+				<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			</ResolvedFileToPublish>
+		</ItemGroup>
+	</Target>
 
 </Project>

@@ -64,8 +64,7 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception exception)
             {
-                Debug.WriteLine($"[WARN] Exception while checking if AppCenter is enabled {exception.Message} {exception.StackTrace}",
-                    GetType().Name);
+                Debug.WriteLine(exception, GetType().Name);
                 isAppCenterEnabled = false;
             }
             
@@ -89,10 +88,10 @@ namespace ASMR.Mobile.Services
 
         private async Task InitAuthentication()
         {
-            await UpdateUserData();
+            await UpdateUserDataAsync();
         }
 
-        public Task Init()
+        public Task InitAsync()
         {
             return Task.WhenAll(new []{
                 InitAppCenter(),
@@ -100,7 +99,7 @@ namespace ASMR.Mobile.Services
             });
         }
 
-        public async Task<AuthenticationResponseModel> SignIn(string username, string password)
+        public async Task<AuthenticationResponseModel> SignInAsync(string username, string password)
         {
             try
             {
@@ -135,7 +134,7 @@ namespace ASMR.Mobile.Services
             }
         }
 
-        public async Task<AuthenticationResponseModel> SignOut()
+        public async Task<AuthenticationResponseModel> SignOutAsync()
         {
             try
             {
@@ -158,7 +157,7 @@ namespace ASMR.Mobile.Services
             }
         }
 
-        public async Task<AuthenticationResponseModel> UpdateUserData()
+        public async Task<AuthenticationResponseModel> UpdateUserDataAsync()
         {
             try
             {

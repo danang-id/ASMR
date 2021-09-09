@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASMR.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210819201322_CreateInitialSchema")]
+    [Migration("20210907142336_CreateInitialSchema")]
     partial class CreateInitialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -413,6 +413,12 @@ namespace ASMR.Web.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("IsWaitingForApproval")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -450,6 +456,7 @@ namespace ASMR.Web.Data.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
@@ -488,16 +495,11 @@ namespace ASMR.Web.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -768,13 +770,6 @@ namespace ASMR.Web.Data.Migrations
                     b.Navigation("Transaction");
                 });
 
-            modelBuilder.Entity("ASMR.Core.Entities.UserRole", b =>
-                {
-                    b.HasOne("ASMR.Core.Entities.User", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("UserId");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("ASMR.Core.Entities.UserRole", null)
@@ -848,11 +843,6 @@ namespace ASMR.Web.Data.Migrations
             modelBuilder.Entity("ASMR.Core.Entities.Transaction", b =>
                 {
                     b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("ASMR.Core.Entities.User", b =>
-                {
-                    b.Navigation("Roles");
                 });
 #pragma warning restore 612, 618
         }

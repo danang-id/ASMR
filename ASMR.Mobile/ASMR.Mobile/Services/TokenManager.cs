@@ -6,6 +6,8 @@ namespace ASMR.Mobile.Services
 {
     public static class TokenManager
     {
+        private static string _sharedName = "ASMR.Mobile";
+        
         public static Task<string> GetAsync(string name)
         {
             try
@@ -14,7 +16,7 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception)
             {
-                return Task.FromResult(Preferences.Get(name, null));
+                return Task.FromResult(Preferences.Get(name, null, _sharedName));
             }
         }
 
@@ -26,7 +28,7 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception)
             {
-                Preferences.Set(name, value);
+                Preferences.Set(name, value, _sharedName);
                 return Task.CompletedTask;
             }
         }
@@ -39,13 +41,25 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception)
             {
-                var hasToken = Preferences.ContainsKey(name);
+                var hasToken = Preferences.ContainsKey(name, _sharedName);
                 if (hasToken)
                 {
-                    Preferences.Remove(name);
+                    Preferences.Remove(name, _sharedName);
                 }
 
                 return hasToken;
+            }
+        }
+
+        public static void RemoveAll()
+        {
+            try
+            {
+                SecureStorage.RemoveAll();
+            }
+            catch (Exception)
+            {
+                Preferences.Clear(_sharedName);
             }
         }
     }

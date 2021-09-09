@@ -11,13 +11,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using ASMR.Core.Constants;
 using ASMR.Core.Entities;
+using ASMR.Core.Enumerations;
 using ASMR.Core.Generic;
 using ASMR.Core.RequestModel;
 using ASMR.Core.ResponseModel;
+using ASMR.Web.Controllers.Attributes;
 using ASMR.Web.Controllers.Generic;
 using ASMR.Web.Extensions;
 using ASMR.Web.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -40,7 +41,7 @@ namespace ASMR.Web.Controllers.API
             _userService = userService;
         }
 
-        [Authorize(Roles = "Administrator,Server,Roaster")]
+        [AllowAccess(Role.Administrator, Role.Roaster, Role.Server)]
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -69,7 +70,8 @@ namespace ASMR.Web.Controllers.API
             return Ok(new BeanResponseModel(bean));
         }
 
-        [Authorize(Roles = "Administrator,Server")]
+        [AllowAccess(Role.Administrator, Role.Server)]
+        [ClientPlatform(ClientPlatform.Web)]
         [HttpPost, DisableRequestSizeLimit]
         public async Task<IActionResult> Create([FromForm] CreateBeanRequestModel model)
         {
@@ -111,10 +113,14 @@ namespace ASMR.Web.Controllers.API
             });
 
             await _beanService.CommitAsync();
-            return Created(Request.Path, new BeanResponseModel(bean));
+            return Created(Request.Path, new BeanResponseModel(bean)
+            {
+                Message = $"Successfully added bean '{bean.Name}'."
+            });
         }
 
-        [Authorize(Roles = "Administrator,Server")]
+        [AllowAccess(Role.Administrator, Role.Server)]
+        [ClientPlatform(ClientPlatform.Web)]
         [HttpPatch("{id}")]
         public async Task<IActionResult> Modify(string id, [FromForm] UpdateBeanRequestModel model)
         {
@@ -189,10 +195,14 @@ namespace ASMR.Web.Controllers.API
             }
 
             await _beanService.CommitAsync();
-            return Ok(new BeanResponseModel(bean));
+            return Ok(new BeanResponseModel(bean)
+            {
+                Message = $"Successfully modified bean '{bean.Name}'."
+            });
         }
 
-        [Authorize(Roles = "Administrator,Server")]
+        [AllowAccess(Role.Administrator, Role.Server)]
+        [ClientPlatform(ClientPlatform.Web)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Remove(string id)
         {
@@ -218,7 +228,10 @@ namespace ASMR.Web.Controllers.API
             }
 
             await _beanService.CommitAsync();
-            return Ok(new BeanResponseModel(bean));
+            return Ok(new BeanResponseModel(bean)
+            {
+                Message = $"Successfully removed bean '{bean.Name}'."
+            });
         }
     }
 }

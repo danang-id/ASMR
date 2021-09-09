@@ -11,8 +11,10 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ASMR.Common.Threading;
 using ASMR.Core.Entities;
 using ASMR.Core.Enumerations;
+using ASMR.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,15 +24,21 @@ namespace ASMR.Web.Data
 {
     public class SelfMigrator
     {
+        private const string AdministratorId = "07d60e85-2111-43d4-95f3-80864bd71ce5";
+        private const string AdministratorFirstName = "Administrator";
+        private const string AdministratorLastName = "ASMR";
         private const string AdministratorUserName = "admin";
+        private const string AdministratorEmailAddress = "asmr@hamzahjundi.me";
         private const string AdministratorPassword = "@SMR-Adm1n";
         
-        private static async Task<bool> SeedData(ILogger<SelfMigrator> logger,
-            ApplicationDbContext dbContext, 
-            UserManager<User> userManager,
-            RoleManager<UserRole> roleManager,
+        private static async Task<bool> SeedDataAsync(IServiceProvider serviceProvider, ApplicationDbContext dbContext, 
             Configuration configuration)
         {
+            var emailService = serviceProvider.GetRequiredService<IEmailService>();
+            var logger = serviceProvider.GetRequiredService<ILogger<SelfMigrator>>();
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<UserRole>>();
+            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            
             var administratorRole = await roleManager.FindByNameAsync(Role.Administrator.ToString());
             if (administratorRole is null)
             {
@@ -76,18 +84,19 @@ namespace ASMR.Web.Data
                 }
             }
 
-            var administrator = await userManager.FindByNameAsync(AdministratorUserName);
+            var administrator = await userManager.FindByIdAsync(AdministratorId);
             if (administrator is null)
             {
-                var administratorId = Guid.NewGuid().ToString();
                 var mediaFileId = Guid.NewGuid().ToString();
                 administrator = new User
                 {
-                    Id = administratorId,
-                    FirstName = "Admin",
-                    LastName = "ASMR",
-                    Email = "asmr@hamzahjundi.me",
+                    Id = AdministratorId,
+                    FirstName = AdministratorFirstName,
+                    LastName = AdministratorLastName,
+                    Email = AdministratorEmailAddress,
                     EmailConfirmed = true,
+                    IsWaitingForApproval = false,
+                    IsApproved = true,
                     UserName = AdministratorUserName,
                     Image = $"/api/mediafile/{mediaFileId}"
                 };
@@ -97,7 +106,7 @@ namespace ASMR.Web.Data
                     Location = Path.Combine("wwwroot", "images", "DefaultUserImage.png"),
                     Name = "DefaultUserImage.png",
                     MimeType = "image/png",
-                    UserId = administratorId
+                    UserId = AdministratorId
                     
                 };
                 var createUserResult = await userManager.CreateAsync(administrator, AdministratorPassword);
@@ -120,6 +129,22 @@ namespace ASMR.Web.Data
                     return false;
                 }
                 dbContext.MediaFiles.Add(mediaFile);
+
+                administrator = await userManager.FindByIdAsync(AdministratorId);
+                var upsertContactError = await emailService.UpsertContactAsync(administrator);
+                if (upsertContactError is not null)
+                {
+                    logger.LogError(upsertContactError.SendGridErrorMessage);
+                    return false;
+                }
+
+                var welcomeMailError = await emailService.SendWelcomeMailAsync(administrator,
+                    Role.Administrator.ToString());
+                if (welcomeMailError is not null)
+                {
+                    logger.LogError(welcomeMailError.SendGridErrorMessage);
+                    return false;
+                }
             }
 
             if (configuration is null)
@@ -141,28 +166,30 @@ namespace ASMR.Web.Data
             return true;
         }
 
-        public static async Task<bool> Migrate(IServiceProvider serviceProvider)
+        public static async Task<bool> MigrateAsync(IServiceProvider serviceProvider)
         {
             await using var dbContext = serviceProvider.GetRequiredService<ApplicationDbContext>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<UserRole>>();
-            var logger = serviceProvider.GetRequiredService<ILogger<SelfMigrator>>();
-
             await dbContext.Database.MigrateAsync();
 
             var configuration = dbContext.Configurations
                 .FirstOrDefault(entity => entity.Key == ConfigurationKey.DataSeedDone);
             if (configuration is null)
             {
-                return await SeedData(logger, dbContext, userManager, roleManager, null);
+                return await SeedDataAsync(serviceProvider, dbContext, null);
             }
 
             if (configuration.Value != true.ToString())
             {
-                return await SeedData(logger, dbContext, userManager, roleManager, configuration);
+                return await SeedDataAsync(serviceProvider, dbContext, configuration);
             }
 
             return true;
+        }
+
+        public static bool Migrate(IServiceProvider serviceProvider)
+        {
+            Task<bool> InnerMigrateAsync() => MigrateAsync(serviceProvider);
+            return TaskHelpers.RunSync(InnerMigrateAsync);
         }
     }
 }

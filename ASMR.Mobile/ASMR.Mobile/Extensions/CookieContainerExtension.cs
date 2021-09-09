@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -22,19 +23,38 @@ namespace ASMR.Mobile.Extensions
 			if (removeStorage)
             {
 				TokenManager.Remove(name);
+				Debug.WriteLine($"Cookie {name}: Removed from Token Manager",
+					nameof(CookieContainerExtension));
+				return;
             }
-			else
-            {
+
+			var currentValue = await TokenManager.GetAsync(name);
+			if (currentValue != cookie.Value)
+			{
 				await TokenManager.SetAsync(name, cookie.Value);
+				Debug.WriteLine($"Cookie {name}: Written to Token Manager\n" +
+				                $"\tValue: {cookie.Value}", nameof(CookieContainerExtension));
 			}
 		}
 		private static async Task<Cookie> RetrieveCookieFromStorage(string name)
 		{
 			var value = await TokenManager.GetAsync(name);
 
+			Debug.WriteLineIf(!string.IsNullOrEmpty(value), 
+				$"Cookie {name}: Read from Token Manager\n" +
+				$"\tValue: {value}",
+				nameof(CookieContainerExtension));
+			
 			return !string.IsNullOrEmpty(value) ? new Cookie(name, value) : null;
 		}
-		
+
+		public static void Clear(this CookieContainer cookieContainer, Uri uri)
+		{
+			foreach (var cookie in cookieContainer.GetCookies(uri).Cast<Cookie>())
+			{
+				cookie.Expired = true;
+			}
+		}
 		public static async Task AddApplicationTokens(this CookieContainer cookieContainer, Uri uri)
 		{
 			var authToken = await RetrieveCookieFromStorage(AuthenticationConstants.CookieName);
@@ -56,7 +76,8 @@ namespace ASMR.Mobile.Extensions
 		}
 		public static async Task SaveApplicationTokens(this CookieContainer cookieContainer, Uri uri)
 		{
-			var cookies = cookieContainer.GetCookies(uri).Cast<Cookie>().ToList();
+			var cookies = cookieContainer.GetCookies(uri).Cast<Cookie>()
+				.AsQueryable();
 
 			await cookies.SaveCookieIfExistsToStorage(AuthenticationConstants.CookieName);
 			await cookies.SaveCookieIfExistsToStorage(AntiforgeryConstants.CookieName);

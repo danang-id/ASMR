@@ -48,7 +48,7 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 	}
 
 	function renderRolesAssignment(role: string, index: number): JSX.Element | null {
-		if (typeof Role[Number(role)] !== "string" || (Number(role) === Role.Administrator && !isAdministrator)) {
+		if (typeof Role[Number(role)] !== "string" || Number(role) === Role.Administrator) {
 			return null
 		}
 
@@ -84,7 +84,7 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 	}, [show, user])
 
 	return (
-		<Modal onClose={onClose} show={show} title={`Modify ${user?.firstName ?? ""} ${user?.lastName ?? ""}'s Profile`}>
+		<Modal onClose={onClose} show={show} title={`Profile: ${user?.firstName ?? ""} ${user?.lastName ?? ""}`}>
 			<Modal.Body>
 				<Form className="modal-form">
 					<div className="form-row">
@@ -113,11 +113,19 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 					</div>
 					<div className="form-row">
 						<label className="form-field">Roles</label>
-						<div className="form-data role-checkboxes">
-							{
-								Object.keys(Role).map(renderRolesAssignment)
-							}
-						</div>
+						{
+							isAdministrator ? (
+								<div className="form-data">
+									<Form.Input disabled value={Role[Role.Administrator]} />
+								</div>
+							) : (
+								<div className="form-data role-checkboxes">
+									{
+										Object.keys(Role).map(renderRolesAssignment)
+									}
+								</div>
+							)
+						}
 					</div>
 				</Form>
 			</Modal.Body>

@@ -1,4 +1,7 @@
-﻿using ASMR.Mobile.Services;
+﻿using ASMR.Common.Net.Http;
+using ASMR.Mobile.Common;
+using ASMR.Mobile.Extensions;
+using ASMR.Mobile.Services;
 using ASMR.Mobile.Services.Abstraction;
 using ASMR.Mobile.Services.BackEnd;
 using ASMR.Mobile.Services.Logging;
@@ -24,8 +27,9 @@ namespace ASMR.Mobile
             MainPage = new AppShell();
         }
 
-        protected override void OnStart()
+        protected override async void OnStart()
         {
+	        await NativeHttpClient.CookieContainer.AddApplicationTokens(BackEndUrl.BaseAddress);
             AppCenter.Start($"android={AppSettingsManager.Settings.AppCenter.SecretKeys.Android};" +
                             $"ios={AppSettingsManager.Settings.AppCenter.SecretKeys.iOS};",
                 typeof(Analytics), typeof(Crashes));
@@ -38,7 +42,7 @@ namespace ASMR.Mobile
             applicationState.LogLevel = LogLevel.Information;
 #endif
 
-            applicationState.Init();
+            await applicationState.InitAsync();
         }
 
         protected override void OnSleep()

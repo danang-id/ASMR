@@ -117,16 +117,13 @@ function BeansManagementPage(): JSX.Element {
 		try {
 			const result = await services.bean.create(requestModel, imageFile)
 			if (result.isSuccess) {
-				if (result.data) {
-					const newGreenBean = result.data
-					notification.success(`Successfully added ${newGreenBean.name} as new bean.`)
-				}
+				notification.success(result.message)
 				await Promise.all([retrieveAllGreenBeans(), onCloseModals()])
 			}
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
@@ -138,16 +135,13 @@ function BeansManagementPage(): JSX.Element {
 		try {
 			const result = await services.bean.modify(selectedBean.id, requestModel, imageFile)
 			if (result.isSuccess) {
-				if (result.data) {
-					const modifiedGreenBean = result.data
-					notification.success(`Successfully updated ${modifiedGreenBean.name}.`)
-				}
+				notification.success(result.message)
 				await Promise.all([retrieveAllGreenBeans(), onCloseModals()])
 			}
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
@@ -159,16 +153,13 @@ function BeansManagementPage(): JSX.Element {
 		try {
 			const result = await services.bean.remove(selectedBean.id)
 			if (result.isSuccess) {
-				if (result.data) {
-					const removedGreenBean = result.data
-					notification.success(`Successfully removed ${removedGreenBean.name}.`)
-				}
+				notification.success(result.message)
 				await Promise.all([retrieveAllGreenBeans(), onCloseModals()])
 			}
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
@@ -181,7 +172,7 @@ function BeansManagementPage(): JSX.Element {
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 

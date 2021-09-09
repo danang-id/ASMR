@@ -1,5 +1,4 @@
 import { useState } from "react"
-import { useHistory } from "react-router-dom"
 import {
 	IoAddCircleOutline,
 	IoCreateOutline,
@@ -15,8 +14,8 @@ import UserImage from "@asmr/components/UserImage"
 import Role from "@asmr/data/enumerations/Role"
 import User from "@asmr/data/models/User"
 import CreateUserRequestModel from "@asmr/data/request/CreateUserRequestModel"
-import UpdateUserPasswordRequestModel from "@asmr/data/request/UpdateUserPasswordRequestModel"
 import UpdateUserRequestModel from "@asmr/data/request/UpdateUserRequestModel"
+import ApproveRegistrationRequestModel from "@asmr/data/request/ApproveRegistrationRequestModel"
 import DashboardLayout from "@asmr/layouts/DashboardLayout"
 import lazy from "@asmr/libs/common/lazy"
 import { singleSwitchToggle } from "@asmr/libs/common/toggle"
@@ -28,14 +27,15 @@ import useLogger from "@asmr/libs/hooks/loggerHook"
 import useNotification from "@asmr/libs/hooks/notificationHook"
 import useProgress from "@asmr/libs/hooks/progressHook"
 import useServices from "@asmr/libs/hooks/servicesHook"
-import AuthenticationRoutes from "@asmr/pages/Authentication/AuthenticationRoutes"
 import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementPage.scoped.css"
 
 const UserCreateModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserCreateModal"))
 const UserUpdateModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserUpdateModal"))
 const UserUpdateImageModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserUpdateImageModal"))
-const UserUpdatePasswordModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserUpdatePasswordModal"))
+const UserResetPasswordModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserResetPasswordModal"))
 const UserRemoveModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserRemoveModal"))
+const RegistrationApproveModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/RegistrationApproveModal"))
+const RegistrationRejectModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/RegistrationRejectModal"))
 
 function UsersManagementPage(): JSX.Element {
 	useDocumentTitle("Manage Users")
@@ -45,11 +45,12 @@ function UsersManagementPage(): JSX.Element {
 	const [userCreateModalShown, setUserCreateModalShown] = useState(false)
 	const [userUpdateModalShown, setUserUpdateModalShown] = useState(false)
 	const [userUpdateImageModalShown, setUserUpdateImageModalShown] = useState(false)
-	const [userUpdatePasswordModalShown, setUserUpdatePasswordModalShown] = useState(false)
+	const [userUpdatePasswordModalShown, setUserResetPasswordModalShown] = useState(false)
 	const [userRemoveModalShown, setUserRemoveModalShown] = useState(false)
+	const [registrationApproveModalShown, setRegistrationApproveModalShown] = useState(false)
+	const [registrationRejectModalShown, setRegistrationRejectModalShown] = useState(false)
 	const authentication = useAuthentication()
 	const breakpoint = useBreakpoint()
-	const history = useHistory()
 	const logger = useLogger(UsersManagementPage)
 	const notification = useNotification()
 	const [progress] = useProgress()
@@ -61,42 +62,97 @@ function UsersManagementPage(): JSX.Element {
 
 	async function onCloseModals() {
 		await singleSwitchToggle(undefined, [
-			setUserCreateModalShown, setUserUpdateModalShown, setUserUpdateImageModalShown, setUserUpdatePasswordModalShown, setUserRemoveModalShown
+			setUserCreateModalShown,
+			setUserUpdateModalShown,
+			setUserUpdateImageModalShown,
+			setUserResetPasswordModalShown,
+			setUserRemoveModalShown,
+			setRegistrationApproveModalShown,
+			setRegistrationRejectModalShown
 		])
 		setSelectedUser(null)
 	}
 
 	async function onShowCreateUserModalButtonClicked() {
 		await singleSwitchToggle(setUserCreateModalShown, [
-			setUserUpdateModalShown, setUserUpdateImageModalShown, setUserUpdatePasswordModalShown, setUserRemoveModalShown
+			setUserUpdateModalShown,
+			setUserUpdateImageModalShown,
+			setUserResetPasswordModalShown,
+			setUserRemoveModalShown,
+			setRegistrationApproveModalShown,
+			setRegistrationRejectModalShown
 		])
 	}
 
 	async function onShowUpdateUserModalButtonClicked(user: User) {
 		setSelectedUser(user)
 		await singleSwitchToggle(setUserUpdateModalShown, [
-			setUserCreateModalShown, setUserUpdateImageModalShown, setUserUpdatePasswordModalShown, setUserRemoveModalShown
+			setUserCreateModalShown,
+			setUserUpdateImageModalShown,
+			setUserResetPasswordModalShown,
+			setUserRemoveModalShown,
+			setRegistrationApproveModalShown,
+			setRegistrationRejectModalShown
 		])
 	}
 
 	async function onShowUpdateUserImageModalButtonClicked(user: User) {
 		setSelectedUser(user)
 		await singleSwitchToggle(setUserUpdateImageModalShown, [
-			setUserCreateModalShown, setUserUpdateModalShown, setUserUpdatePasswordModalShown, setUserRemoveModalShown
+			setUserCreateModalShown,
+			setUserUpdateModalShown,
+			setUserResetPasswordModalShown,
+			setUserRemoveModalShown,
+			setRegistrationApproveModalShown,
+			setRegistrationRejectModalShown
 		])
 	}
 
-	async function onShowUpdateUserPasswordModalButtonClicked(user: User) {
+	async function onShowResetUserPasswordModalButtonClicked(user: User) {
 		setSelectedUser(user)
-		await singleSwitchToggle(setUserUpdatePasswordModalShown, [
-			setUserCreateModalShown, setUserUpdateModalShown, setUserUpdateImageModalShown, setUserRemoveModalShown
+		await singleSwitchToggle(setUserResetPasswordModalShown, [
+			setUserCreateModalShown,
+			setUserUpdateModalShown,
+			setUserUpdateImageModalShown,
+			setUserRemoveModalShown,
+			setRegistrationApproveModalShown,
+			setRegistrationRejectModalShown
 		])
 	}
 
 	async function onShowRemoveUserModalButtonClicked(user: User) {
 		setSelectedUser(user)
 		await singleSwitchToggle(setUserRemoveModalShown, [
-			setUserCreateModalShown, setUserUpdateModalShown, setUserUpdatePasswordModalShown, setUserUpdateImageModalShown
+			setUserCreateModalShown,
+			setUserUpdateModalShown,
+			setUserResetPasswordModalShown,
+			setUserUpdateImageModalShown,
+			setRegistrationApproveModalShown,
+			setRegistrationRejectModalShown
+		])
+	}
+
+	async function onShowApproveRegistrationModalButtonClicked(user: User) {
+		setSelectedUser(user)
+		await singleSwitchToggle(setRegistrationApproveModalShown, [
+			setUserCreateModalShown,
+			setUserUpdateModalShown,
+			setUserResetPasswordModalShown,
+			setUserUpdateImageModalShown,
+			setUserRemoveModalShown,
+			setRegistrationRejectModalShown
+		])
+	}
+
+	async function onShowRejectRegistrationModalButtonClicked(user: User) {
+		setSelectedUser(user)
+		await singleSwitchToggle(setRegistrationRejectModalShown, [
+			setUserCreateModalShown,
+			setUserUpdateModalShown,
+			setUserResetPasswordModalShown,
+			setUserUpdateImageModalShown,
+			setUserRemoveModalShown,
+			setRegistrationApproveModalShown
 		])
 	}
 
@@ -108,16 +164,13 @@ function UsersManagementPage(): JSX.Element {
 		try {
 			const result = await services.user.create(requestModel, imageFile)
 			if (result.isSuccess) {
-				if (result.data) {
-					const newUser = result.data
-					notification.success(`Successfully added ${newUser.firstName} ${newUser.lastName} as new user.`)
-				}
+				notification.success(result.message)
 				await Promise.all([retrieveAllUsers(), onCloseModals()])
 			}
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
@@ -129,42 +182,31 @@ function UsersManagementPage(): JSX.Element {
 		try {
 			const result = await services.user.modify(selectedUser.id, requestModel, imageFile)
 			if (result.isSuccess) {
-				if (result.data) {
-					const modifiedUser = result.data
-					notification.success(`Successfully saved profile information of ${modifiedUser.firstName} ${modifiedUser.lastName}.`)
-				}
+				notification.success(result.message)
 				await Promise.all([retrieveAllUsers(), onCloseModals(), authentication.updateUserData()])
 			}
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
-	async function updateUserPassword(requestModel: UpdateUserPasswordRequestModel) {
-		if (!selectedUser || !requestModel) {
+	async function resetUserPassword() {
+		if (!selectedUser) {
 			return
 		}
 
 		try {
-			const result = await services.user.modifyPassword(selectedUser.id, requestModel)
+			const result = await services.user.resetPassword(selectedUser.id)
 			if (result.isSuccess) {
-				if (result.data) {
-					const modifiedUser = result.data
-					notification.success(`Successfully changed password for ${modifiedUser.firstName} ${modifiedUser.lastName}.`)
-
-					if (modifiedUser.id === authentication.user?.id) {
-						history.push(AuthenticationRoutes.SignOutPage)
-						notification.info("Your password has been changed. Please sign-in again.")
-					}
-				}
+				notification.success(result.message)
 				await Promise.all([retrieveAllUsers(), onCloseModals()])
 			}
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
@@ -176,17 +218,49 @@ function UsersManagementPage(): JSX.Element {
 		try {
 			const result = await services.user.remove(selectedUser.id)
 			if (result.isSuccess) {
-				if (result.data) {
-					const removedUser = result.data
-					notification.success(
-						`Successfully removed ${removedUser.firstName} ${removedUser.lastName} [${removedUser.username}].`)
-				}
+				notification.success(result.message)
 				await Promise.all([retrieveAllUsers(), onCloseModals()])
 			}
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
+		}
+	}
+
+	async function approveRegistration(requestModel: ApproveRegistrationRequestModel) {
+		if (!selectedUser) {
+			return
+		}
+
+		try {
+			const result = await services.user.approve(selectedUser.id, requestModel)
+			if (result.isSuccess) {
+				notification.success(result.message)
+				await Promise.all([retrieveAllUsers(), onCloseModals()])
+			}
+
+			services.handleErrors(result.errors, notification, logger)
+		} catch (error) {
+			services.handleError(error as Error, notification, logger)
+		}
+	}
+
+	async function rejectRegistration() {
+		if (!selectedUser) {
+			return
+		}
+
+		try {
+			const result = await services.user.reject(selectedUser.id)
+			if (result.isSuccess) {
+				notification.success(result.message)
+				await Promise.all([retrieveAllUsers(), onCloseModals()])
+			}
+
+			services.handleErrors(result.errors, notification, logger)
+		} catch (error) {
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
@@ -210,7 +284,7 @@ function UsersManagementPage(): JSX.Element {
 
 			services.handleErrors(result.errors, notification, logger)
 		} catch (error) {
-			services.handleError(error, notification, logger)
+			services.handleError(error as Error, notification, logger)
 		}
 	}
 
@@ -220,13 +294,39 @@ function UsersManagementPage(): JSX.Element {
 			.map(userRole => Role[userRole.role])
 
 		function ManagementActions() {
+			if (!user.isEmailConfirmed) {
+				return <></>
+			}
+
+			if (user.isWaitingForApproval) {
+				return <>
+					<Button disabled={progress.loading} key={0} icon={IoCreateOutline} size="xs" style="outline"
+							onClick={() => onShowRejectRegistrationModalButtonClicked(user)}>Reject</Button>
+					<Button disabled={progress.loading} key={1} icon={IoCreateOutline} size="xs" style="filled"
+							onClick={() => onShowApproveRegistrationModalButtonClicked(user)}>Approve</Button>
+				</>
+			}
+
+			if (!user.isApproved) {
+				return <>
+					<Button disabled={progress.loading} key={0} icon={IoCreateOutline} size="xs" style="filled"
+							onClick={() => onShowApproveRegistrationModalButtonClicked(user)}>Approve</Button>
+					{
+						(user.id !== authentication.user?.id) && (
+							<Button disabled={progress.loading} key={1} icon={IoTrashOutline} size="xs" style="danger"
+									onClick={() => onShowRemoveUserModalButtonClicked(user)}>Remove</Button>
+						)
+					}
+				</>
+			}
+
 			return <>
 				<Button disabled={progress.loading} key={0} icon={IoCreateOutline} size="xs" style="outline"
 						onClick={() => onShowUpdateUserModalButtonClicked(user)}>Modify</Button>
 				<Button disabled={progress.loading} key={1} icon={IoImageOutline} size="xs" style="outline"
 						onClick={() => onShowUpdateUserImageModalButtonClicked(user)}>Change Image</Button>
 				<Button disabled={progress.loading} key={2} icon={IoKeyOutline} size="xs" style="outline"
-						onClick={() => onShowUpdateUserPasswordModalButtonClicked(user)}>Change Password</Button>
+						onClick={() => onShowResetUserPasswordModalButtonClicked(user)}>Reset Password</Button>
 				{
 					(user.id !== authentication.user?.id) && (
 						<Button disabled={progress.loading} key={3} icon={IoTrashOutline} size="xs" style="danger"
@@ -238,6 +338,20 @@ function UsersManagementPage(): JSX.Element {
 
 		function renderRole(role: string, index: number) {
 			return <span key={index} className="role">&nbsp;{role}&nbsp;</span>
+		}
+
+		function renderUserRole() {
+			if (!user.isEmailConfirmed) {
+				return <span className="approval approval-email">Email Not Confirmed</span>
+			}
+
+			return !user.isWaitingForApproval ? (
+				user.isApproved ? roles.map(renderRole) : (
+					<span className="approval approval-rejected">Registration Rejected</span>
+				)
+			) : (
+				<span className="approval approval-waiting">Waiting for Approval</span>
+			)
 		}
 
 		return (
@@ -255,7 +369,7 @@ function UsersManagementPage(): JSX.Element {
 					</div>
 					<BreakpointRenderer max="md">
 						<div className="user-roles">
-							{roles.map(renderRole)}
+							{renderUserRole()}
 						</div>
 						<div className="management-actions">
 							<ManagementActions />
@@ -265,7 +379,7 @@ function UsersManagementPage(): JSX.Element {
 				<BreakpointRenderer min="lg">
 					<Table.DataCell>
 						<div className="user-roles">
-							{roles.map(renderRole)}
+							{renderUserRole()}
 						</div>
 					</Table.DataCell>
 					<Table.DataCell>
@@ -297,7 +411,7 @@ function UsersManagementPage(): JSX.Element {
 									{ breakpoint.includes("lg") ? "Name" : "Information" }
 								</Table.DataCell>
 								<BreakpointRenderer min="lg">
-									<Table.DataCell head>Assigned Roles</Table.DataCell>
+									<Table.DataCell head>Status / Assigned Roles</Table.DataCell>
 									<Table.DataCell head>&nbsp;</Table.DataCell>
 								</BreakpointRenderer>
 							</Table.Row>
@@ -318,8 +432,10 @@ function UsersManagementPage(): JSX.Element {
 			<UserCreateModal onClose={onCloseModals} onCreateUser={createUser} progress={progress} show={userCreateModalShown} />
 			<UserUpdateModal onClose={onCloseModals} onUpdateUser={updateUser} progress={progress} show={userUpdateModalShown} user={selectedUser} />
 			<UserUpdateImageModal onClose={onCloseModals} onUpdateUser={updateUser} progress={progress} show={userUpdateImageModalShown} user={selectedUser} />
-			<UserUpdatePasswordModal onClose={onCloseModals} onUpdateUserPassword={updateUserPassword} progress={progress} show={userUpdatePasswordModalShown} user={selectedUser}  />
+			<UserResetPasswordModal onClose={onCloseModals} onResetUserPassword={resetUserPassword} progress={progress} show={userUpdatePasswordModalShown} user={selectedUser}  />
 			<UserRemoveModal onClose={onCloseModals} onRemoveUser={removeUser} progress={progress} show={userRemoveModalShown} user={selectedUser} />
+			<RegistrationApproveModal onClose={onCloseModals} onApproveRegistration={approveRegistration} progress={progress} show={registrationApproveModalShown}  user={selectedUser} />
+			<RegistrationRejectModal onClose={onCloseModals} onRejectRegistration={rejectRegistration} progress={progress} show={registrationRejectModalShown}  user={selectedUser} />
 		</DashboardLayout>
 	)
 }
