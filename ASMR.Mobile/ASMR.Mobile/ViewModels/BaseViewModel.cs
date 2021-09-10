@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using ASMR.Mobile.Common.Abstractions;
 using ASMR.Mobile.Services.Abstraction;
-using ASMR.Mobile.Services.BackEnd;
 using Xamarin.Forms;
 
 namespace ASMR.Mobile.ViewModels
@@ -13,8 +13,12 @@ namespace ASMR.Mobile.ViewModels
     {
         protected static IApplicationState ApplicationState => DependencyService.Get<IApplicationState>();
         protected static ILogging Logging => DependencyService.Get<ILogging>();
+        protected static IAlertHandler AlertHandler => DependencyService.Get<IAlertHandler>();
         protected static IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
-        protected static IAuthenticationService AuthenticationService => DependencyService.Get<IAuthenticationService>();
+        protected static IBeanService BeanService => DependencyService.Get<IBeanService>();
+        protected static IGateService GateService => DependencyService.Get<IGateService>();
+        protected static IProductionService ProductionService => DependencyService.Get<IProductionService>();
+        protected static IProductService ProductService => DependencyService.Get<IProductService>();
         protected static IStatusService StatusService => DependencyService.Get<IStatusService>();
 
         private bool _isBusy;

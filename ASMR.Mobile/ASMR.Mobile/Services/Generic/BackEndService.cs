@@ -1,42 +1,46 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ASMR.Common.Net.Http;
-using ASMR.Mobile.Common;
+using ASMR.Core.Constants;
+using ASMR.Core.Generic;
+using ASMR.Mobile.Common.Net;
 using ASMR.Mobile.Extensions;
+using ASMR.Mobile.Services.Abstraction;
 using Flurl;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 
-namespace ASMR.Mobile.Services.BackEnd
+namespace ASMR.Mobile.Services.Generic
 {
-	public class BackEndService 
+	public class BackEndService : IHttpService
 	{
-		private static readonly NativeHttpClient HttpClient = new ();
+		private static readonly NativeHttpClient HttpClient = new();
+		private readonly string _pathSegment;
 
 		protected BackEndService()
 		{
-		}
-		
-		protected static Task<HttpContent> GenerateHttpContentAsync<TRequest>(TRequest requestContent)
-			where TRequest : class
-		{
-			return Task.FromResult<HttpContent>(requestContent is not null 
-				? new JsonContent<TRequest>(requestContent) 
-				: null);
+			_pathSegment = string.Empty;
 		}
 
-		private static async Task<HttpRequestMessage> GenerateHttpRequestMessageAsync(HttpMethod method, 
+		protected BackEndService(string pathSegment)
+		{
+			_pathSegment = pathSegment;
+		}
+
+		protected static async Task<HttpRequestMessage> GenerateHttpRequestMessageAsync(HttpMethod method, 
 			string endpoint, HttpContent httpContent, 
-			string acceptMimeType = "application/json",
+			IEnumerable<MediaTypeWithQualityHeaderValue> accepts = null,
 			bool addApplicationTokens = true,
 			bool addClientInformation = true,
 			IDictionary<string, IEnumerable<string>> headers = null,
 			QueryParamCollection queryParams = null)
 		{
+			accepts ??= new[] { new MediaTypeWithQualityHeaderValue("application/json") };
 			headers ??= new Dictionary<string, IEnumerable<string>>();
 			queryParams ??= new QueryParamCollection();
 			
@@ -45,19 +49,27 @@ namespace ASMR.Mobile.Services.BackEnd
 				queryParams.Add("clientPlatform", Device.RuntimePlatform);
 				queryParams.Add("clientVersion", VersionTracking.CurrentVersion);
 			}
+
+			foreach (var (name, value) in Url.ParseQueryParams(endpoint))
+			{
+				queryParams.Add(name, value);
+			}
 			
 			var requestUri = new BackEndUrl()
-				.AppendPathSegments("api", Url.ParsePathSegments(endpoint))
+				.AppendPathSegment("api")
+				.AppendPathSegments(Url.ParsePathSegments(endpoint))
 				.SetQueryParams(queryParams)
 				.ToUri();
 			var httpRequestMessage = new HttpRequestMessage(method, requestUri);
-			
 			httpRequestMessage.Content = httpContent;
-			httpRequestMessage.Headers.Accept
-				.Add(new MediaTypeWithQualityHeaderValue(acceptMimeType));
 			if (addApplicationTokens)
 			{
 				await httpRequestMessage.Headers.AddApplicationTokens();
+			}
+
+			foreach (var accept in accepts)
+			{
+				httpRequestMessage.Headers.Accept.Add(accept);
 			}
 
 			foreach (var (key, value) in headers)
@@ -70,8 +82,13 @@ namespace ASMR.Mobile.Services.BackEnd
 		
 		private static async Task ResetClientAsync()
 		{
-			NativeHttpClient.CookieContainer.Clear(BackEndUrl.BaseAddress);
-			await NativeHttpClient.CookieContainer.AddApplicationTokens(BackEndUrl.BaseAddress);
+			NativeHttpClient.CookieContainer.Clear(BackEndUrl.BaseUri);
+			await NativeHttpClient.CookieContainer.AddApplicationTokens(BackEndUrl.BaseUri);
+		}
+
+		protected Url GetServiceEndpoint()
+		{
+			return string.IsNullOrEmpty(_pathSegment) ? new Url() : new Url().AppendPathSegment(_pathSegment);
 		}
 		
 		protected virtual Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string endpoint) 
@@ -87,45 +104,55 @@ namespace ASMR.Mobile.Services.BackEnd
 			return RequestAsync<TResponse, object>(method, endpoint, requestContent);
 		}
 
-		protected virtual async Task<TResponse> RequestAsync<TResponse, TRequest>(HttpMethod method, string endpoint, 
+		protected virtual Task<TResponse> RequestAsync<TResponse, TRequest>(HttpMethod method, string endpoint, 
 			TRequest requestContent)
 			where TResponse : class
 			where TRequest : class
 		{
-			var httpContent = await GenerateHttpContentAsync(requestContent);
-			return await RequestAsync<TResponse>(method, endpoint, httpContent);
+			var httpContent = requestContent is not null ? new JsonContent<TRequest>(requestContent) : null;
+			return RequestAsync<TResponse>(method, endpoint, httpContent);
 		}
 		
-		protected virtual async Task<TResponse> RequestAsync<TResponse, TRequest>(HttpMethod method, string endpoint, 
+		protected virtual async Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string endpoint, 
 			HttpContent httpContent)
 			where TResponse : class
-			where TRequest : class
 		{
 			var httpMessageRequest = await GenerateHttpRequestMessageAsync(method, endpoint, httpContent);
 			return await RequestAsync<TResponse>(method, endpoint, httpMessageRequest);
 		}
 
 		protected virtual async Task<TResponse> RequestAsync<TResponse>(HttpMethod method, string endpoint, 
-			HttpRequestMessage httpRequestMessage) 
+			HttpRequestMessage httpRequestMessage)
 			where TResponse : class
 		{
+			var debugMessage = $"{method} {endpoint}\n";
 			try
 			{
-				Debug.WriteLine($"{nameof(NativeHttpClient)}: Request Started", GetType().Name);
 				await ResetClientAsync();
 				
 				using var httpResponseMessage = await HttpClient.SendAsync(httpRequestMessage);
-				await httpResponseMessage.SaveApplicationTokens();
+				await httpResponseMessage.GetCookieCollection().SaveApplicationTokens();
+
+				var responseContentBytes = await httpResponseMessage.Content.ReadAsByteArrayAsync();
+				var response = responseContentBytes.DeserializeAsync<TResponse>();
+				var defaultResponse = responseContentBytes.DeserializeAsync<DefaultResponseModel>();
 				
-				var response = await httpResponseMessage.ToResponseModel<TResponse>();
-				Debug.WriteLine($"{method} {endpoint}: {response}", GetType().Name);
-				
+				if (defaultResponse.Errors is not null && 
+				    defaultResponse.Errors.Any(error => error.Code == ErrorCodeConstants.InvalidAntiforgeryToken))
+				{
+					debugMessage = $"{debugMessage}\tInvalid antiforgery token, should be fine to resend request.";
+					Debug.WriteLine(debugMessage, GetType().Name);
+					throw new Exception("Something went wrong, please try again.");
+				}
+
+				debugMessage = $"{debugMessage}{response.ToJsonString()}";
+				Debug.WriteLine(debugMessage, GetType().Name);
 				return response;
 			}
 			catch (Exception exception)
 			{
 				Debug.WriteLine(exception, GetType().Name);
-				return exception.ToResponseModel<TResponse>();
+				return exception.Cast<TResponse>();
 			}
 		}
 		

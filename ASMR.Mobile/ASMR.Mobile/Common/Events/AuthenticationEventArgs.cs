@@ -1,7 +1,7 @@
 ﻿using System;
 using ASMR.Core.Entities;
 
-namespace ASMR.Mobile.Services.Events
+namespace ASMR.Mobile.Common.Events
 {
     public class AuthenticationEventArgs : EventArgs
     {

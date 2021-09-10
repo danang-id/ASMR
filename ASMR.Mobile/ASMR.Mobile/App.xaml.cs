@@ -1,15 +1,16 @@
 ﻿using ASMR.Common.Net.Http;
 using ASMR.Mobile.Common;
+using ASMR.Mobile.Common.Abstractions;
+using ASMR.Mobile.Common.Logging;
+using ASMR.Mobile.Common.Net;
 using ASMR.Mobile.Extensions;
 using ASMR.Mobile.Services;
 using ASMR.Mobile.Services.Abstraction;
-using ASMR.Mobile.Services.BackEnd;
-using ASMR.Mobile.Services.Logging;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Xamarin.Forms;
-using LogLevel = ASMR.Mobile.Services.Logging.LogLevel;
+using LogLevel = ASMR.Mobile.Common.Logging.LogLevel;
 
 namespace ASMR.Mobile
 {
@@ -22,14 +23,17 @@ namespace ASMR.Mobile
             DependencyService.Register<IApplicationState, ApplicationState>();
             DependencyService.Register<ILogging, Logging>();
             DependencyService.Register<MockDataStore>();
-            DependencyService.Register<IAuthenticationService, AuthenticationService>();
+            DependencyService.Register<IBeanService, BeanService>();
+            DependencyService.Register<IGateService, GateService>();
+            DependencyService.Register<IProductionService, ProductionService>();
+            DependencyService.Register<IProductService, ProductService>();
             DependencyService.Register<IStatusService, StatusService>();
             MainPage = new AppShell();
         }
 
         protected override async void OnStart()
         {
-	        await NativeHttpClient.CookieContainer.AddApplicationTokens(BackEndUrl.BaseAddress);
+	        await NativeHttpClient.CookieContainer.AddApplicationTokens(BackEndUrl.BaseUri);
             AppCenter.Start($"android={AppSettingsManager.Settings.AppCenter.SecretKeys.Android};" +
                             $"ios={AppSettingsManager.Settings.AppCenter.SecretKeys.iOS};",
                 typeof(Analytics), typeof(Crashes));

@@ -8,23 +8,24 @@ using ASMR.Core.Entities;
 using ASMR.Core.Enumerations;
 using ASMR.Core.RequestModel;
 using ASMR.Core.ResponseModel;
-using ASMR.Mobile.Common;
+using ASMR.Mobile.Common.Abstractions;
+using ASMR.Mobile.Common.Events;
+using ASMR.Mobile.Common.Security;
 using ASMR.Mobile.Extensions;
 using ASMR.Mobile.Services.Abstraction;
-using ASMR.Mobile.Services.BackEnd;
-using ASMR.Mobile.Services.Events;
 using Microsoft.AppCenter;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+using LogLevel = ASMR.Mobile.Common.Logging.LogLevel;
 
-namespace ASMR.Mobile.Services
+namespace ASMR.Mobile.Common
 {
 	public class ApplicationState : IApplicationState
 	{
-        private static IAuthenticationService AuthenticationService =>
-            DependencyService.Get<IAuthenticationService>();
+        private static IGateService GateService =>
+            DependencyService.Get<IGateService>();
 
         private NormalizedUser _user;
 
@@ -32,43 +33,40 @@ namespace ASMR.Mobile.Services
         public ApplicationState()
         {
             InstallId = Guid.Empty;
-            LogLevel = Logging.LogLevel.None;
+            LogLevel = LogLevel.None;
         }
 
 
         private async Task<bool> IsAppCenterEnabled()
         {
-            var isAppCenterEnabled = true;
             try
             {
-                if (Connectivity.NetworkAccess == NetworkAccess.Internet)
+                if (Connectivity.NetworkAccess != NetworkAccess.Internet)
                 {
-                    var isAnalyticsEnabled = await Analytics.IsEnabledAsync();
-                    if (!isAnalyticsEnabled)
-                    {
-                        Debug.WriteLine("[WARN] AppCenter Analytics is not available", GetType().Name);
-                        isAppCenterEnabled = false;
-                    }
+                    return false;
+                }
+                
+                if (!await Analytics.IsEnabledAsync())
+                {
+                    Debug.WriteLine("[WARN] AppCenter Analytics is not available", 
+                        GetType().Name);
+                    return false;
+                }
  
-                    var isCrashEnabled = await Crashes.IsEnabledAsync();
-                    if (!isCrashEnabled)
-                    {
-                        Debug.WriteLine("[WARN] AppCenter Crash Reporting is not available.", GetType().Name);
-                        isAppCenterEnabled = false;
-                    }
-                }
-                else
+                if (!await Crashes.IsEnabledAsync())
                 {
-                    isAppCenterEnabled = false;
+                    Debug.WriteLine("[WARN] AppCenter Crash Reporting is not available.", 
+                        GetType().Name);
+                    return false;
                 }
+
+                return true;
             }
             catch (Exception exception)
             {
                 Debug.WriteLine(exception, GetType().Name);
-                isAppCenterEnabled = false;
+                return false;
             }
-            
-            return isAppCenterEnabled;
         }
 
         private async Task InitAppCenter()
@@ -93,44 +91,39 @@ namespace ASMR.Mobile.Services
 
         public Task InitAsync()
         {
-            return Task.WhenAll(new []{
-                InitAppCenter(),
-                InitAuthentication()
-            });
+            return Task.WhenAll(InitAppCenter(), InitAuthentication());
         }
 
         public async Task<AuthenticationResponseModel> SignInAsync(string username, string password)
         {
             try
             {
-                var result = await AuthenticationService.SignIn(new SignInRequestModel {
+                var result = await GateService.Authenticate(new SignInRequestModel {
                     Username = username,
                     Password = password,
                     RememberMe = true
                 });
-                if (!result.IsSuccess || result.Data is null)
+                
+                if (result.Data?.Roles is null || result.Data.Roles.All(role => role.Role != Role.Roaster))
                 {
-                    Debug.WriteLine("Sign In Failed: API Operation Not Success", GetType().Name);
-                    return result;
-                }
-
-                if (result.Data.Roles is null || !result.Data.Roles.Where(role => role.Role == Role.Roaster).Any())
-                {
-                    Debug.WriteLine("Sign In Failed: Insufficient Role", GetType().Name);
-                    throw new Exception("You do not have sufficient role to access this application (required role: Roaster).");
+                    throw new Exception("You do not have sufficient role to access this application " +
+                        $"(required role: {Role.Administrator}).");
                 }
                 
-                User = result.Data;
-                if (!string.IsNullOrEmpty(result.Data.Token))
+                if (result.IsSuccess)
                 {
-                    await TokenManager.SetAsync(ApplicationConstants.JsonWebTokenStorageKey, result.Data.Token);
+                    User = result.Data;
+                    if (!string.IsNullOrEmpty(result.Data.Token))
+                    {
+                        await TokenManager.SetAsync(ApplicationConstants.JsonWebTokenStorageKey, result.Data.Token);
+                    }
                 }
 
                 return result;
             }
             catch (Exception exception)
             {
-                return exception.ToResponseModel<AuthenticationResponseModel>();
+                return exception.Cast<AuthenticationResponseModel>();
             }
         }
 
@@ -138,7 +131,7 @@ namespace ASMR.Mobile.Services
         {
             try
             {
-                var result = await AuthenticationService.SignOut();
+                var result = await GateService.ClearSession();
                 if (!result.IsSuccess)
                 {
                     Debug.WriteLine("Sign Out Failed: API Operation Not Success", GetType().Name);
@@ -153,7 +146,7 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception exception)
             {
-                return exception.ToResponseModel<AuthenticationResponseModel>();
+                return exception.Cast<AuthenticationResponseModel>();
             }
         }
 
@@ -161,7 +154,7 @@ namespace ASMR.Mobile.Services
         {
             try
             {
-                var result = await AuthenticationService.GetProfile();
+                var result = await GateService.GetUserPassport();
                 if (result.IsSuccess && result.Data is not null)
                 {
                     User = result.Data;
@@ -171,7 +164,7 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception exception)
             {
-                return exception.ToResponseModel<AuthenticationResponseModel>();
+                return exception.Cast<AuthenticationResponseModel>();
             }
         }
 
@@ -180,7 +173,7 @@ namespace ASMR.Mobile.Services
 
         public Guid InstallId { get; private set; }
         
-        public Logging.LogLevel LogLevel { get; set; }
+        public LogLevel LogLevel { get; set; }
 
         public bool IsAuthenticated => _user is not null;
 

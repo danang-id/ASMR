@@ -1,4 +1,4 @@
-namespace ASMR.Mobile.Services.Logging
+namespace ASMR.Mobile.Common.Logging
 {
 	public enum LogLevel
 	{

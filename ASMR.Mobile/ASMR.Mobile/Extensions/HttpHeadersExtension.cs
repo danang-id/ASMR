@@ -1,10 +1,9 @@
 using System;
-using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using ASMR.Common.Constants;
 using ASMR.Mobile.Common;
-using ASMR.Mobile.Services;
+using ASMR.Mobile.Common.Security;
 
 namespace ASMR.Mobile.Extensions
 {
@@ -23,11 +22,6 @@ namespace ASMR.Mobile.Extensions
 			Func<string, string> valueModifier)
 		{
 			var value = await TokenManager.GetAsync(storageKey);
-			
-			Debug.WriteLineIf(!string.IsNullOrEmpty(value), 
-				$"Header {headerName}: Read from Token Manager\n" +
-				$"\tValue: {value}",
-				nameof(HttpHeadersExtension));
 			
 			if (!string.IsNullOrEmpty(value))
 			{

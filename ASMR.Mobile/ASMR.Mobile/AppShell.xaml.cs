@@ -1,10 +1,10 @@
-﻿using ASMR.Mobile.Services.Abstraction;
-using ASMR.Mobile.Services.Events;
-using ASMR.Mobile.Views;
+﻿using ASMR.Mobile.Views;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Windows.Input;
 using ASMR.Common.Constants;
+using ASMR.Mobile.Common.Abstractions;
+using ASMR.Mobile.Common.Events;
 using Xamarin.Forms;
 
 namespace ASMR.Mobile

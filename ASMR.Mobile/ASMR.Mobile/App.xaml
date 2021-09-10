@@ -10,6 +10,7 @@
             <Color x:Key="Action">#1D71F9</Color>
             <Color x:Key="ActionAccent">#2F7DFA</Color>
             <Color x:Key="Danger">#F32013</Color>
+            <Color x:Key="Warning">#FFAE3D</Color>
             <Color x:Key="Bean">#794028</Color>
             <Color x:Key="Primary">#432D27</Color>
             <Color x:Key="Secondary">#D7B7A3</Color>
@@ -20,13 +21,13 @@
             <Color x:Key="Light">#EAE7E7</Color>
             <Color x:Key="Lighter">#F5F2F2</Color>
             <Style TargetType="Entry">
-                <Setter Property="FontFamily" Value="TitilliumWeb"></Setter>
+                <Setter Property="FontFamily" Value="Content"></Setter>
             </Style>
             <Style TargetType="Label">
-                <Setter Property="FontFamily" Value="TitilliumWeb"></Setter>
+                <Setter Property="FontFamily" Value="Content"></Setter>
             </Style>
             <Style TargetType="Button">
-                <Setter Property="FontFamily" Value="TitilliumWeb"></Setter>
+                <Setter Property="FontFamily" Value="Content"></Setter>
                 <Setter Property="TextColor" Value="White"></Setter>
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>

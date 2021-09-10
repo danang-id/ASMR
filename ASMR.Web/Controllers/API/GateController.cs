@@ -7,7 +7,6 @@
 //
 // GateController.cs
 //
-
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -420,7 +419,6 @@ namespace ASMR.Web.Controllers.API
             
             return Ok(new AuthenticationResponseModel());
         }
-        
         
         [ClientPlatform(ClientPlatform.Web)]
         [HttpPost("password/reset")]

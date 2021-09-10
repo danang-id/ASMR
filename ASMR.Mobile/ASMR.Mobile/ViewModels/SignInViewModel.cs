@@ -36,7 +36,7 @@ namespace ASMR.Mobile.ViewModels
         private async void ExecuteSignIn()
         {
             IsBusy = true;
-            SignInStatus = "Please wait...";
+            // SignInStatus = "Please wait...";
 
             try
             {
@@ -51,14 +51,16 @@ namespace ASMR.Mobile.ViewModels
 
                 if (result.Errors is null || !result.Errors.Any())
                 {
-                    SignInStatus = "Failed with no reason.";
+                    AlertHandler.Display("Sign in failed.");
+                    // SignInStatus = "Failed with no reason.";
                     return;
                 }
 
                 foreach (var error in result.Errors)
                 {
                     Logging.LogError(error.Reason);
-                    SignInStatus = error.Reason;
+                    AlertHandler.Display(error.Reason);
+                    // SignInStatus = error.Reason;
                 }
             }
             finally

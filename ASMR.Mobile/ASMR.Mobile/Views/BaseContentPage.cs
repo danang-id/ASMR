@@ -1,5 +1,5 @@
-using ASMR.Mobile.Services.Abstraction;
-using ASMR.Mobile.Services.Logging;
+using ASMR.Mobile.Common.Abstractions;
+using ASMR.Mobile.Common.Logging;
 using Xamarin.Forms;
 
 namespace ASMR.Mobile.Views

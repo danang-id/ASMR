@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using ASMR.Mobile.Services.Logging;
+using ASMR.Mobile.Common.Logging;
 
-namespace ASMR.Mobile.Services.Abstraction
+namespace ASMR.Mobile.Common.Abstractions
 {
 	public interface ILogging
 	{

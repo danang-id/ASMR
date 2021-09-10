@@ -84,6 +84,11 @@ namespace ASMR.Core.Generic
         {
             return JsonSerializer.Serialize(this, JsonConstants.DefaultJsonSerializerOptions);
         }
+
+        public string ToJsonString()
+        {
+            return JsonSerializer.Serialize(this, JsonConstants.IndentedJsonSerializerOptions);
+        }
     }
 
     public class DefaultResponseModel : DefaultResponseModel<object> {
@@ -96,7 +101,5 @@ namespace ASMR.Core.Generic
         public DefaultResponseModel(IEnumerable<ResponseError> errors) : base(errors) { }
 
         public DefaultResponseModel(Exception exception) : base(exception) { }
-
-        public DefaultResponseModel(IEnumerable<Exception> exceptions) : base(exceptions) { }
     }
 }

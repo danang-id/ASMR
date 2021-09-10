@@ -2,12 +2,12 @@
 using System.Threading.Tasks;
 using Xamarin.Essentials;
 
-namespace ASMR.Mobile.Services
+namespace ASMR.Mobile.Common.Security
 {
     public static class TokenManager
     {
-        private static string _sharedName = "ASMR.Mobile";
-        
+        private const string SharedName = "ASMR.Mobile";
+
         public static Task<string> GetAsync(string name)
         {
             try
@@ -16,7 +16,7 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception)
             {
-                return Task.FromResult(Preferences.Get(name, null, _sharedName));
+                return Task.FromResult(Preferences.Get(name, null, SharedName));
             }
         }
 
@@ -28,7 +28,7 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception)
             {
-                Preferences.Set(name, value, _sharedName);
+                Preferences.Set(name, value, SharedName);
                 return Task.CompletedTask;
             }
         }
@@ -41,10 +41,10 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception)
             {
-                var hasToken = Preferences.ContainsKey(name, _sharedName);
+                var hasToken = Preferences.ContainsKey(name, SharedName);
                 if (hasToken)
                 {
-                    Preferences.Remove(name, _sharedName);
+                    Preferences.Remove(name, SharedName);
                 }
 
                 return hasToken;
@@ -59,7 +59,7 @@ namespace ASMR.Mobile.Services
             }
             catch (Exception)
             {
-                Preferences.Clear(_sharedName);
+                Preferences.Clear(SharedName);
             }
         }
     }

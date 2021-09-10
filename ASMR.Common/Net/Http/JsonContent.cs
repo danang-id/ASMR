@@ -28,7 +28,6 @@ namespace ASMR.Common.Net.Http
 		protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
 		{
 			return JsonSerializer.SerializeAsync(stream, _value, JsonConstants.DefaultJsonSerializerOptions);
-			
 		}
 	}
 }

@@ -15,10 +15,17 @@ namespace ASMR.Common.Constants
 {
     public static class JsonConstants
     {
-        public static readonly JsonSerializerOptions DefaultJsonSerializerOptions = new JsonSerializerOptions
+        public static readonly JsonSerializerOptions DefaultJsonSerializerOptions = new()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
+        
+        public static readonly JsonSerializerOptions IndentedJsonSerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            WriteIndented = true
         };
     }
 }

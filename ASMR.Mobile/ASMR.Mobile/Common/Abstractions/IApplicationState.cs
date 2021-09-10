@@ -2,10 +2,10 @@ using System;
 using System.Threading.Tasks;
 using ASMR.Core.Entities;
 using ASMR.Core.ResponseModel;
-using ASMR.Mobile.Services.Events;
-using ASMR.Mobile.Services.Logging;
+using ASMR.Mobile.Common.Events;
+using ASMR.Mobile.Common.Logging;
 
-namespace ASMR.Mobile.Services.Abstraction
+namespace ASMR.Mobile.Common.Abstractions
 {
 	public interface IApplicationState
 	{

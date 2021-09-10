@@ -16,17 +16,20 @@
     <ContentPage.Content>
         <StackLayout Spacing="16" Margin="16,32" VerticalOptions="CenterAndExpand">
             <Label Text="asmr"
-                   FontFamily="Quicksand-Bold"
-                   FontSize="Large"
+                   FontFamily="Brand-Bold"
+                   FontSize="48"
                    TextColor="{StaticResource Primary}"
                    Margin="0, 0, 0, 32"
                    HorizontalTextAlignment="Center"  />
             <Entry Text="{Binding Username}"
                    Placeholder="Username" />
             <Entry Text="{Binding Password}"
+                   IsPassword="True"
                    Placeholder="Password"
-                   IsPassword="True" />
+                   ReturnCommand="{Binding SignInCommand}" />
             <Button Text="Sign In"
+                    FontFamily="Content-Bold"
+                    FontSize="16"
                     HorizontalOptions="FillAndExpand"
                     Command="{Binding SignInCommand}" />
             <Label Text="{Binding SignInStatus}"

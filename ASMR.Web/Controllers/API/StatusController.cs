@@ -21,7 +21,7 @@ namespace ASMR.Web.Controllers.API
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public IActionResult GetStatus()
         {
             var applicationVersion = GetType().Assembly.GetName().Version;
             var runtimeVersion = System.Environment.Version;

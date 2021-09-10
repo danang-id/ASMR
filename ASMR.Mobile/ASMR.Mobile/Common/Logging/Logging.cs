@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
-#if DEBUG
 using System.Diagnostics;
-#endif
 using System.Linq;
-using ASMR.Mobile.Services.Abstraction;
+using ASMR.Mobile.Common;
+using ASMR.Mobile.Common.Abstractions;
 using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Xamarin.Essentials;
 using Xamarin.Forms;
+#if DEBUG
+#endif
 
-[assembly: Dependency(typeof(ASMR.Mobile.Services.ApplicationState))]
-namespace ASMR.Mobile.Services.Logging
+[assembly: Dependency(typeof(ApplicationState))]
+namespace ASMR.Mobile.Common.Logging
 {
 	public class Logging : ILogging
 	{
