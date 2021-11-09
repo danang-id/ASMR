@@ -1,4 +1,3 @@
-
 import { ReactNode } from "react"
 import { Breakpoint } from "@asmr/libs/application/BreakpointContextInfo"
 import useBreakpoint from "@asmr/libs/hooks/breakpointHook"
@@ -13,7 +12,7 @@ function BreakpointRenderer({ max = "3xl", min = "xs", children }: BreakpointPro
 	const { current, includes } = useBreakpoint()
 	const shouldRender = includes(min) && (!includes(max) || current === max)
 
-	return <>{ shouldRender ? children : void 0 }</>
+	return <>{shouldRender ? children : void 0}</>
 }
 
 export default BreakpointRenderer

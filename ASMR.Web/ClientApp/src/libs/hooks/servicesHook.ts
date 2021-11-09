@@ -4,10 +4,10 @@ import { useEffect } from "react"
 
 function useServices() {
 	const progressContextInfo = useProgress()
-	const services = createServices(new AbortController(), progressContextInfo[1])
+	const services = createServices(progressContextInfo[1])
 	useEffect(() => {
 		return () => {
-			services.abort()
+			services.abort("Page changed, aborting service request...")
 		}
 	}, [])
 	return services

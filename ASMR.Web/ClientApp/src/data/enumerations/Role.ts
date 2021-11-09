@@ -1,7 +1,7 @@
 enum Role {
 	Administrator,
 	Server,
-	Roaster
+	Roaster,
 }
 
 export default Role

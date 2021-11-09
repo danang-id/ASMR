@@ -10,7 +10,7 @@
 		<ReleaseVersion>1.0.0</ReleaseVersion>
 		<StartupObject>ASMR.Web.Program</StartupObject>
 		<ApplicationIcon>ASMR.Web.ico</ApplicationIcon>
-		<AssemblyName>ASMR</AssemblyName>
+		<AssemblyName>asmr</AssemblyName>
 		<Authors>Danang Galuh Tegar Prasetyo</Authors>
 		<PackageId>ASMR</PackageId>
 		<Company>Pandora Karya Digital</Company>
@@ -18,11 +18,18 @@
 		<AssemblyVersion>1.0.0</AssemblyVersion>
 		<FileVersion>1.0.0</FileVersion>
 		<NeutralLanguage>en</NeutralLanguage>
-		<Platforms>AnyCPU;x64</Platforms>
-	  <UserSecretsId>143ab751-b354-4226-b63e-fc5e30c39def</UserSecretsId>
-  </PropertyGroup>
+		<Platforms>AnyCPU</Platforms>
+		<UserSecretsId>143ab751-b354-4226-b63e-fc5e30c39def</UserSecretsId>
+	</PropertyGroup>
 
 	<PropertyGroup Condition=" '$(RunConfiguration)' == 'Production' " />
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+		<WarningLevel>4</WarningLevel>
+		<LangVersion>10.0</LangVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	  <LangVersion>10.0</LangVersion>
+	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Flurl" Version="3.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
@@ -69,6 +76,10 @@
 	<ItemGroup>
 		<!-- Make sure all of the necessary appsettings are included with the application. -->
 		<Content Update="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
+		</Content>
+		<Content Update="runtimeconfig.json">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
 		</Content>

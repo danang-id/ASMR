@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react"
 import ReactGA from "react-ga"
-import Role from "@asmr/data/enumerations/Role";
+import Role from "@asmr/data/enumerations/Role"
 import User from "@asmr/data/models/User"
 import config from "@asmr/libs/common/config"
 import useInit from "@asmr/libs/hooks/initHook"
@@ -8,14 +8,13 @@ import useServices from "@asmr/libs/hooks/servicesHook"
 import usePersistedState from "@asmr/libs/hooks/persistedStateHook"
 import AuthenticationContext from "@asmr/libs/security/AuthenticationContext"
 import ErrorCode from "@asmr/data/enumerations/ErrorCode"
-import AuthenticationRoutes from "@asmr/pages/Authentication/AuthenticationRoutes"
 
 interface AuthenticationProviderProps {
 	children: ReactNode
 	fallbackComponent?: JSX.Element
 }
 
-function AuthenticationProvider({children, fallbackComponent: fallback}: AuthenticationProviderProps): JSX.Element {
+function AuthenticationProvider({ children, fallbackComponent: fallback }: AuthenticationProviderProps): JSX.Element {
 	useInit(onInit)
 	const [initialized, setInitialized] = useState(false)
 	const [user, setUser] = usePersistedState<User>("authentication.user")
@@ -39,7 +38,7 @@ function AuthenticationProvider({children, fallbackComponent: fallback}: Authent
 		}
 
 		for (const userRole of user.roles) {
-			if (roles.findIndex(role => role === userRole.role) !== -1) {
+			if (roles.findIndex((role) => role === userRole.role) !== -1) {
 				return true
 			}
 		}
@@ -70,22 +69,22 @@ function AuthenticationProvider({children, fallbackComponent: fallback}: Authent
 	}
 
 	async function updateUserData() {
-		try	{
+		try {
 			const result = await services.gate.getUserPassport()
 			if (result.isSuccess && result.data) {
 				setUser(parseUserData(result.data))
 			}
 
 			if (result.errors && Array.isArray(result.errors)) {
-				const hasNotAuthenticatedError = result.errors
-					.findIndex(error => error.code === ErrorCode.NotAuthenticated) !== -1
+				const hasNotAuthenticatedError =
+					result.errors.findIndex((error) => error.code === ErrorCode.NotAuthenticated) !== -1
 				if (!hasNotAuthenticatedError) {
 					services.handleErrors(result.errors)
 					return
 				}
 
 				if (isAuthenticated()) {
-					window.location.href = AuthenticationRoutes.SignOutPage + "?invalidSession=1"
+					window.location.href = "/authentication/sign-out?invalidSession=1"
 				}
 			}
 		} catch (error) {
@@ -95,7 +94,7 @@ function AuthenticationProvider({children, fallbackComponent: fallback}: Authent
 
 	useEffect(() => {
 		if (config.googleAnalyticsMeasurementID) {
-			ReactGA.set({ userId: user?.id ?? null, userName: user?.username ?? null })
+			ReactGA.set({ userId: user?.id ? user.id : null, userName: user?.username ? user.username : null })
 		}
 	}, [user])
 
@@ -104,17 +103,19 @@ function AuthenticationProvider({children, fallbackComponent: fallback}: Authent
 	}
 
 	return (
-		<AuthenticationContext.Provider value={{
-			user,
-			abort: services.abort,
-			handleError: services.handleError,
-			handleErrors: services.handleErrors,
-			isAuthenticated,
-			isAuthorized,
-			signIn,
-			signOut,
-			updateUserData
-		}}>
+		<AuthenticationContext.Provider
+			value={{
+				user,
+				abort: services.abort,
+				handleError: services.handleError,
+				handleErrors: services.handleErrors,
+				isAuthenticated,
+				isAuthorized,
+				signIn,
+				signOut,
+				updateUserData,
+			}}
+		>
 			{children}
 		</AuthenticationContext.Provider>
 	)

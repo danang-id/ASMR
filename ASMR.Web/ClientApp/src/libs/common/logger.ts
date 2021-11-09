@@ -7,7 +7,7 @@ type LoggerOptions = {
 }
 
 const defaultLoggerOptions: LoggerOptions = {
-	disableOnProduction: true
+	disableOnProduction: true,
 }
 
 export interface ILogger {

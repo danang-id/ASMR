@@ -29,12 +29,26 @@ export interface FormInputProps {
 	placeholder?: string
 	readOnly?: boolean
 	required?: boolean
-	type?: "text" | "password" | "email" | "number" | "url" | "date" | "datetime-local" | "month" | "week" | "time"
-		| "search" | "tel" | "checkbox" | "radio" | "file"
+	type?:
+		| "text"
+		| "password"
+		| "email"
+		| "number"
+		| "url"
+		| "date"
+		| "datetime-local"
+		| "month"
+		| "week"
+		| "time"
+		| "search"
+		| "tel"
+		| "checkbox"
+		| "radio"
+		| "file"
 	value?: string
 }
 
-Form.Input = function({ className, disabled = false, ...props }: FormInputProps): JSX.Element {
+Form.Input = function ({ className, disabled = false, ...props }: FormInputProps): JSX.Element {
 	const [progress] = useProgress()
 	className = combineClassNames(className, "form-input", "form-input-custom")
 	return <input className={className} disabled={disabled || progress.loading} {...props} />
@@ -52,13 +66,21 @@ export interface FormCheckBoxProps {
 	value?: string
 }
 
-Form.CheckBox = function({ children, className, disabled = false, name, ...props }: FormCheckBoxProps): JSX.Element {
+Form.CheckBox = function ({ children, className, disabled = false, name, ...props }: FormCheckBoxProps): JSX.Element {
 	const [progress] = useProgress()
 	className = combineClassNames(className, "form-checkbox", "form-checkbox-custom")
-	return <label className="form-checkbox-container" htmlFor={name}>
-		<input className={className} disabled={disabled || progress.loading} name={name} type="checkbox" {...props} />
-		<span className="form-checkbox-label">{children}</span>
-	</label>
+	return (
+		<label className="form-checkbox-container" htmlFor={name}>
+			<input
+				className={className}
+				disabled={disabled || progress.loading}
+				name={name}
+				type="checkbox"
+				{...props}
+			/>
+			<span className="form-checkbox-label">{children}</span>
+		</label>
+	)
 }
 
 export interface FormSelectProps {
@@ -67,9 +89,13 @@ export interface FormSelectProps {
 	multiple?: boolean
 }
 
-Form.Select = function({ children, className, ...props }: FormSelectProps): JSX.Element {
+Form.Select = function ({ children, className, ...props }: FormSelectProps): JSX.Element {
 	className = combineClassNames(className, "form-select", "form-select-custom")
-	return <select className={className} {...props}>{children}</select>
+	return (
+		<select className={className} {...props}>
+			{children}
+		</select>
+	)
 }
 
 export interface FormTextAreaProps {
@@ -81,10 +107,14 @@ export interface FormTextAreaProps {
 	value?: string
 }
 
-Form.TextArea = function({ children, className, rows, ...props }: FormTextAreaProps): JSX.Element {
+Form.TextArea = function ({ children, className, rows, ...props }: FormTextAreaProps): JSX.Element {
 	className = combineClassNames(className, "form-text-area", "form-text-area-custom")
 
-	return <textarea className={className} rows={rows} {...props}>{children}</textarea>
+	return (
+		<textarea className={className} rows={rows} {...props}>
+			{children}
+		</textarea>
+	)
 }
 
 export default Form

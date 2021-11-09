@@ -5,15 +5,17 @@ import ASMRWebReleaseInformation from "@asmr/data/release/ASMRWebReleaseInformat
 
 class ReleaseService extends ServiceBase {
 	public getMobileReleaseInformation() {
-		return this.request<DefaultResponseModel<ASMRMobileReleaseInformation>>(() => (
-			this.httpClient.get("/api/release/mobile")
-		))
+		return this.httpClient
+			.get<DefaultResponseModel<ASMRMobileReleaseInformation>>("/api/release/mobile")
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
-	
+
 	public getWebReleaseInformation() {
-		return this.request<DefaultResponseModel<ASMRWebReleaseInformation>>(() => (
-			this.httpClient.get("/api/release/web")
-		))
+		return this.httpClient
+			.get<DefaultResponseModel<ASMRWebReleaseInformation>>("/api/release/web")
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 }
 

@@ -1,7 +1,7 @@
 enum TransactionStatus {
 	InProcess,
 	Done,
-	Cancelled
+	Cancelled,
 }
 
 export default TransactionStatus

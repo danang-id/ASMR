@@ -8,7 +8,8 @@ export function getBreakpointValue(value: string): number {
 		return -1
 	}
 
-	const screens = fullConfig.theme.screens
+	type ScreensObject = { [key: string]: any }
+	const screens = fullConfig.theme.screens as ScreensObject
 	return parseInt(screens[value].slice(0, screens[value].indexOf("px")))
 }
 
@@ -17,7 +18,7 @@ export function getActiveBreakpoints(width = window.innerWidth): string[] {
 		return []
 	}
 
-	const activeBreakpoints: string[] = [ "xs" ]
+	const activeBreakpoints: string[] = ["xs"]
 	for (const breakpoint of Object.keys(fullConfig.theme.screens)) {
 		const breakpointValue = getBreakpointValue(breakpoint)
 		if (width >= breakpointValue) {
@@ -44,6 +45,5 @@ export function getCurrentBreakpoint(width = window.innerWidth): string {
 	}
 	return activeBreakpoint
 }
-
 
 export default { getBreakpointValue, getActiveBreakpoints, getCurrentBreakpoint }

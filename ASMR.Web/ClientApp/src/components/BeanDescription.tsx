@@ -1,4 +1,3 @@
-
 interface BeanDescriptionProps {
 	description?: string
 }
@@ -8,10 +7,13 @@ function BeanDescription({ description }: BeanDescriptionProps) {
 		return <></>
 	}
 
-	return <>{
-		description.split("\n")
-			.map((line, index) => <p key={index}>{line}</p>)
-	}</>
+	return (
+		<>
+			{description.split("\n").map((line, index) => (
+				<p key={index}>{line}</p>
+			))}
+		</>
+	)
 }
 
 export default BeanDescription

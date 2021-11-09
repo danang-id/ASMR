@@ -1,4 +1,3 @@
-
 import Button from "@asmr/components/Button"
 import Modal from "@asmr/components/Modal"
 import Bean from "@asmr/data/models/Bean"
@@ -12,25 +11,35 @@ interface ProductRemoveModalProps {
 	onClose: () => void
 	onRemoveProduct: () => void
 	product: Product | null
-	progress: ProgressInfo,
+	progress: ProgressInfo
 	show: boolean
 }
-function ProductRemoveModal({ bean, onClose, onRemoveProduct, product, progress, show }: ProductRemoveModalProps): JSX.Element {
+function ProductRemoveModal({
+	bean,
+	onClose,
+	onRemoveProduct,
+	product,
+	progress,
+	show,
+}: ProductRemoveModalProps): JSX.Element {
 	return (
 		<Modal onClose={onClose} show={show} title={`Remove ${bean?.name ?? ""}'s Product`}>
 			<Modal.Body>
 				<p className="remove-product-modal-body">
-					Are you sure you would like to remove the{" "}
-					<span className="name">{bean?.name ?? ""}</span> product{" "}
-					{toLocaleUnit(product?.weightPerPackaging ?? 0, "gram")} /{" "}
-					{toLocalCurrency(product?.price ?? 0)}?
+					Are you sure you would like to remove the <span className="name">{bean?.name ?? ""}</span> product{" "}
+					{toLocaleUnit(product?.weightPerPackaging ? product.weightPerPackaging : 0, "gram")} /{" "}
+					{toLocalCurrency(product?.price ? product.price : 0)}?
 				</p>
 			</Modal.Body>
 
 			<Modal.Footer>
 				<div className="modal-actions">
-					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>Cancel</Button>
-					<Button disabled={progress.loading} style="danger" size="sm" onClick={onRemoveProduct}>Remove</Button>
+					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>
+						Cancel
+					</Button>
+					<Button disabled={progress.loading} style="danger" size="sm" onClick={onRemoveProduct}>
+						Remove
+					</Button>
 				</div>
 			</Modal.Footer>
 		</Modal>

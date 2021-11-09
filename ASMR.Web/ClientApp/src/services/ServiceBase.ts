@@ -1,159 +1,103 @@
-import Cookie from "js-cookie"
-import HttpClient from "@asmr/libs/http/HttpClient"
-import HttpResponse from "@asmr/libs/http/HttpResponse";
+
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from "axios"
 import Platform from "@asmr/data/enumerations/Platform"
-import DefaultResponseModel from "@asmr/data/generic/DefaultResponseModel"
 import { SetProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import HttpRequestBody from "@asmr/libs/http/HttpRequestBody"
-import HttpRequestOptions from "@asmr/libs/http/HttpRequestOptions"
 import config from "@asmr/libs/common/config"
+import { ILogger } from "@asmr/libs/common/logger"
+import useLogger from "@asmr/libs/hooks/loggerHook"
+
+export interface ServiceLogOptions {
+	requestHeader?: boolean
+	requestBody?: boolean
+	responseHeader?: boolean
+	responseBody?: boolean
+}
+
+export interface ServiceOptions {
+	log: ServiceLogOptions;
+}
 
 class ServiceBase {
-	private readonly crsfRequestTokenCookieName = "ASMR.CSRF-Request-Token"
-	private readonly csrfTokenFieldName = "__CSRF-Token__"
-	private readonly csrfTokenHeaderName = "X-CSRF-Token"
-
 	protected csrfToken?: string
-	protected readonly httpClient: HttpClient
+	protected readonly httpClient: AxiosInstance
+	protected readonly logger: ILogger
+	protected readonly options: ServiceOptions
 	protected readonly setProgress: SetProgressInfo
 
-	constructor(controller?: AbortController, setProgress?: SetProgressInfo) {
-		this.saveCsrfRequestToken()
-		this.httpClient = new HttpClient({
-			baseUrl: config.backEndBaseUrl ?? window.location.origin,
-			mode: config.backEndBaseUrl ? "cors" : "same-origin",
-			signal: controller ? controller.signal : void 0,
+	constructor(cancelTokenSource: CancelTokenSource, options?: ServiceOptions,setProgress?: SetProgressInfo) {
+		this.httpClient = axios.create({
+			baseURL: config.backEndBaseUrl ?? window.location.origin,
+			cancelToken: cancelTokenSource.token,
+			headers: {
+				Accept: 'application/json',
+			},
+			params: {
+				clientPlatform: Platform.Web,
+				clientVersion: config.application.version,
+			},
+			validateStatus: status => status >= 200 && status <= 500,
+			withCredentials: true,
+			xsrfCookieName: "ASMR.CSRF-Request-Token",
+			xsrfHeaderName: "X-CSRF-Token",
 		})
+		this.logger = useLogger(ServiceBase)
+		this.options = options ?? {
+			log: {
+				requestHeader: false,
+				requestBody: false,
+				responseHeader: false,
+				responseBody: false,
+			},
+		}
 		this.setProgress = setProgress ?? (() => {})
 
-		const getFunction = this.httpClient.get.bind(this.httpClient)
-		const postFunction = this.httpClient.post.bind(this.httpClient)
-		const putFunction = this.httpClient.put.bind(this.httpClient)
-		const patchFunction = this.httpClient.patch.bind(this.httpClient)
-		const deleteFunction = this.httpClient.delete.bind(this.httpClient)
-		this.httpClient.get = (endpoint, options) => {
-			const newHeader = this.appendRequestToken(undefined, options?.headers)[1]
-			const newParams = this.appendClientInformation(options?.params)
-			const newOptions: HttpRequestOptions = !options ? {
-				headers: newHeader,
-				params: newParams
-			} : {
-				...options,
-				headers: newHeader,
-				params: newParams
-			}
-			return getFunction(endpoint, newOptions)
+		this.httpClient.interceptors.request.use(this.onRequestFulfilled.bind(this), this.onRequestRejected.bind(this));
+		this.httpClient.interceptors.response.use(this.onResponseFulfilled.bind(this), this.onResponseRejected.bind(this));
+	}
+
+	protected logRequest(request: AxiosRequestConfig, response: AxiosResponse) {
+		this.logger.info(`[${response.status}] ${request.method?.toUpperCase()} ${request.url}`)
+		if (this.options.log.requestHeader === true) {
+			this.logger.info(request.headers)
 		}
-		this.httpClient.post = (endpoint, body, options) => {
-			const [newBody, newHeader] = this.appendRequestToken(body, options?.headers)
-			const newParams = this.appendClientInformation(options?.params)
-			const newOptions: HttpRequestOptions = !options ? {
-				headers: newHeader,
-				params: newParams
-			} : {
-				...options,
-				headers: newHeader,
-				params: newParams
-			}
-			return postFunction(endpoint, newBody, newOptions)
+		if (this.options.log.requestBody === true && request.data) {
+			this.logger.info(`Request: ${request.data}`)
 		}
-		this.httpClient.put = (endpoint, body, options) => {
-			const [newBody, newHeader] = this.appendRequestToken(body, options?.headers)
-			const newParams = this.appendClientInformation(options?.params)
-			const newOptions: HttpRequestOptions = !options ? {
-				headers: newHeader,
-				params: newParams
-			} : {
-				...options,
-				headers: newHeader,
-				params: newParams
-			}
-			return putFunction(endpoint, newBody, newOptions)
+		if (this.options.log.responseHeader === true) {
+			this.logger.info(response.headers)
 		}
-		this.httpClient.patch = (endpoint, body, options) => {
-			const [newBody, newHeader] = this.appendRequestToken(body, options?.headers)
-			const newParams = this.appendClientInformation(options?.params)
-			const newOptions: HttpRequestOptions = !options ? {
-				headers: newHeader,
-				params: newParams
-			} : {
-				...options,
-				headers: newHeader,
-				params: newParams
-			}
-			return patchFunction(endpoint, newBody, newOptions)
-		}
-		this.httpClient.delete = (endpoint, options) => {
-			const newHeader = this.appendRequestToken(undefined, options?.headers)[1]
-			const newParams = this.appendClientInformation(options?.params)
-			const newOptions: HttpRequestOptions = !options ? {
-				headers: newHeader,
-				params: newParams
-			} : {
-				...options,
-				headers: newHeader,
-				params: newParams
-			}
-			return deleteFunction(endpoint, newOptions)
+		if (this.options.log.responseBody === true && response.data) {
+			this.logger.info(`Response: ${JSON.stringify(response.data)}`)
 		}
 	}
 
-	private saveCsrfRequestToken() {
-		this.csrfToken = Cookie.get(this.crsfRequestTokenCookieName)
+	protected async onRequestFulfilled(request: AxiosRequestConfig) {
+		this.setProgress(true, 0)
+		return request;
 	}
 
-	protected appendRequestToken(body?: HttpRequestBody, headers: HeadersInit = {}): [HttpRequestBody | undefined, HeadersInit] {
-		if (this.csrfToken) {
-			if (body && body instanceof  FormData) {
-				body.append(this.csrfTokenFieldName, this.csrfToken)
-			}
-			if (headers) {
-				(headers as Record<string, string>)[this.csrfTokenHeaderName] = this.csrfToken
-			}
-		}
-
-		return [body, headers]
+	protected onRequestRejected(error: Error) {
+		this.logger.error(error)
+		return Promise.reject(error)
 	}
 
-	protected appendClientInformation(params?: URLSearchParams | Record<string, any>): URLSearchParams {
-		params = new URLSearchParams(params)
-		params.append("clientPlatform", Platform.Web)
-		params.append("clientVersion", config.application.version)
-		return params as URLSearchParams
+	protected async onResponseFulfilled(response: AxiosResponse) {
+		this.logRequest(response.config, response)
+		return response
 	}
 
-	protected createFormData(body?: Record<string, any>) {
-		const formData = new FormData()
-		if (body) {
-			for (const bodyKey in body) {
-				// eslint-disable-next-line no-prototype-builtins
-				if (body.hasOwnProperty(bodyKey)) {
-					const bodyValue = body[bodyKey]
-					if (Array.isArray(bodyValue)) {
-						for (const value of bodyValue) {
-							formData.append(bodyKey, value)
-						}
-					} else {
-						formData.append(bodyKey, bodyValue)
-					}
-				}
-			}
-		}
-		return formData
+	protected onResponseRejected(error: Error) {
+		this.logger.error(error)
+		return Promise.reject(error)
 	}
 
-	protected async request<TResponse extends DefaultResponseModel>(
-		requester: () => Promise<HttpResponse<TResponse>>
-	): Promise<TResponse> {
-		try {
-			this.setProgress(true, 0)
-			const response = await requester()
-			this.saveCsrfRequestToken()
-			this.setProgress(true, 1)
-			return response.body as TResponse
-		} finally {
-			this.setProgress(false, 0)
-		}
+	protected processResponse<T>(response: AxiosResponse<T>): T {
+		this.setProgress(true, 1)
+		return response.data
+	}
+
+	protected finalize() {
+		this.setProgress(false, 0)
 	}
 }
 

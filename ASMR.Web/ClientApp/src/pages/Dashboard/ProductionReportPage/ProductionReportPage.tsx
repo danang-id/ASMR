@@ -6,13 +6,14 @@ function ProductionReportPage(): JSX.Element {
 	return (
 		<DashboardLayout>
 			<div className="header">
-				<BackButton />&nbsp;&nbsp;
-				Production Report
+				<BackButton />
+				&nbsp;&nbsp; Production Report
 			</div>
 			<div className="content">
 				<div>
 					<div className="warning-box">
-						We are sorry, this feature is not currently available at the moment.<br/>
+						We are sorry, this feature is not currently available at the moment.
+						<br />
 						Please try again later.
 					</div>
 				</div>

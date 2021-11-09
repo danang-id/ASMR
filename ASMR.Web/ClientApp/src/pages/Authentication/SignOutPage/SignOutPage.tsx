@@ -1,20 +1,19 @@
 import { useEffect } from "react"
-import { Redirect, useLocation } from "react-router-dom"
+import { Navigate, useLocation } from "react-router-dom"
 import BaseLayout from "@asmr/layouts/BaseLayout"
 import useAuthentication from "@asmr/libs/hooks/authenticationHook"
 import useDocumentTitle from "@asmr/libs/hooks/documentTitleHook"
 import useLogger from "@asmr/libs/hooks/loggerHook"
 import useNotification from "@asmr/libs/hooks/notificationHook"
-import AuthenticationRoutes from "@asmr/pages/Authentication/AuthenticationRoutes"
 import "@asmr/pages/Authentication/SignOutPage/SignOutPage.scoped.css"
 
-function SignOutPage():JSX.Element {
+function SignOutPage(): JSX.Element {
 	useDocumentTitle("Sign Out")
 	const authentication = useAuthentication()
 	const location = useLocation()
 	const logger = useLogger(SignOutPage)
 	const notification = useNotification()
-	const signInRedirectPath = `${AuthenticationRoutes.SignInPage}${location.search}`
+	const signInRedirectPath = `/authentication/sign-in${location.search}`
 
 	async function signOut() {
 		try {
@@ -26,7 +25,7 @@ function SignOutPage():JSX.Element {
 			}
 
 			authentication.handleErrors(result.errors, notification, logger)
-		} catch(error) {
+		} catch (error) {
 			authentication.handleError(error as Error, notification, logger)
 		}
 	}
@@ -37,7 +36,9 @@ function SignOutPage():JSX.Element {
 		}
 	}, [])
 
-	return !authentication.isAuthenticated() ? <Redirect to={signInRedirectPath} /> : (
+	return !authentication.isAuthenticated() ? (
+		<Navigate replace to={signInRedirectPath} />
+	) : (
 		<BaseLayout className="page">
 			<p>Signing you out...</p>
 		</BaseLayout>

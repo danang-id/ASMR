@@ -13,7 +13,7 @@ function LoadingBar({ showSpinner = false }: LoadingBarProps): JSX.Element {
 	const [progress, setProgress] = useProgress()
 
 	function calculatePercentage(percentage: number) {
-		percentage = percentage ?? 0
+		percentage = percentage ? percentage : 0
 		let random: number
 
 		if (percentage >= 0 && percentage < 0.25) {
@@ -35,7 +35,7 @@ function LoadingBar({ showSpinner = false }: LoadingBarProps): JSX.Element {
 	function getBarStyle() {
 		return {
 			width: appearDelayWidth ? 0 : `${progress.percentage * 100}%`,
-			display: disappearDelayHide || progress.percentage > 0 ? "block" : "none"
+			display: disappearDelayHide || progress.percentage > 0 ? "block" : "none",
 		}
 	}
 
@@ -90,15 +90,11 @@ function LoadingBar({ showSpinner = false }: LoadingBarProps): JSX.Element {
 					<div className="progress" />
 				</div>
 			</div>
-			{
-				showSpinner &&
+			{showSpinner && (
 				<div className="loading-bar-spinner">
-					<div
-						className="icon"
-						style={getSpinnerIconStyle()}
-					/>
+					<div className="icon" style={getSpinnerIconStyle()} />
 				</div>
-			}
+			)}
 		</>
 	)
 }

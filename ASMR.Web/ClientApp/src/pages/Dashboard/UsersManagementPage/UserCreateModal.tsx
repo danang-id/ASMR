@@ -1,4 +1,3 @@
-
 import { ChangeEvent, useEffect, useState } from "react"
 import Button from "@asmr/components/Button"
 import Form from "@asmr/components/Form"
@@ -13,10 +12,10 @@ import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.cs
 interface UserCreateModalProps {
 	onClose: () => void
 	onCreateUser: (requestModel: CreateUserRequestModel, imageFile: File | null) => void
-	progress: ProgressInfo,
+	progress: ProgressInfo
 	show: boolean
 }
-function UserCreateModal({ onClose, onCreateUser, progress, show  }: UserCreateModalProps): JSX.Element {
+function UserCreateModal({ onClose, onCreateUser, progress, show }: UserCreateModalProps): JSX.Element {
 	const emptyRequestModel: CreateUserRequestModel = {
 		firstName: "",
 		lastName: "",
@@ -24,7 +23,7 @@ function UserCreateModal({ onClose, onCreateUser, progress, show  }: UserCreateM
 		username: "",
 		password: "",
 		passwordConfirmation: "",
-		roles: []
+		roles: [],
 	}
 	const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null)
 	const [imageBuffer, setImageBuffer] = useState<string | ArrayBuffer | null>(null)
@@ -55,8 +54,7 @@ function UserCreateModal({ onClose, onCreateUser, progress, show  }: UserCreateM
 
 	function onUserImageCropped(cropper: Cropper) {
 		const canvas = cropper.getCroppedCanvas()
-		getFileFromCanvas(canvas, imageFile?.name ?? "", imageFile?.type)
-			.then(setCroppedImageFile)
+		getFileFromCanvas(canvas, imageFile?.name ?? "", imageFile?.type).then(setCroppedImageFile)
 	}
 
 	function renderRolesAssignment(role: string, index: number): JSX.Element | null {
@@ -100,8 +98,7 @@ function UserCreateModal({ onClose, onCreateUser, progress, show  }: UserCreateM
 					<div className="form-row">
 						<label className="form-field">First Name</label>
 						<div className="form-data">
-							<Form.Input name="firstName" onChange={onChange}
-							/>
+							<Form.Input name="firstName" onChange={onChange} />
 						</div>
 					</div>
 					<div className="form-row">
@@ -136,25 +133,24 @@ function UserCreateModal({ onClose, onCreateUser, progress, show  }: UserCreateM
 					</div>
 					<div className="form-row">
 						<label className="form-field">Roles</label>
-						<div className="form-data role-checkboxes">
-							{
-								Object.keys(Role).map(renderRolesAssignment)
-							}
-						</div>
+						<div className="form-data role-checkboxes">{Object.keys(Role).map(renderRolesAssignment)}</div>
 					</div>
 					<div className="form-row">
 						<label className="form-field">Image</label>
 						<div className="form-data">
-							<Form.Input accept="image/png, image/jpeg, image/webp" name="image" type="file" onChange={onChange} />
+							<Form.Input
+								accept="image/png, image/jpeg, image/webp"
+								name="image"
+								type="file"
+								onChange={onChange}
+							/>
 						</div>
 					</div>
-					{
-						imageBuffer && (
-							<div className="form-row image-preview">
-								<ImageCropper alt="User Image" source={imageBuffer} onCropped={onUserImageCropped} />
-							</div>
-						)
-					}
+					{imageBuffer && (
+						<div className="form-row image-preview">
+							<ImageCropper alt="User Image" source={imageBuffer} onCropped={onUserImageCropped} />
+						</div>
+					)}
 				</Form>
 			</Modal.Body>
 
@@ -163,7 +159,11 @@ function UserCreateModal({ onClose, onCreateUser, progress, show  }: UserCreateM
 					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>
 						Cancel
 					</Button>
-					<Button disabled={progress.loading} size="sm" onClick={() => onCreateUser(requestModel, croppedImageFile)}>
+					<Button
+						disabled={progress.loading}
+						size="sm"
+						onClick={() => onCreateUser(requestModel, croppedImageFile)}
+					>
 						Create
 					</Button>
 				</div>

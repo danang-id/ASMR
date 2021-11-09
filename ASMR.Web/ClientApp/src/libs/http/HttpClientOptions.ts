@@ -10,7 +10,7 @@ export const DefaultHttpClientOptions: HttpClientOptions = {
 	credentials: "same-origin",
 	headers: {},
 	mode: "same-origin",
-	params: new URLSearchParams({})
+	params: new URLSearchParams({}),
 }
 
 export default HttpClientOptions

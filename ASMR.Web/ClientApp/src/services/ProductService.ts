@@ -6,41 +6,47 @@ import ProductsResponseModel from "@asmr/data/response/ProductsResponseModel"
 
 class ProductService extends ServiceBase {
 	public getAll() {
-		return this.request<ProductsResponseModel>(() => (
-			this.httpClient.get("/api/product")
-		))
+		return this.httpClient
+			.get<ProductsResponseModel>("/api/product")
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 
 	public getByBeanId(beanId: string) {
-		return this.request<ProductsResponseModel>(() => (
-			this.httpClient.get("/api/product", {
+		return this.httpClient
+			.get<ProductsResponseModel>("/api/product", {
 				params: { beanId }
 			})
-		))
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 
 	public getById(id: string) {
-		return this.request<ProductResponseModel>(() => (
-			this.httpClient.get(`/api/product/${id}`)
-		))
+		return this.httpClient
+			.get<ProductResponseModel>(`/api/product/${id}`)
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 
 	public create(body: CreateProductRequestModel) {
-		return this.request<ProductResponseModel>(() => (
-			this.httpClient.post("/api/product", body)
-		))
+		return this.httpClient
+			.post<ProductResponseModel>("/api/product", body)
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 
 	public modify(id: string, body: UpdateProductRequestModel) {
-		return this.request<ProductResponseModel>(() => (
-			this.httpClient.patch(`/api/product/${id}`, body)
-		))
+		return this.httpClient
+			.patch<ProductResponseModel>(`/api/product/${id}`, body)
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 
 	public remove(id: string) {
-		return this.request<ProductResponseModel>(() => (
-			this.httpClient.delete(`/api/product/${id}`)
-		))
+		return this.httpClient
+			.delete<ProductResponseModel>(`/api/product/${id}`)
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 }
 

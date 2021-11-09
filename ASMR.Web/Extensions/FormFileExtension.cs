@@ -83,18 +83,21 @@ namespace ASMR.Web.Extensions
                 return true;
             }
 
-            try
+            if (OperatingSystem.IsWindows())
             {
-                using var bitmap = new System.Drawing.Bitmap(formFile.OpenReadStream());
-            }
-            catch (Exception exception)
-            {
-                logger?.LogError(exception, exception.Message);
-                return false;
-            }
-            finally
-            {
-                formFile.OpenReadStream().Position = 0;
+                try
+                {
+                    using var bitmap = new System.Drawing.Bitmap(formFile.OpenReadStream());
+                }
+                catch (Exception exception)
+                {
+                    logger?.LogError(exception, exception.Message);
+                    return false;
+                }
+                finally
+                {
+                    formFile.OpenReadStream().Position = 0;
+                }
             }
 
             return true;

@@ -12,7 +12,7 @@ function BreakpointProvider({ children }: BreakpointProviderProps): JSX.Element 
 	const logger = useLogger(BreakpointProvider)
 	const [activeList, setActiveList] = useState<Breakpoint[]>([])
 	const [current, setCurrent] = useState<Breakpoint>("xs")
-	const [width, setWidth] = useState(window.innerWidth ?? 0)
+	const [width, setWidth] = useState(window.innerWidth ? window.innerWidth : 0)
 
 	function onResize(event: Event) {
 		if (event.type !== "resize" && window.innerWidth === width) {
@@ -34,7 +34,7 @@ function BreakpointProvider({ children }: BreakpointProviderProps): JSX.Element 
 	}, [])
 
 	useEffect(() => {
-		const breakpointList = activeList.map(value => value === current ? `[${value}]` : value).join(" ")
+		const breakpointList = activeList.map((value) => (value === current ? `[${value}]` : value)).join(" ")
 		logger.info("Breakpoint changed:", breakpointList)
 	}, [current])
 

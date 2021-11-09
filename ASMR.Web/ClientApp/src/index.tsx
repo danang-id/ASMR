@@ -19,15 +19,15 @@ if (config.googleAnalyticsMeasurementID) {
 	Monitoring.reportWebVitalsToGoogleAnalytics()
 }
 
-ReactDOM.render((
+ReactDOM.render(
 	<StrictMode>
 		<ErrorBoundary FallbackComponent={FallbackPage}>
 			<Application />
 		</ErrorBoundary>
-	</StrictMode>
-), document.getElementById("asmr"))
+	</StrictMode>,
+	document.getElementById("asmr")
+)
 
 if (process.env.NODE_ENV === "production") {
 	ServiceWorker.register()
 }
-

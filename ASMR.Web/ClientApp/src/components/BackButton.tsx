@@ -1,14 +1,18 @@
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { IoArrowBack } from "react-icons/io5"
 
 function BackButton(): JSX.Element {
-	const history = useHistory()
+	const navigate = useNavigate()
 
 	function onBackButtonClicked() {
-		history.goBack()
+		navigate(-1)
 	}
 
-	return <button onClick={onBackButtonClicked}><IoArrowBack/></button>
+	return (
+		<button onClick={onBackButtonClicked}>
+			<IoArrowBack />
+		</button>
+	)
 }
 
 export default BackButton

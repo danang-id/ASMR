@@ -1,4 +1,4 @@
-import * as React from "react";
+import React from "react"
 import { ForwardedRef, forwardRef } from "react"
 
 interface ImageProps {
@@ -10,11 +10,16 @@ interface ImageProps {
 	style?: React.CSSProperties
 }
 
-function Image({ source, alt, type, fallback, ...props }: ImageProps, ref?: ForwardedRef<HTMLImageElement>): JSX.Element {
-	return <picture>
-		<source srcSet={source} type={type} />
-		<img src={fallback} alt={alt} ref={ref} {...props} />
-	</picture>
+function Image(
+	{ source, alt, type, fallback, ...props }: ImageProps,
+	ref?: ForwardedRef<HTMLImageElement>
+): JSX.Element {
+	return (
+		<picture>
+			<source srcSet={source} type={type} />
+			<img src={fallback} alt={alt} ref={ref} {...props} />
+		</picture>
+	)
 }
 
 export default forwardRef(Image)

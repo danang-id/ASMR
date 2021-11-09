@@ -27,7 +27,7 @@ class HttpClient extends EventEmitter {
 	): RequestInit {
 		const requestInit: RequestInit = {
 			...options,
-			method: method
+			method: method,
 		}
 		if (typeof body === "undefined" || body === null) {
 			return requestInit
@@ -37,33 +37,34 @@ class HttpClient extends EventEmitter {
 			requestInit.body = body
 			requestInit.headers = {
 				// "Content-Type": "multipart/form-data",
-				...requestInit.headers
+				...requestInit.headers,
 			}
 		} else if (body instanceof URLSearchParams) {
 			requestInit.body = body
 			requestInit.headers = {
 				"Content-Type": "application/x-www-form-urlencoded",
-				...requestInit.headers
+				...requestInit.headers,
 			}
 		} else if (typeof body === "object") {
 			requestInit.body = JSON.stringify(body)
 			requestInit.headers = {
 				"Content-Type": "application/json",
-				...requestInit.headers
+				...requestInit.headers,
 			}
 		} else {
 			requestInit.body = body
 			requestInit.headers = {
 				"Content-Type": "text/plain",
-				...requestInit.headers
+				...requestInit.headers,
 			}
 		}
 
 		return requestInit
 	}
 
-	private static createResponseBody<TResponse = unknown>(response: Response)
-		: Promise<TResponse | FormData | string | undefined> {
+	private static createResponseBody<TResponse = unknown>(
+		response: Response
+	): Promise<TResponse | FormData | string | undefined> {
 		if (response.bodyUsed) {
 			return Promise.resolve(void 0)
 		}
@@ -87,7 +88,7 @@ class HttpClient extends EventEmitter {
 
 	private getURL(endpoint: string, options: HttpRequestOptions): URL {
 		const url = new URL(endpoint, this.options.baseUrl)
-		const urlSearchParams = new URLSearchParams(options.params ?? {})
+		const urlSearchParams = new URLSearchParams(options.params && {})
 		urlSearchParams.forEach((value, name) => {
 			url.searchParams.append(name, value)
 		})
@@ -151,10 +152,7 @@ class HttpClient extends EventEmitter {
 		}
 	}
 
-	public get<TResponse = unknown>(
-		endpoint: string,
-		options?: HttpRequestOptions
-	): Promise<HttpResponse<TResponse>> {
+	public get<TResponse = unknown>(endpoint: string, options?: HttpRequestOptions): Promise<HttpResponse<TResponse>> {
 		return this.request(HttpMethod.GET, endpoint, void 0, options)
 	}
 

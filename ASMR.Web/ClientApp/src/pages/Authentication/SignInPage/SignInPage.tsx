@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, MouseEvent, useState } from "react"
-import { Redirect, useHistory, useLocation } from "react-router-dom"
+import { Navigate, useLocation, useNavigate } from "react-router-dom"
 import { IoHomeOutline, IoKey, IoLogInOutline, IoPerson } from "react-icons/io5"
 import ApplicationLogo from "@asmr/components/ApplicationLogo"
 import Button from "@asmr/components/Button"
@@ -13,11 +13,8 @@ import useInit from "@asmr/libs/hooks/initHook"
 import useLogger from "@asmr/libs/hooks/loggerHook"
 import useNotification from "@asmr/libs/hooks/notificationHook"
 import useProgress from "@asmr/libs/hooks/progressHook"
-import AuthenticationRoutes from "@asmr/pages/Authentication/AuthenticationRoutes"
-import DashboardRoutes from "@asmr/pages/Dashboard/DashboardRoutes"
-import PublicRoutes from "@asmr/pages/Public/PublicRoutes"
-import "@asmr/pages/Authentication/SignInPage/SignInPage.scoped.css"
 import useServices from "@asmr/libs/hooks/servicesHook"
+import "@asmr/pages/Authentication/SignInPage/SignInPage.scoped.css"
 
 interface AccountProblemPageProps {
 	code: ErrorCode
@@ -28,13 +25,13 @@ interface AccountProblemPageProps {
 
 function AccountProblemPage({ code, description, username, password }: AccountProblemPageProps): JSX.Element {
 	const [resendDone, setResendDone] = useState(false)
-	const history = useHistory()
 	const logger = useLogger(AccountProblemPage)
+	const navigate = useNavigate()
 	const notification = useNotification()
 	const services = useServices()
 
 	function onHomeButtonClicked() {
-		history.push(PublicRoutes.HomePage)
+		navigate("/")
 	}
 
 	function onResendEmailAddressConfirmationButtonClicked() {
@@ -45,9 +42,11 @@ function AccountProblemPage({ code, description, username, password }: AccountPr
 		try {
 			const result = await services.gate.resendEmailAddressConfirmation({ username, password })
 			if (result.isSuccess) {
-				notification.success(result.message ??
-					"An email has been sent to the email address registered for your account. " +
-					"Please check your email inbox.")
+				notification.success(
+					result.message ??
+						"An email has been sent to the email address registered for your account. " +
+							"Please check your email inbox."
+				)
 				setResendDone(true)
 				return
 			}
@@ -61,23 +60,21 @@ function AccountProblemPage({ code, description, username, password }: AccountPr
 	return (
 		<BaseLayout className="page">
 			<div className="header">
-				<ApplicationLogo/>
+				<ApplicationLogo />
 				<p className="title">{config.application.name}</p>
 			</div>
 			<span className="separator" />
-			<div className="description">
-				{ description }
-			</div>
+			<div className="description">{description}</div>
 			<span className="separator" />
 			<div className="call-to-action">
-				{(code === ErrorCode.EmailAddressWaitingConfirmation && !resendDone) && (
-					<Button style="outline"
-							onClick={onResendEmailAddressConfirmationButtonClicked}>
+				{code === ErrorCode.EmailAddressWaitingConfirmation && !resendDone && (
+					<Button style="outline" onClick={onResendEmailAddressConfirmationButtonClicked}>
 						Resend Confirmation Email
 					</Button>
 				)}
 				<Button onClick={onHomeButtonClicked}>
-					Home&nbsp;&nbsp;<IoHomeOutline />
+					Home&nbsp;&nbsp;
+					<IoHomeOutline />
 				</Button>
 			</div>
 		</BaseLayout>
@@ -87,16 +84,16 @@ function AccountProblemPage({ code, description, username, password }: AccountPr
 function SignInPage(): JSX.Element {
 	useDocumentTitle("Sign In")
 	useInit(onInit)
-	const [accountProblem, setAccontProblem] = useState<AccountProblemPageProps | null>(null)
-	const [nextUrl, setNextUrl] = useState<string>(DashboardRoutes.IndexPage)
+	const [accountProblem, setAccountProblem] = useState<AccountProblemPageProps | null>(null)
+	const [nextUrl, setNextUrl] = useState<string>("/dashboard")
 	const [username, setUsername] = useState("")
 	const [password, setPassword] = useState("")
 	const [rememberMe, setRememberMe] = useState(false)
 	const [signInExecuted, setSignInExecuted] = useState(false)
 	const authentication = useAuthentication()
-	const history = useHistory()
 	const location = useLocation()
 	const logger = useLogger(SignInPage)
+	const navigate = useNavigate()
 	const notification = useNotification()
 	const [progress] = useProgress()
 
@@ -114,11 +111,11 @@ function SignInPage(): JSX.Element {
 	}
 
 	function onRegisterButtonClicked() {
-		history.push(AuthenticationRoutes.RegistrationPage)
+		navigate("/authentication/register")
 	}
 
 	function onForgetPasswordButtonClicked() {
-		history.push(AuthenticationRoutes.ForgetPasswordPage)
+		navigate("/authentication/password/forget")
 	}
 
 	function onUsernameChanged(event: ChangeEvent<HTMLInputElement>) {
@@ -154,22 +151,23 @@ function SignInPage(): JSX.Element {
 			const result = await authentication.signIn(username.trim(), password, rememberMe)
 			if (result.isSuccess) {
 				logger.info("Sign-in success, redirecting to:", nextUrl)
-				history.push(nextUrl)
+				navigate(nextUrl)
 				return
 			}
 
 			if (result.errors && result.errors[0]) {
 				const error = result.errors[0]
-				const showAccountProblemPage = error.code === ErrorCode.EmailAddressWaitingConfirmation ||
+				const showAccountProblemPage =
+					error.code === ErrorCode.EmailAddressWaitingConfirmation ||
 					error.code === ErrorCode.AccountWaitingForApproval ||
 					error.code === ErrorCode.AccountWasNotApproved
 
 				if (showAccountProblemPage) {
-					setAccontProblem({
+					setAccountProblem({
 						code: error.code,
 						description: error.reason,
 						username: username.trim(),
-						password: password
+						password: password,
 					})
 					return
 				}
@@ -182,14 +180,18 @@ function SignInPage(): JSX.Element {
 	}
 
 	if (!signInExecuted && authentication.isAuthenticated()) {
-		return <Redirect to={nextUrl} />
+		return <Navigate replace to={nextUrl} />
 	}
 
 	if (accountProblem) {
-		return <AccountProblemPage code={accountProblem.code}
-									description={accountProblem.description}
-									username={accountProblem.username}
-									password={accountProblem.password} />
+		return (
+			<AccountProblemPage
+				code={accountProblem.code}
+				description={accountProblem.description}
+				username={accountProblem.username}
+				password={accountProblem.password}
+			/>
+		)
 	}
 
 	return (
@@ -200,52 +202,58 @@ function SignInPage(): JSX.Element {
 					<p>Sign In</p>
 				</div>
 				<div className="card-body">
-					<Form className="sign-in-form" onSubmit={onSignInFormSubmitted} >
+					<Form className="sign-in-form" onSubmit={onSignInFormSubmitted}>
 						<div className="form-row">
 							<div className="form-icon">
 								<IoPerson />
 							</div>
-							<Form.Input disabled={progress.loading}
+							<Form.Input
+								disabled={progress.loading}
 								placeholder="Username"
 								type="text"
 								value={username}
-								onChange={onUsernameChanged} />
+								onChange={onUsernameChanged}
+							/>
 						</div>
 						<div className="form-row">
 							<div className="form-icon">
 								<IoKey />
 							</div>
-							<Form.Input disabled={progress.loading}
+							<Form.Input
+								disabled={progress.loading}
 								placeholder="Password"
 								type="password"
 								value={password}
-								onChange={onPasswordChanged} />
+								onChange={onPasswordChanged}
+							/>
 						</div>
 						<div className="form-row">
 							<div className="remember-me">
-								<Form.CheckBox checked={rememberMe}
+								<Form.CheckBox
+									checked={rememberMe}
 									disabled={progress.loading}
-									onChange={onRememberMeChanged}>Remember Me?</Form.CheckBox>
+									onChange={onRememberMeChanged}
+								>
+									Remember Me?
+								</Form.CheckBox>
 							</div>
 						</div>
 						<div className="call-to-action">
-							<Button className="sign-in-button"
-									disabled={progress.loading}
-									icon={IoLogInOutline}
-									type="submit"
-									onClick={onSignInButtonClicked}>
+							<Button
+								className="sign-in-button"
+								disabled={progress.loading}
+								icon={IoLogInOutline}
+								type="submit"
+								onClick={onSignInButtonClicked}
+							>
 								Sign In
 							</Button>
 						</div>
 						<div className="other-actions">
-							<Button style="none"
-									type="button"
-									onClick={onRegisterButtonClicked}>
+							<Button style="none" type="button" onClick={onRegisterButtonClicked}>
 								I don't have an account
 							</Button>
-							<Button style="none"
-									type="button"
-									onClick={onForgetPasswordButtonClicked}>
+							<Button style="none" type="button" onClick={onForgetPasswordButtonClicked}>
 								I forget my password
 							</Button>
 						</div>

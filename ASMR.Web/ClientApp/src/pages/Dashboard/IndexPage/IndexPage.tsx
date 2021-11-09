@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { IoAnalytics, IoBag, IoCash, IoPeople, IoPerson } from "react-icons/io5"
 import { GiCoffeeBeans } from "react-icons/gi"
 import Role from "@asmr/data/enumerations/Role"
@@ -7,7 +7,6 @@ import DashboardLayout from "@asmr/layouts/DashboardLayout"
 import useAuthentication from "@asmr/libs/hooks/authenticationHook"
 import useDocumentTitle from "@asmr/libs/hooks/documentTitleHook"
 import useNotification from "@asmr/libs/hooks/notificationHook"
-import DashboardRoutes from "@asmr/pages/Dashboard/DashboardRoutes"
 import "@asmr/pages/Dashboard/IndexPage/IndexPage.scoped.css"
 
 type FeaturePage = {
@@ -18,7 +17,7 @@ type FeaturePage = {
 }
 
 function addFeaturePage(featurePages: FeaturePage[], featurePage: FeaturePage): FeaturePage[] {
-	if (!featurePages.find(fp => fp.id === featurePage.id)) {
+	if (!featurePages.find((fp) => fp.id === featurePage.id)) {
 		featurePages.push(featurePage)
 	}
 
@@ -32,65 +31,65 @@ function getFeaturePagesBasedOnRole(featurePages: FeaturePage[], role: Role): Fe
 				id: 1,
 				name: "Manage Users",
 				icon: <IoPeople />,
-				pathname: DashboardRoutes.UsersManagementPage
+				pathname: "/dashboard/manage/users",
 			})
 			featurePages = addFeaturePage(featurePages, {
 				id: 2,
 				name: "Manage Beans",
 				icon: <GiCoffeeBeans />,
-				pathname: DashboardRoutes.BeansManagementPage
+				pathname: "/dashboard/manage/beans",
 			})
 			featurePages = addFeaturePage(featurePages, {
 				id: 3,
 				name: "Manage Products",
 				icon: <IoBag />,
-				pathname: DashboardRoutes.ProductsManagementPage
+				pathname: "/dashboard/manage/products",
 			})
 			featurePages = addFeaturePage(featurePages, {
 				id: 4,
 				name: "Production Report",
 				icon: <IoAnalytics />,
-				pathname: DashboardRoutes.ProductionReportPage
+				pathname: "/dashboard/report/production",
 			})
-			break;
+			break
 		case Role.Roaster:
 			featurePages = addFeaturePage(featurePages, {
 				id: 0,
 				name: "My Profile",
 				icon: <IoPerson />,
-				pathname: DashboardRoutes.ProfilePage
+				pathname: "/dashboard/profile",
 			})
-			break;
+			break
 		case Role.Server:
 			featurePages = addFeaturePage(featurePages, {
 				id: 2,
 				name: "Manage Beans",
 				icon: <GiCoffeeBeans />,
-				pathname: DashboardRoutes.BeansManagementPage
+				pathname: "/dashboard/manage/beans",
 			})
 			featurePages = addFeaturePage(featurePages, {
 				id: 3,
 				name: "Manage Products",
 				icon: <IoBag />,
-				pathname: DashboardRoutes.ProductsManagementPage
+				pathname: "/dashboard/manage/products",
 			})
 			featurePages = addFeaturePage(featurePages, {
 				id: 5,
 				name: "Product Transactions",
 				icon: <IoCash />,
-				pathname: DashboardRoutes.ProductTransactionsPage
+				pathname: "/dashboard/transactions",
 			})
-			break;
+			break
 	}
 
-	return featurePages;
+	return featurePages
 }
 
 function IndexPage(): JSX.Element {
 	useDocumentTitle("Dashboard")
 	const [featurePages, setFeaturePages] = useState<FeaturePage[]>([])
 	const authentication = useAuthentication()
-	const history = useHistory()
+	const navigate = useNavigate()
 	const notification = useNotification()
 
 	function onFeatureCardClicked(featurePage: FeaturePage) {
@@ -99,17 +98,16 @@ function IndexPage(): JSX.Element {
 			return
 		}
 
-		history.push({ pathname: featurePage.pathname })
+		navigate(featurePage.pathname)
 	}
 
 	useEffect(() => {
-		const roles = authentication.user?.roles.map(userRole => userRole.role) ?? []
+		const roles = authentication.user?.roles.map((userRole) => userRole.role) ?? []
 		let featurePagesBasedOnRole: FeaturePage[] = []
 		for (const role of roles) {
 			featurePagesBasedOnRole = getFeaturePagesBasedOnRole(featurePagesBasedOnRole, role)
 		}
-		featurePagesBasedOnRole = featurePagesBasedOnRole
-			.sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0)
+		featurePagesBasedOnRole = featurePagesBasedOnRole.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
 		setFeaturePages(featurePagesBasedOnRole)
 	}, [authentication.user])
 
@@ -124,9 +122,7 @@ function IndexPage(): JSX.Element {
 
 	return (
 		<DashboardLayout>
-			<div className="feature-card-list">
-				{featurePages.map(renderFeatureCard)}
-			</div>
+			<div className="feature-card-list">{featurePages.map(renderFeatureCard)}</div>
 		</DashboardLayout>
 	)
 }

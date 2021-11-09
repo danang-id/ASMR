@@ -10,7 +10,7 @@ const loadingTexts = [
 	"We are making your coffee",
 	"Heating up the stove",
 	"Making sure the beans are brewed well",
-	"Have a coffee while you are waiting"
+	"Have a coffee while you are waiting",
 ]
 
 function SuspenseFallbackPage(): JSX.Element {
@@ -59,10 +59,13 @@ function SuspenseFallbackPage(): JSX.Element {
 	return (
 		<BaseLayout className="screen">
 			<div className="loading-animation">
-				<CoffeeLoading/>
+				<CoffeeLoading />
 			</div>
 			<div className="loading-text-wrapper">
-				<p>{loadingTexts[loadingTextIndex]}{loadingTick}</p>
+				<p>
+					{loadingTexts[loadingTextIndex]}
+					{loadingTick}
+				</p>
 			</div>
 		</BaseLayout>
 	)

@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, MouseEvent, useRef, useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { IoHomeOutline, IoMail } from "react-icons/io5"
+import ReCAPTCHA from "react-google-recaptcha"
 import ApplicationLogo from "@asmr/components/ApplicationLogo"
 import Button from "@asmr/components/Button"
 import Form from "@asmr/components/Form"
@@ -11,43 +12,39 @@ import useLogger from "@asmr/libs/hooks/loggerHook"
 import useNotification from "@asmr/libs/hooks/notificationHook"
 import useProgress from "@asmr/libs/hooks/progressHook"
 import useServices from "@asmr/libs/hooks/servicesHook"
-import AuthenticationRoutes from "@asmr/pages/Authentication/AuthenticationRoutes"
 import "@asmr/pages/Authentication/ForgetPasswordPage/ForgetPasswordPage.scoped.css"
-import PublicRoutes from "@asmr/pages/Public/PublicRoutes"
-import ReCAPTCHA from "react-google-recaptcha"
 
 interface InstructionSentProps {
 	emailAddress: string
 }
 
 function InstructionSent({ emailAddress }: InstructionSentProps): JSX.Element {
-	const history = useHistory()
+	const navigate = useNavigate()
 
 	function onHomeButtonClicked() {
-		history.push(PublicRoutes.HomePage)
+		navigate("/")
 	}
 
 	return (
 		<BaseLayout className="page">
 			<div className="header">
-				<ApplicationLogo/>
+				<ApplicationLogo />
 				<p className="title">{config.application.name}</p>
 			</div>
 			<span className="separator" />
 			<div className="description">
 				<div>
-					If we found an account with the email address <strong>{emailAddress}</strong>, we will send an instruction
-					to reset your password.
+					If we found an account with the email address <strong>{emailAddress}</strong>, we will send an
+					instruction to reset your password.
 				</div>
-				<br/>
-				<div>
-					Please check your email inbox and follow the instruction we sent you.
-				</div>
+				<br />
+				<div>Please check your email inbox and follow the instruction we sent you.</div>
 			</div>
 			<span className="separator" />
 			<div className="call-to-action">
 				<Button onClick={onHomeButtonClicked}>
-					Home&nbsp;&nbsp;<IoHomeOutline />
+					Home&nbsp;&nbsp;
+					<IoHomeOutline />
 				</Button>
 			</div>
 		</BaseLayout>
@@ -59,14 +56,14 @@ function ForgetPasswordPage(): JSX.Element {
 	const [emailAddress, setEmailAddress] = useState("")
 	const [resetInstructionSent, setResetInstructionSent] = useState(false)
 	const recaptchaRef = useRef<ReCAPTCHA>(null)
-	const history = useHistory()
 	const logger = useLogger(ForgetPasswordPage)
+	const navigate = useNavigate()
 	const notification = useNotification()
 	const [progress] = useProgress()
 	const services = useServices()
 
 	function onSignInButtonClicked() {
-		history.push(AuthenticationRoutes.SignInPage)
+		navigate("/authentication/sign-in")
 	}
 
 	function onEmailAddressChanged(event: ChangeEvent<HTMLInputElement>) {
@@ -90,8 +87,7 @@ function ForgetPasswordPage(): JSX.Element {
 
 		try {
 			setResetInstructionSent(false)
-			const result = await services.gate.forgetPassword({ emailAddress },
-				recaptchaRef.current.getValue())
+			const result = await services.gate.forgetPassword({ emailAddress }, recaptchaRef.current.getValue())
 			if (result.isSuccess) {
 				setResetInstructionSent(true)
 				return
@@ -115,32 +111,34 @@ function ForgetPasswordPage(): JSX.Element {
 					<p>Forget Password</p>
 				</div>
 				<div className="card-body">
-					<Form className="forget-password-form" onSubmit={onForgetPasswordFormSubmitted} >
+					<Form className="forget-password-form" onSubmit={onForgetPasswordFormSubmitted}>
 						<div className="form-row">
 							<div className="form-icon">
 								<IoMail />
 							</div>
-							<Form.Input disabled={progress.loading}
-										placeholder="Email Address"
-										type="email"
-										value={emailAddress}
-										onChange={onEmailAddressChanged} />
+							<Form.Input
+								disabled={progress.loading}
+								placeholder="Email Address"
+								type="email"
+								value={emailAddress}
+								onChange={onEmailAddressChanged}
+							/>
 						</div>
 						<div className="recaptcha-row">
 							<ReCAPTCHA ref={recaptchaRef} sitekey={config.googleRecaptchaSiteKey} />
 						</div>
 						<div className="call-to-action">
-							<Button className="send-reset-password-instruction-button"
-									disabled={progress.loading}
-									type="submit"
-									onClick={onSendResetPasswordInstructionButtonClicked}>
+							<Button
+								className="send-reset-password-instruction-button"
+								disabled={progress.loading}
+								type="submit"
+								onClick={onSendResetPasswordInstructionButtonClicked}
+							>
 								Send Reset Password Instruction
 							</Button>
 						</div>
 						<div className="other-actions">
-							<Button style="none"
-									type="button"
-									onClick={onSignInButtonClicked}>
+							<Button style="none" type="button" onClick={onSignInButtonClicked}>
 								I remember my password
 							</Button>
 						</div>

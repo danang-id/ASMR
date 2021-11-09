@@ -1,6 +1,6 @@
 enum PaymentMethod {
 	Cash,
-	DebitCreditCard
+	DebitCreditCard,
 }
 
 export default PaymentMethod

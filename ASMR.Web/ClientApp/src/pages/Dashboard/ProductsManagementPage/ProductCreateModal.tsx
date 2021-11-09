@@ -1,4 +1,3 @@
-
 import { ChangeEvent, useEffect, useState } from "react"
 import Button from "@asmr/components/Button"
 import Form from "@asmr/components/Form"
@@ -12,14 +11,14 @@ interface ProductCreateModalProps {
 	bean: Bean | null
 	onClose: () => void
 	onCreateProduct: (requestModel: CreateProductRequestModel) => void
-	progress: ProgressInfo,
+	progress: ProgressInfo
 	show: boolean
 }
-function ProductCreateModal({ bean, onClose, onCreateProduct, progress, show  }: ProductCreateModalProps): JSX.Element {
+function ProductCreateModal({ bean, onClose, onCreateProduct, progress, show }: ProductCreateModalProps): JSX.Element {
 	const emptyRequestModel: CreateProductRequestModel = {
 		beanId: bean?.id ?? "",
 		price: 0,
-		weightPerPackaging: 0
+		weightPerPackaging: 0,
 	}
 	const [requestModel, setRequestModal] = useState<CreateProductRequestModel>(emptyRequestModel)
 
@@ -41,7 +40,7 @@ function ProductCreateModal({ bean, onClose, onCreateProduct, progress, show  }:
 			setRequestModal({
 				beanId: bean.id,
 				price: 0,
-				weightPerPackaging: 0
+				weightPerPackaging: 0,
 			})
 		}
 	}, [show, bean])
@@ -53,15 +52,13 @@ function ProductCreateModal({ bean, onClose, onCreateProduct, progress, show  }:
 					<div className="form-row">
 						<label className="form-field">Weight per Packaging (gram)</label>
 						<div className="form-data">
-							<Form.Input name="weightPerPackaging" type="number" onChange={onChange}
-							/>
+							<Form.Input name="weightPerPackaging" type="number" onChange={onChange} />
 						</div>
 					</div>
 					<div className="form-row">
 						<label className="form-field">Price (Rp)</label>
 						<div className="form-data">
-							<Form.Input name="price" type="number" onChange={onChange}
-							/>
+							<Form.Input name="price" type="number" onChange={onChange} />
 						</div>
 					</div>
 				</Form>

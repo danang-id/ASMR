@@ -3,7 +3,9 @@ import HttpRequestBody from "@asmr/libs/http/HttpRequestBody"
 
 type HttpRequestInterceptorResult = [HttpRequestOptions, HttpRequestBody | undefined]
 
-type HttpRequestInterceptor = (options: HttpRequestOptions, body?: HttpRequestBody)
-	=> HttpRequestInterceptorResult | Promise<HttpRequestInterceptorResult>
+type HttpRequestInterceptor = (
+	options: HttpRequestOptions,
+	body?: HttpRequestBody
+) => HttpRequestInterceptorResult | Promise<HttpRequestInterceptorResult>
 
 export default HttpRequestInterceptor

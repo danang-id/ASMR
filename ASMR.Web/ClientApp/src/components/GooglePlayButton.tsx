@@ -1,4 +1,4 @@
-import * as React from "react"
+import React from "react"
 import "@asmr/components/styles/GooglePlayButton.css"
 
 import GooglePlayButtonImage from "@asmr/assets/google-play-button.png"

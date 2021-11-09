@@ -1,4 +1,3 @@
-
 import { ChangeEvent, useEffect, useState } from "react"
 import Button from "@asmr/components/Button"
 import Form from "@asmr/components/Form"
@@ -12,7 +11,7 @@ import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.cs
 interface UserUpdateModalProps {
 	onClose: () => void
 	onUpdateUser: (requestModel: UpdateUserRequestModel, imageFile: File | null) => void
-	progress: ProgressInfo,
+	progress: ProgressInfo
 	show: boolean
 	user: User | null
 }
@@ -22,7 +21,7 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 		lastName: "",
 		emailAddress: "",
 		username: "",
-		roles: []
+		roles: [],
 	}
 	const [isAdministrator, setIsAdministrator] = useState(false)
 	const [requestModel, setRequestModal] = useState<UpdateUserRequestModel>(emptyRequestModel)
@@ -30,7 +29,7 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 	function onChange(event: ChangeEvent<HTMLInputElement>) {
 		const newRequestModel = { ...requestModel }
 		if (event.target.name.startsWith("role")) {
-			const roles: Role[] = [...(newRequestModel.roles ?? [])]
+			const roles: Role[] = [...(newRequestModel.roles && [])]
 			const role: Role = parseInt(event.target.name.substring(5))
 			const roleIndex = roles.indexOf(role)
 			if (event.target.checked) {
@@ -76,7 +75,7 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 				lastName: user.lastName,
 				emailAddress: user.emailAddress,
 				username: user.username,
-				roles: user.roles.map(userRole => userRole.role)
+				roles: user.roles.map((userRole) => userRole.role),
 			}
 			setIsAdministrator(newRequestModel.roles.includes(Role.Administrator))
 			setRequestModal(newRequestModel)
@@ -84,7 +83,7 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 	}, [show, user])
 
 	return (
-		<Modal onClose={onClose} show={show} title={`Profile: ${user?.firstName ?? ""} ${user?.lastName ?? ""}`}>
+		<Modal onClose={onClose} show={show} title={`Profile: ${user?.firstName && ""} ${user?.lastName && ""}`}>
 			<Modal.Body>
 				<Form className="modal-form">
 					<div className="form-row">
@@ -102,7 +101,12 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 					<div className="form-row">
 						<label className="form-field">Email Address</label>
 						<div className="form-data">
-							<Form.Input name="emailAddress" type="email" value={requestModel.emailAddress} onChange={onChange} />
+							<Form.Input
+								name="emailAddress"
+								type="email"
+								value={requestModel.emailAddress}
+								onChange={onChange}
+							/>
 						</div>
 					</div>
 					<div className="form-row">
@@ -113,19 +117,15 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 					</div>
 					<div className="form-row">
 						<label className="form-field">Roles</label>
-						{
-							isAdministrator ? (
-								<div className="form-data">
-									<Form.Input disabled value={Role[Role.Administrator]} />
-								</div>
-							) : (
-								<div className="form-data role-checkboxes">
-									{
-										Object.keys(Role).map(renderRolesAssignment)
-									}
-								</div>
-							)
-						}
+						{isAdministrator ? (
+							<div className="form-data">
+								<Form.Input disabled value={Role[Role.Administrator]} />
+							</div>
+						) : (
+							<div className="form-data role-checkboxes">
+								{Object.keys(Role).map(renderRolesAssignment)}
+							</div>
+						)}
 					</div>
 				</Form>
 			</Modal.Body>

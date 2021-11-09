@@ -16,7 +16,13 @@ function BeanImage({ bean, clickable = false }: BeanImageProps): JSX.Element {
 
 	const beanImage = <Image className="bean-image" source={bean.image} fallback={AsmrLogoImage} alt={bean.name} />
 
-	return clickable ? <a href={bean.image} target="_blank">{beanImage}</a> : beanImage
+	return clickable ? (
+		<a href={bean.image} target="_blank">
+			{beanImage}
+		</a>
+	) : (
+		beanImage
+	)
 }
 
 export default BeanImage

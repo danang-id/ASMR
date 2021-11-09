@@ -1,4 +1,4 @@
-import * as localforage from "localforage"
+import localforage from "localforage"
 import { useState } from "react"
 import useInit from "@asmr/libs/hooks/initHook"
 import useLogger from "@asmr/libs/hooks/loggerHook"
@@ -6,7 +6,7 @@ import useLogger from "@asmr/libs/hooks/loggerHook"
 const dataInstance = localforage.createInstance({
 	name: "asmr",
 	description: "Persisted Application State",
-	storeName: "persisted-state"
+	storeName: "persisted-state",
 })
 
 function usePersistedState<T = unknown>(name: string, initialValue?: T): [T | undefined, (value?: T) => void] {

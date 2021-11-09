@@ -10,7 +10,11 @@ export interface TableProps {
 
 function Table({ children, className, ...props }: TableProps): JSX.Element {
 	className = combineClassNames("table", className)
-	return <table className={className} {...props}>{children}</table>
+	return (
+		<table className={className} {...props}>
+			{children}
+		</table>
+	)
 }
 
 export interface TableHeadProps {
@@ -19,9 +23,13 @@ export interface TableHeadProps {
 	styles?: CSSProperties
 }
 
-Table.Head = function ({ children, className, ...props }: TableHeadProps): JSX.Element  {
+Table.Head = function ({ children, className, ...props }: TableHeadProps): JSX.Element {
 	className = combineClassNames("table-head", className)
-	return <thead className={className} {...props}>{children}</thead>
+	return (
+		<thead className={className} {...props}>
+			{children}
+		</thead>
+	)
 }
 
 export interface TableBodyProps {
@@ -30,9 +38,13 @@ export interface TableBodyProps {
 	styles?: CSSProperties
 }
 
-Table.Body = function ({ children, className, ...props }: TableBodyProps): JSX.Element  {
+Table.Body = function ({ children, className, ...props }: TableBodyProps): JSX.Element {
 	className = combineClassNames("table-body", className)
-	return <tbody className={className} {...props}>{children}</tbody>
+	return (
+		<tbody className={className} {...props}>
+			{children}
+		</tbody>
+	)
 }
 
 export interface TableRowProps {
@@ -41,9 +53,13 @@ export interface TableRowProps {
 	styles?: CSSProperties
 }
 
-Table.Row = function ({ children, className, ...props }: TableRowProps): JSX.Element  {
+Table.Row = function ({ children, className, ...props }: TableRowProps): JSX.Element {
 	className = combineClassNames("table-row", className)
-	return <tr className={className} {...props}>{children}</tr>
+	return (
+		<tr className={className} {...props}>
+			{children}
+		</tr>
+	)
 }
 
 export interface TableDataCellProps {
@@ -54,7 +70,7 @@ export interface TableDataCellProps {
 	styles?: CSSProperties
 }
 
-Table.DataCell = function ({ children, className, head = false, ...props }: TableDataCellProps): JSX.Element  {
+Table.DataCell = function ({ children, className, head = false, ...props }: TableDataCellProps): JSX.Element {
 	let addedClassName = combineClassNames("table-data-cell")
 	if (head) {
 		addedClassName = combineClassNames(addedClassName, "table-data-cell-head")
@@ -62,9 +78,13 @@ Table.DataCell = function ({ children, className, head = false, ...props }: Tabl
 	className = combineClassNames(addedClassName, className)
 
 	return head ? (
-		<th className={className} {...props}>{children}</th>
+		<th className={className} {...props}>
+			{children}
+		</th>
 	) : (
-		<td className={className} {...props}>{children}</td>
+		<td className={className} {...props}>
+			{children}
+		</td>
 	)
 }
 

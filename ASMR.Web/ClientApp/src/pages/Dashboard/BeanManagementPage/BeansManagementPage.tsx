@@ -1,8 +1,8 @@
-
 import { useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import {
-	IoAddCircleOutline, IoBagOutline,
+	IoAddCircleOutline,
+	IoBagOutline,
 	IoCreateOutline,
 	IoImageOutline,
 	IoQrCodeOutline,
@@ -28,8 +28,6 @@ import useLogger from "@asmr/libs/hooks/loggerHook"
 import useNotification from "@asmr/libs/hooks/notificationHook"
 import useProgress from "@asmr/libs/hooks/progressHook"
 import useServices from "@asmr/libs/hooks/servicesHook"
-import DashboardRoutes from "@asmr/pages/Dashboard/DashboardRoutes"
-import PublicRoutes from "@asmr/pages/Public/PublicRoutes"
 import "@asmr/pages/Dashboard/BeanManagementPage/BeansManagementPage.scoped.css"
 
 const BeanCreateModal = lazy(() => import("@asmr/pages/Dashboard/BeanManagementPage/BeanCreateModal"))
@@ -46,8 +44,8 @@ function BeansManagementPage(): JSX.Element {
 	const [beanUpdateModalShown, setBeanUpdateModalShown] = useState(false)
 	const [beanUpdateImageModalShown, setBeanUpdateImageModalShown] = useState(false)
 	const [beanRemoveModalShown, setBeanRemoveModalShown] = useState(false)
-	const history = useHistory()
 	const logger = useLogger(BeansManagementPage)
+	const navigate = useNavigate()
 	const notification = useNotification()
 	const [progress] = useProgress()
 	const services = useServices()
@@ -67,11 +65,11 @@ function BeansManagementPage(): JSX.Element {
 	}
 
 	function onShowBeanInformationPageButtonClicked(bean: Bean) {
-		window.open(`${PublicRoutes.BeanInformationPage}/${bean.id}`, "_blank")
+		window.open(`/pub/bean/${bean.id}`, "_blank")
 	}
 
 	function onShowProductManagementPageButtonClicked(bean: Bean) {
-		history.push(`${DashboardRoutes.ProductsManagementPage}?beanId=${bean.id}`)
+		navigate(`/dashboard/manage/products?beanId=${bean.id}`)
 	}
 
 	async function onShowBeanCreateModalButtonClicked() {
@@ -177,26 +175,70 @@ function BeansManagementPage(): JSX.Element {
 	}
 
 	function renderBeanInventory(beanInventory: BeanInventory): JSX.Element {
-		return <div className="bean-inventory">
-			<p>Green Bean: {toLocaleUnit(beanInventory.currentGreenBeanWeight, "gram")}</p>
-			<p>Roasted Bean: {toLocaleUnit(beanInventory.currentRoastedBeanWeight, "gram")}</p>
-		</div>
+		return (
+			<div className="bean-inventory">
+				<p>Green Bean: {toLocaleUnit(beanInventory.currentGreenBeanWeight, "gram")}</p>
+				<p>Roasted Bean: {toLocaleUnit(beanInventory.currentRoastedBeanWeight, "gram")}</p>
+			</div>
+		)
 	}
 
 	function renderBeanTableRow(bean: Bean, index: number): JSX.Element {
 		function ManagementActions() {
-			return <>
-				<Button disabled={progress.loading} key={0} icon={IoQrCodeOutline} size="xs" style="filled"
-						onClick={() => onShowBeanInformationPageButtonClicked(bean)}>Show QR Code</Button>
-				<Button disabled={progress.loading} key={1} icon={IoBagOutline} size="xs" style="outline"
-						onClick={() => onShowProductManagementPageButtonClicked(bean)}>Manage Products</Button>
-				<Button disabled={progress.loading} key={2} icon={IoCreateOutline} size="xs" style="outline"
-						onClick={() => onShowBeanUpdateModalButtonClicked(bean)}>Modify</Button>
-				<Button disabled={progress.loading} key={3} icon={IoImageOutline} size="xs" style="outline"
-						onClick={() => onShowBeanUpdateImageModalButtonClicked(bean)}>Change Image</Button>
-				<Button disabled={progress.loading} key={4} icon={IoTrashOutline} size="xs" style="danger"
-						onClick={() => onShowBeanRemoveModalButtonClicked(bean)}>Remove</Button>
-			</>
+			return (
+				<>
+					<Button
+						disabled={progress.loading}
+						key={0}
+						icon={IoQrCodeOutline}
+						size="xs"
+						style="filled"
+						onClick={() => onShowBeanInformationPageButtonClicked(bean)}
+					>
+						Show QR Code
+					</Button>
+					<Button
+						disabled={progress.loading}
+						key={1}
+						icon={IoBagOutline}
+						size="xs"
+						style="outline"
+						onClick={() => onShowProductManagementPageButtonClicked(bean)}
+					>
+						Manage Products
+					</Button>
+					<Button
+						disabled={progress.loading}
+						key={2}
+						icon={IoCreateOutline}
+						size="xs"
+						style="outline"
+						onClick={() => onShowBeanUpdateModalButtonClicked(bean)}
+					>
+						Modify
+					</Button>
+					<Button
+						disabled={progress.loading}
+						key={3}
+						icon={IoImageOutline}
+						size="xs"
+						style="outline"
+						onClick={() => onShowBeanUpdateImageModalButtonClicked(bean)}
+					>
+						Change Image
+					</Button>
+					<Button
+						disabled={progress.loading}
+						key={4}
+						icon={IoTrashOutline}
+						size="xs"
+						style="danger"
+						onClick={() => onShowBeanRemoveModalButtonClicked(bean)}
+					>
+						Remove
+					</Button>
+				</>
+			)
 		}
 
 		return (
@@ -223,9 +265,7 @@ function BeansManagementPage(): JSX.Element {
 					</div>
 				</Table.DataCell>
 				<BreakpointRenderer min="lg">
-					<Table.DataCell>
-						{renderBeanInventory(bean.inventory)}
-					</Table.DataCell>
+					<Table.DataCell>{renderBeanInventory(bean.inventory)}</Table.DataCell>
 					<Table.DataCell>
 						<div className="management-actions">
 							<ManagementActions />
@@ -239,13 +279,19 @@ function BeansManagementPage(): JSX.Element {
 	return (
 		<DashboardLayout className="page">
 			<div className="header">
-				<BackButton />&nbsp;&nbsp;
-				Beans Management
+				<BackButton />
+				&nbsp;&nbsp; Beans Management
 			</div>
 
 			<div className="click-to-actions">
-				<Button disabled={progress.loading} icon={IoAddCircleOutline} size="sm"
-						onClick={onShowBeanCreateModalButtonClicked}>Add Bean</Button>
+				<Button
+					disabled={progress.loading}
+					icon={IoAddCircleOutline}
+					size="sm"
+					onClick={onShowBeanCreateModalButtonClicked}
+				>
+					Add Bean
+				</Button>
 			</div>
 
 			<div className="content">
@@ -261,10 +307,14 @@ function BeansManagementPage(): JSX.Element {
 							</Table.Row>
 						</Table.Head>
 						<Table.Body>
-							{beans.length > 0 ? beans.map(renderBeanTableRow) : (
+							{beans.length > 0 ? (
+								beans.map(renderBeanTableRow)
+							) : (
 								<Table.Row>
 									<Table.DataCell colSpan={3}>
-										{progress.loading ? "Retrieving data from server..." : "There are no beans at the moment."}
+										{progress.loading
+											? "Retrieving data from server..."
+											: "There are no beans at the moment."}
 									</Table.DataCell>
 								</Table.Row>
 							)}
@@ -273,25 +323,33 @@ function BeansManagementPage(): JSX.Element {
 				</div>
 			</div>
 
-			<BeanCreateModal onClose={onCloseModals}
-								onCreateBean={createBean}
-								progress={progress}
-								show={beanCreateModalShown} />
-			<BeanUpdateModal bean={selectedBean}
-								onClose={onCloseModals}
-								onUpdateBean={updateBean}
-								progress={progress}
-								show={beanUpdateModalShown} />
-			<BeanUpdateImageModal bean={selectedBean}
-									onClose={onCloseModals}
-									onUpdateBean={updateBean}
-									progress={progress}
-									show={beanUpdateImageModalShown} />
-			<BeanRemoveModal bean={selectedBean}
-								onClose={onCloseModals}
-								onRemoveBean={removeBean}
-								progress={progress}
-								show={beanRemoveModalShown} />
+			<BeanCreateModal
+				onClose={onCloseModals}
+				onCreateBean={createBean}
+				progress={progress}
+				show={beanCreateModalShown}
+			/>
+			<BeanUpdateModal
+				bean={selectedBean}
+				onClose={onCloseModals}
+				onUpdateBean={updateBean}
+				progress={progress}
+				show={beanUpdateModalShown}
+			/>
+			<BeanUpdateImageModal
+				bean={selectedBean}
+				onClose={onCloseModals}
+				onUpdateBean={updateBean}
+				progress={progress}
+				show={beanUpdateImageModalShown}
+			/>
+			<BeanRemoveModal
+				bean={selectedBean}
+				onClose={onCloseModals}
+				onRemoveBean={removeBean}
+				progress={progress}
+				show={beanRemoveModalShown}
+			/>
 		</DashboardLayout>
 	)
 }

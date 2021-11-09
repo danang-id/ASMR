@@ -1,4 +1,3 @@
-
 import { ChangeEvent, useEffect, useState } from "react"
 import Button from "@asmr/components/Button"
 import Form from "@asmr/components/Form"
@@ -13,7 +12,7 @@ import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.cs
 interface UserUpdateImageModalProps {
 	onClose: () => void
 	onUpdateUser: (requestModel: UpdateUserRequestModel, imageFile: File | null) => void
-	progress: ProgressInfo,
+	progress: ProgressInfo
 	show: boolean
 	user: User | null
 }
@@ -30,8 +29,7 @@ function UserUpdateImageModal({ user, onClose, onUpdateUser, progress, show }: U
 
 	function onUserImageCropped(cropper: Cropper) {
 		const canvas = cropper.getCroppedCanvas()
-		getFileFromCanvas(canvas, imageFile?.name ?? "", imageFile?.type)
-			.then(setCroppedImageFile)
+		getFileFromCanvas(canvas, imageFile?.name ?? "", imageFile?.type).then(setCroppedImageFile)
 	}
 
 	useEffect(() => {
@@ -54,23 +52,33 @@ function UserUpdateImageModal({ user, onClose, onUpdateUser, progress, show }: U
 	}, [imageFile])
 
 	return (
-		<Modal onClose={onClose} show={show} title={`Change Image for ${user?.firstName ?? ""} ${user?.lastName ?? ""}`}>
+		<Modal
+			onClose={onClose}
+			show={show}
+			title={`Change Image for ${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
+		>
 			<Modal.Body>
 				<Form className="modal-form">
 					<div className="form-row">
 						<label className="form-field">Image</label>
 						<div className="form-data">
-							<Form.Input accept="image/png, image/jpeg, image/webp" name="image" type="file" onChange={onChange} />
+							<Form.Input
+								accept="image/png, image/jpeg, image/webp"
+								name="image"
+								type="file"
+								onChange={onChange}
+							/>
 						</div>
 					</div>
-					{
-						imageBuffer && (
-							<div className="form-row image-preview">
-								<ImageCropper alt={`${user?.firstName ?? ""} Image`}  source={imageBuffer}
-										onCropped={onUserImageCropped} />
-							</div>
-						)
-					}
+					{imageBuffer && (
+						<div className="form-row image-preview">
+							<ImageCropper
+								alt={`${user?.firstName ?? ""} Image`}
+								source={imageBuffer}
+								onCropped={onUserImageCropped}
+							/>
+						</div>
+					)}
 				</Form>
 			</Modal.Body>
 
@@ -79,8 +87,11 @@ function UserUpdateImageModal({ user, onClose, onUpdateUser, progress, show }: U
 					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>
 						Cancel
 					</Button>
-					<Button disabled={progress.loading} size="sm"
-							onClick={() => onUpdateUser({} as UpdateUserRequestModel, croppedImageFile)}>
+					<Button
+						disabled={progress.loading}
+						size="sm"
+						onClick={() => onUpdateUser({} as UpdateUserRequestModel, croppedImageFile)}
+					>
 						Save
 					</Button>
 				</div>

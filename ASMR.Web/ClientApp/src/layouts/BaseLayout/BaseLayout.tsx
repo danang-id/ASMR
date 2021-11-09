@@ -1,8 +1,7 @@
 import { CSSProperties, ReactNode } from "react"
-import { useHistory } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import config from "@asmr/libs/common/config"
 import { combineClassNames } from "@asmr/libs/common/styles"
-import PublicRoutes from "@asmr/pages/Public/PublicRoutes"
 import "@asmr/layouts/BaseLayout/BaseLayout.css"
 
 export interface BaseLayoutProps {
@@ -13,7 +12,8 @@ export interface BaseLayoutProps {
 }
 
 function BaseLayout({ children, className, ignoreTheme = false, ...props }: BaseLayoutProps): JSX.Element {
-	const history = useHistory()
+	const location = useLocation()
+	const navigate = useNavigate()
 	let addedClassName = combineClassNames("layout")
 	if (!ignoreTheme) {
 		addedClassName = combineClassNames(addedClassName, "layout-theme")
@@ -21,11 +21,11 @@ function BaseLayout({ children, className, ignoreTheme = false, ...props }: Base
 	className = combineClassNames(addedClassName, className)
 
 	function onApplicationStatusClicked() {
-		if (history.location.pathname.startsWith(PublicRoutes.CoreInformationPage)) {
+		if (location.pathname.startsWith("/pub/core")) {
 			return
 		}
 
-		history.push(PublicRoutes.CoreInformationPage)
+		navigate("/pub/core")
 	}
 
 	return (

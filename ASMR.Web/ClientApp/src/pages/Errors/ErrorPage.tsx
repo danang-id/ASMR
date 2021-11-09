@@ -15,7 +15,7 @@ function ErrorPage({
 	documentTitle = "Error Occurred",
 	title = "Something went wrong",
 	message = "We are sorry about that. You may try again later.",
-	clickToActions
+	clickToActions,
 }: ErrorPageProps): JSX.Element {
 	useDocumentTitle(documentTitle)
 
@@ -27,9 +27,7 @@ function ErrorPage({
 			<div className="content">
 				<p className="title">{title}</p>
 				<p className="description">{message}</p>
-				<div className="click-to-action">
-					{clickToActions}
-				</div>
+				<div className="click-to-action">{clickToActions}</div>
 			</div>
 		</BaseLayout>
 	)

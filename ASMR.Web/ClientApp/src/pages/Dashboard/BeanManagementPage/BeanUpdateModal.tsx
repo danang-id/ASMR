@@ -1,4 +1,3 @@
-
 import { ChangeEvent, useEffect, useState } from "react"
 import Button from "@asmr/components/Button"
 import Form from "@asmr/components/Form"
@@ -9,16 +8,16 @@ import { ProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
 import "@asmr/pages/Dashboard/BeanManagementPage/BeansManagementModal.scoped.css"
 
 interface BeanUpdateModalProps {
-	bean: Bean | null,
+	bean: Bean | null
 	onClose: () => void
 	onUpdateBean: (requestModel: UpdateBeanRequestModel, imageFile: File | null) => void
-	progress: ProgressInfo,
+	progress: ProgressInfo
 	show: boolean
 }
 function BeanUpdateModal({ bean, onClose, onUpdateBean, progress, show }: BeanUpdateModalProps): JSX.Element {
 	const emptyRequestModel: UpdateBeanRequestModel = {
 		name: "",
-		description: ""
+		description: "",
 	}
 	const [requestModel, setRequestModal] = useState<UpdateBeanRequestModel>(emptyRequestModel)
 
@@ -38,7 +37,7 @@ function BeanUpdateModal({ bean, onClose, onUpdateBean, progress, show }: BeanUp
 		if (bean) {
 			const newRequestModel: UpdateBeanRequestModel = {
 				name: bean.name,
-				description: bean.description
+				description: bean.description,
 			}
 			setRequestModal(newRequestModel)
 		}
@@ -57,7 +56,12 @@ function BeanUpdateModal({ bean, onClose, onUpdateBean, progress, show }: BeanUp
 					<div className="form-row">
 						<label className="form-field">Description</label>
 						<div className="form-data">
-							<Form.TextArea name="description" rows={6} value={requestModel.description} onChange={onChange} />
+							<Form.TextArea
+								name="description"
+								rows={6}
+								value={requestModel.description}
+								onChange={onChange}
+							/>
 						</div>
 					</div>
 				</Form>

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react"
 import ASMRWebReleaseInformation from "@asmr/data/release/ASMRWebReleaseInformation"
 import BackButton from "@asmr/components/BackButton"
@@ -51,8 +50,8 @@ function CoreInformationPage(): JSX.Element {
 		<BaseLayout>
 			<div className="core-information-page">
 				<div className="header">
-					<BackButton />&nbsp;&nbsp;
-					Core Information
+					<BackButton />
+					&nbsp;&nbsp; Core Information
 				</div>
 				<div className="table-container">
 					<Table>
@@ -69,45 +68,41 @@ function CoreInformationPage(): JSX.Element {
 									<p className="latest-version">
 										Latest Version: {releaseInformation?.BackEnd.Version ?? "N/A"}
 									</p>
-									{
-										isBackEndLatest ? (
-											<p className="current-version">You are using the latest version</p>
-										) : (
-											<p className="current-version">
-												Version mismatch, you are using version {config.backEndVersion}<br />
-												You may try to refresh or clear the cache of the web application
-											</p>
-										)
-									}
+									{isBackEndLatest ? (
+										<p className="current-version">You are using the latest version</p>
+									) : (
+										<p className="current-version">
+											Version mismatch, you are using version {config.backEndVersion}
+											<br />
+											You may try to refresh or clear the cache of the web application
+										</p>
+									)}
 								</Table.DataCell>
 							</Table.Row>
 							<Table.Row>
 								<Table.DataCell>Web UI</Table.DataCell>
 								<Table.DataCell>
-									{
-										environment.isDevelopment && (
-											<>
-												<p className="current-version">
-													You are on the development version of the Web UI.
-													This information may not be relevant for you.
-												</p>
-												<hr/>
-											</>
-										)
-									}
+									{environment.isDevelopment && (
+										<>
+											<p className="current-version">
+												You are on the development version of the Web UI. This information may
+												not be relevant for you.
+											</p>
+											<hr />
+										</>
+									)}
 									<p className="latest-version">
 										Latest Version: {releaseInformation?.FrontEnd.Version ?? "N/A"}
 									</p>
-									{
-										isFrontEndLatest ? (
-											<p className="current-version">You are using the latest version</p>
-										) : (
-											<p className="current-version">
-												Version mismatch, you are using version {config.application.versionFull}<br />
-												You may try to refresh or clear the cache of the web application
-											</p>
-										)
-									}
+									{isFrontEndLatest ? (
+										<p className="current-version">You are using the latest version</p>
+									) : (
+										<p className="current-version">
+											Version mismatch, you are using version {config.application.versionFull}
+											<br />
+											You may try to refresh or clear the cache of the web application
+										</p>
+									)}
 								</Table.DataCell>
 							</Table.Row>
 						</Table.Body>

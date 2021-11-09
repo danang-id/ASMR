@@ -32,7 +32,6 @@ const fileExtensionRegexp = new RegExp("/[^/?]+\\.[^/]+$")
 registerRoute(
 	// Return false to exempt requests from being fulfilled by index.html.
 	({ request, url }: { request: Request; url: URL }) => {
-
 		// If this isn't a navigation, skip.
 		if (request.mode !== "navigate") {
 			return false
@@ -64,7 +63,6 @@ registerRoute(
 // An example runtime caching route for requests that aren't handled by the
 // precache, in this case same-origin .png or .webp requests like those from in public/
 registerRoute(
-
 	// Add in any other file extensions or routing criteria as needed.
 	({ url }) =>
 		url.origin === self.location.origin &&
@@ -82,7 +80,7 @@ registerRoute(
 
 // This allows the web application to trigger skipWaiting via
 // registration.waiting.postMessage({type: 'SKIP_WAITING'})
-self.addEventListener("message", event => {
+self.addEventListener("message", (event) => {
 	if (event.data && event.data.type === "SKIP_WAITING") {
 		self.skipWaiting()
 	}

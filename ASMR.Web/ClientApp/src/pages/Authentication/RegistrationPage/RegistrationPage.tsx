@@ -1,6 +1,7 @@
 import { ChangeEvent, FormEvent, MouseEvent, useEffect, useRef, useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { IoHomeOutline, IoLogInOutline } from "react-icons/io5"
+import ReCAPTCHA from "react-google-recaptcha"
 import ApplicationLogo from "@asmr/components/ApplicationLogo"
 import Button from "@asmr/components/Button"
 import Form from "@asmr/components/Form"
@@ -15,36 +16,32 @@ import useLogger from "@asmr/libs/hooks/loggerHook"
 import useNotification from "@asmr/libs/hooks/notificationHook"
 import useProgress from "@asmr/libs/hooks/progressHook"
 import useServices from "@asmr/libs/hooks/servicesHook"
-import AuthenticationRoutes from "@asmr/pages/Authentication/AuthenticationRoutes"
-import PublicRoutes from "@asmr/pages/Public/PublicRoutes"
 import "@asmr/pages/Authentication/RegistrationPage/RegistrationPage.scoped.css"
-import ReCAPTCHA from "react-google-recaptcha"
 
 interface RegistrationDonePageProps {
 	message?: string
 }
 
 function RegistrationDonePage({ message }: RegistrationDonePageProps): JSX.Element {
-	const history = useHistory()
+	const navigate = useNavigate()
 
 	function onHomeButtonClicked() {
-		history.push(PublicRoutes.HomePage)
+		navigate("/")
 	}
 
 	return (
 		<BaseLayout className="page">
 			<div className="header">
-				<ApplicationLogo/>
+				<ApplicationLogo />
 				<p className="title">{config.application.name}</p>
 			</div>
 			<span className="separator" />
-			<div className="description">
-				{ message }
-			</div>
+			<div className="description">{message}</div>
 			<span className="separator" />
 			<div className="call-to-action">
 				<Button onClick={onHomeButtonClicked}>
-					Home&nbsp;&nbsp;<IoHomeOutline />
+					Home&nbsp;&nbsp;
+					<IoHomeOutline />
 				</Button>
 			</div>
 		</BaseLayout>
@@ -71,8 +68,8 @@ function RegistrationPage(): JSX.Element {
 	const [registrationDone, setRegistrationDone] = useState(false)
 	const [registrationMessage, setRegistrationMessage] = useState<string | undefined>()
 	const recaptchaRef = useRef<ReCAPTCHA>(null)
-	const history = useHistory()
 	const logger = useLogger(RegistrationPage)
+	const navigate = useNavigate()
 	const notification = useNotification()
 	const [progress] = useProgress()
 	const services = useServices()
@@ -83,7 +80,7 @@ function RegistrationPage(): JSX.Element {
 	}
 
 	function onSignInButtonClicked() {
-		history.push(AuthenticationRoutes.SignInPage)
+		navigate("/authentication/sign-in")
 	}
 
 	function onChange(event: ChangeEvent<HTMLInputElement>) {
@@ -100,8 +97,7 @@ function RegistrationPage(): JSX.Element {
 
 	function onUserImageCropped(cropper: Cropper) {
 		const canvas = cropper.getCroppedCanvas()
-		getFileFromCanvas(canvas, imageFile?.name ?? "", imageFile?.type)
-			.then(setCroppedImageFile)
+		getFileFromCanvas(canvas, imageFile?.name ? imageFile.name : "", imageFile?.type).then(setCroppedImageFile)
 	}
 
 	function onRegisterButtonClicked(event: MouseEvent<HTMLButtonElement>) {
@@ -122,8 +118,7 @@ function RegistrationPage(): JSX.Element {
 		try {
 			setRegistrationDone(false)
 			logger.info("Registering user", requestModel.username)
-			const result = await services.gate.register(requestModel, croppedImageFile,
-				recaptchaRef.current.getValue())
+			const result = await services.gate.register(requestModel, croppedImageFile, recaptchaRef.current.getValue())
 			if (result.isSuccess) {
 				setRegistrationMessage(result.message)
 				setRegistrationDone(true)
@@ -161,12 +156,11 @@ function RegistrationPage(): JSX.Element {
 					<p>Register</p>
 				</div>
 				<div className="card-body">
-					<Form className="registration-form" onSubmit={onRegistrationFormSubmitted} >
+					<Form className="registration-form" onSubmit={onRegistrationFormSubmitted}>
 						<div className="form-row">
 							<label className="form-field">First Name</label>
 							<div className="form-data">
-								<Form.Input name="firstName" onChange={onChange}
-								/>
+								<Form.Input name="firstName" onChange={onChange} />
 							</div>
 						</div>
 						<div className="form-row">
@@ -208,32 +202,35 @@ function RegistrationPage(): JSX.Element {
 						<div className="form-row">
 							<label className="form-field">Image</label>
 							<div className="form-data">
-								<Form.Input accept="image/png, image/jpeg, image/webp" name="image" type="file" onChange={onChange} />
+								<Form.Input
+									accept="image/png, image/jpeg, image/webp"
+									name="image"
+									type="file"
+									onChange={onChange}
+								/>
 							</div>
 						</div>
-						{
-							imageBuffer && (
-								<div className="form-row image-preview">
-									<ImageCropper alt="User Image" source={imageBuffer} onCropped={onUserImageCropped} />
-								</div>
-							)
-						}
+						{imageBuffer && (
+							<div className="form-row image-preview">
+								<ImageCropper alt="User Image" source={imageBuffer} onCropped={onUserImageCropped} />
+							</div>
+						)}
 						<div className="recaptcha-row">
 							<ReCAPTCHA ref={recaptchaRef} sitekey={config.googleRecaptchaSiteKey} />
 						</div>
 						<div className="call-to-action">
-							<Button className="register-button"
-									disabled={progress.loading}
-									icon={IoLogInOutline}
-									type="submit"
-									onClick={onRegisterButtonClicked}>
+							<Button
+								className="register-button"
+								disabled={progress.loading}
+								icon={IoLogInOutline}
+								type="submit"
+								onClick={onRegisterButtonClicked}
+							>
 								Register
 							</Button>
 						</div>
 						<div className="other-actions">
-							<Button style="none"
-									type="button"
-									onClick={onSignInButtonClicked}>
+							<Button style="none" type="button" onClick={onSignInButtonClicked}>
 								I have an account
 							</Button>
 						</div>

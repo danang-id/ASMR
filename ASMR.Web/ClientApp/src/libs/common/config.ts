@@ -10,19 +10,18 @@ const timeDigit = now.getHours() >= 10 ? now.getHours().toString() : `0${now.get
 
 const version = process.env.REACT_APP_VERSION ?? "1.0"
 
-const buildNumber = process.env.NODE_ENV === "production"
-	? (build.number ?? "00000000")
-	:  yearDigit + monthDigit + dateDigit + timeDigit
+const buildNumber =
+	process.env.NODE_ENV === "production" ? build.number ?? "00000000" : yearDigit + monthDigit + dateDigit + timeDigit
 
 const config = {
 	application: {
 		name: process.env.REACT_APP_NAME ?? "ASMR",
 		version: version,
 		versionFull: version + "." + buildNumber,
-		description: process.env.REACT_APP_DESCRIPTION ?? "Coffee Beans Management Solution"
+		description: process.env.REACT_APP_DESCRIPTION ?? "Coffee Beans Management Solution",
 	},
 	build: {
-		number: buildNumber
+		number: buildNumber,
 	},
 	backEndBaseUrl: process.env.REACT_APP_BACK_END_BASE_URL,
 	backEndVersion: process.env.REACT_APP_BACK_END_VERSION,

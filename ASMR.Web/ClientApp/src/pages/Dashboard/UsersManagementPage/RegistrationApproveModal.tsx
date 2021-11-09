@@ -1,4 +1,3 @@
-
 import { ChangeEvent, useEffect, useState } from "react"
 import Button from "@asmr/components/Button"
 import Form from "@asmr/components/Form"
@@ -12,13 +11,19 @@ import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.cs
 interface RegistrationApproveModalProps {
 	onClose: () => void
 	onApproveRegistration: (requestModel: ApproveRegistrationRequestModel) => void
-	progress: ProgressInfo,
+	progress: ProgressInfo
 	show: boolean
 	user: User | null
 }
-function RegistrationApproveModal({ onClose, onApproveRegistration, progress, show, user }: RegistrationApproveModalProps): JSX.Element {
+function RegistrationApproveModal({
+	onClose,
+	onApproveRegistration,
+	progress,
+	show,
+	user,
+}: RegistrationApproveModalProps): JSX.Element {
 	const emptyRequestModel: ApproveRegistrationRequestModel = {
-		roles: []
+		roles: [],
 	}
 	const [requestModel, setRequestModal] = useState<ApproveRegistrationRequestModel>(emptyRequestModel)
 
@@ -60,31 +65,37 @@ function RegistrationApproveModal({ onClose, onApproveRegistration, progress, sh
 	}, [show])
 
 	return (
-		<Modal onClose={onClose} show={show} title={`Approve Registration of ${user?.firstName ?? ""} ${user?.lastName ?? ""}`}>
+		<Modal
+			onClose={onClose}
+			show={show}
+			title={`Approve Registration of ${user?.firstName ?? ""} ${user?.lastName ?? ""}`}
+		>
 			<Modal.Body>
 				<div className="approve-registration-modal-body">
 					<p>
 						To approve the registration of user{" "}
-						<span className="full-name">{user?.firstName} {user?.lastName}</span>,{" "}
-						please assign roles for this user.
+						<span className="full-name">
+							{user?.firstName} {user?.lastName}
+						</span>
+						, please assign roles for this user.
 					</p>
 				</div>
 				<Form className="modal-form">
 					<div className="form-row">
 						<label className="form-field">Roles</label>
-						<div className="form-data role-checkboxes">
-							{
-								Object.keys(Role).map(renderRolesAssignment)
-							}
-						</div>
+						<div className="form-data role-checkboxes">{Object.keys(Role).map(renderRolesAssignment)}</div>
 					</div>
 				</Form>
 			</Modal.Body>
 
 			<Modal.Footer>
 				<div className="modal-actions">
-					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>Cancel</Button>
-					<Button disabled={progress.loading} size="sm" onClick={() => onApproveRegistration(requestModel)}>Approve</Button>
+					<Button disabled={progress.loading} style="outline" size="sm" onClick={onClose}>
+						Cancel
+					</Button>
+					<Button disabled={progress.loading} size="sm" onClick={() => onApproveRegistration(requestModel)}>
+						Approve
+					</Button>
 				</div>
 			</Modal.Footer>
 		</Modal>

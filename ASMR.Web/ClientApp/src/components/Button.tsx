@@ -1,5 +1,5 @@
 import { ComponentType, MouseEvent, ReactNode } from "react"
-import {IoCogOutline} from "react-icons/io5"
+import { IoCogOutline } from "react-icons/io5"
 import { combineClassNames } from "@asmr/libs/common/styles"
 import useProgress from "@asmr/libs/hooks/progressHook"
 import "@asmr/components/styles/Button.css"
@@ -15,21 +15,24 @@ interface ButtonProps {
 	type?: "button" | "reset" | "submit"
 }
 
-function Button({ children, className, icon: Icon, size = "md", style = "filled", ...props }: ButtonProps): JSX.Element {
-	className = combineClassNames(className,
-		"button",
-		`button-${size}`,
-		`button-${style}`)
+function Button({
+	children,
+	className,
+	icon: Icon,
+	size = "md",
+	style = "filled",
+	...props
+}: ButtonProps): JSX.Element {
+	className = combineClassNames(className, "button", `button-${size}`, `button-${style}`)
 	const [progress] = useProgress()
-	
-	const ButtonIcon = () => progress.loading 
-		? <IoCogOutline className="animate-spin" /> 
-		: Icon ? <Icon className="button-icon" /> : <></>
+
+	const ButtonIcon = () =>
+		progress.loading ? <IoCogOutline className="animate-spin" /> : Icon ? <Icon className="button-icon" /> : <></>
 
 	return (
 		<button className={className} {...props}>
-			{ Icon && <ButtonIcon />}
-			{ (Icon && children) && <>&nbsp;&nbsp;</> }
+			{Icon && <ButtonIcon />}
+			{Icon && children && <>&nbsp;&nbsp;</>}
 			{children}
 		</button>
 	)

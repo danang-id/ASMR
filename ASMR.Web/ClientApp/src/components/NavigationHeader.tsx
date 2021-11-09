@@ -1,13 +1,11 @@
 import { Fragment, useEffect, useState } from "react"
-import { useHistory, useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { Menu, Transition } from "@headlessui/react"
 import ApplicationLogo from "@asmr/components/ApplicationLogo"
 import Button from "@asmr/components/Button"
 import UserImage from "@asmr/components/UserImage"
 import config from "@asmr/libs/common/config"
 import useAuthentication from "@asmr/libs/hooks/authenticationHook"
-import AuthenticationRoutes from "@asmr/pages/Authentication/AuthenticationRoutes"
-import DashboardRoutes from "@asmr/pages/Dashboard/DashboardRoutes"
 import "@asmr/components/styles/NavigationHeader.css"
 
 function NavigationHeader(): JSX.Element {
@@ -15,11 +13,11 @@ function NavigationHeader(): JSX.Element {
 	// const [profileMenuShown, setProfileMenuShown] = useState(false)
 	// const [hoverTimeout, setHoverTimeout] = useState<NodeJS.Timeout | null>	(null)
 	const authentication = useAuthentication()
-	const history = useHistory()
 	const location = useLocation()
+	const navigate = useNavigate()
 
 	function onApplicationLogoClicked() {
-		history.push(DashboardRoutes.IndexPage)
+		navigate("/dashboard")
 	}
 
 	// function onProfileMenuClicked() {
@@ -38,15 +36,15 @@ function NavigationHeader(): JSX.Element {
 	// }
 
 	function onProfileClicked() {
-		if (location.pathname.startsWith(DashboardRoutes.ProfilePage)) {
+		if (location.pathname.startsWith("/dashboard/profile")) {
 			return
 		}
 
-		history.push(DashboardRoutes.ProfilePage)
+		navigate("/dashboard/profile")
 	}
 
 	function onSignOutClicked() {
-		history.push(AuthenticationRoutes.SignOutPage)
+		navigate("/authentication/sign-out")
 	}
 
 	useEffect(() => {
@@ -56,7 +54,7 @@ function NavigationHeader(): JSX.Element {
 		}
 		const userLastName = authentication.user.lastName
 			.split(" ")
-			.map(word => word.substr(0, 1))
+			.map((word) => word.substr(0, 1))
 			.join(" ")
 		setUserFullName(`${authentication.user.firstName} ${userLastName}`)
 	}, [authentication.user])
@@ -76,48 +74,40 @@ function NavigationHeader(): JSX.Element {
 					<ApplicationLogo />
 					<p className="application-name">{config.application.name}</p>
 				</div>
-				{
-					authentication.user && (
-						<Menu as="div" className="navigation-bar-right">
-							<Menu.Button className="profile-menu">
-								<div className="profile-image">
-									<UserImage circular user={authentication.user} />
-								</div>
-								<div className="profile-information">
-									<p className="profile-name ">
-										{userFullName}
-									</p>
-								</div>
-							</Menu.Button>
-							<Transition
-								as={Fragment}
-								enter="transition ease-out duration-100"
-								enterFrom="transform opacity-0 scale-95"
-								enterTo="transform opacity-100 scale-100"
-								leave="transition ease-in duration-75"
-								leaveFrom="transform opacity-100 scale-100"
-								leaveTo="transform opacity-0 scale-95"
-							>
-								<Menu.Items className="profile-menu-overlay">
-									<Menu.Item>
-										<Button className="profile-menu-item"
-												style="outline"
-												onClick={onProfileClicked}>
-											My Profile
-										</Button>
-									</Menu.Item>
-									<Menu.Item>
-										<Button className="profile-menu-item"
-												style="outline"
-												onClick={onSignOutClicked}>
-											Sign Out
-										</Button>
-									</Menu.Item>
-								</Menu.Items>
-							</Transition>
-						</Menu>
-					)
-				}
+				{authentication.user && (
+					<Menu as="div" className="navigation-bar-right">
+						<Menu.Button className="profile-menu">
+							<div className="profile-image">
+								<UserImage circular user={authentication.user} />
+							</div>
+							<div className="profile-information">
+								<p className="profile-name ">{userFullName}</p>
+							</div>
+						</Menu.Button>
+						<Transition
+							as={Fragment}
+							enter="transition ease-out duration-100"
+							enterFrom="transform opacity-0 scale-95"
+							enterTo="transform opacity-100 scale-100"
+							leave="transition ease-in duration-75"
+							leaveFrom="transform opacity-100 scale-100"
+							leaveTo="transform opacity-0 scale-95"
+						>
+							<Menu.Items className="profile-menu-overlay">
+								<Menu.Item>
+									<Button className="profile-menu-item" style="outline" onClick={onProfileClicked}>
+										My Profile
+									</Button>
+								</Menu.Item>
+								<Menu.Item>
+									<Button className="profile-menu-item" style="outline" onClick={onSignOutClicked}>
+										Sign Out
+									</Button>
+								</Menu.Item>
+							</Menu.Items>
+						</Transition>
+					</Menu>
+				)}
 			</div>
 		</div>
 	)

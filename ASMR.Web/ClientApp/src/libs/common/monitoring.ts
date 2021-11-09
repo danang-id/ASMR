@@ -5,7 +5,6 @@ import Logger from "@asmr/libs/common/logger"
 
 // Learn more: https://bit.ly/CRA-vitals
 class Monitoring {
-
 	private static logger = new Logger(Monitoring.name)
 
 	public static sendToGoogleAnalytics({ id, name, value }: Metric) {
@@ -30,11 +29,13 @@ class Monitoring {
 
 	public static reportWebVitalsToGoogleAnalytics() {
 		if (config.googleAnalyticsMeasurementID) {
-			Monitoring.logger.info("Web Vitals reported to Google Analytics, Measurement ID:", config.googleAnalyticsMeasurementID)
+			Monitoring.logger.info(
+				"Web Vitals reported to Google Analytics, Measurement ID:",
+				config.googleAnalyticsMeasurementID
+			)
 			Monitoring.reportWebVitals(Monitoring.sendToGoogleAnalytics)
 		}
 	}
-
 }
 
 export default Monitoring

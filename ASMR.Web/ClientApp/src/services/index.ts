@@ -1,4 +1,4 @@
-
+import axios from "axios"
 import ErrorCode from "@asmr/data/enumerations/ErrorCode"
 import ResponseError from "@asmr/data/generic/ResponseError"
 import { SetProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
@@ -10,9 +10,9 @@ import ProductService from "@asmr/services/ProductService"
 import ReleaseService from "@asmr/services/ReleaseService"
 import StatusService from "@asmr/services/StatusService"
 import UserService from "@asmr/services/UserService"
-import AuthenticationRoutes from "@asmr/pages/Authentication/AuthenticationRoutes"
+
 export type Services = {
-	abort: () => void
+	abort: (message?: string) => void
 	handleError: (error?: Error, notification?: INotificationHandler, logger?: ILogger) => void
 	handleErrors: (errors?: ResponseError[], notification?: INotificationHandler, logger?: ILogger) => void
 	bean: BeanService
@@ -23,14 +23,15 @@ export type Services = {
 	user: UserService
 }
 
-export function createServices(controller: AbortController, setProgress?: SetProgressInfo): Services {
-	function abort() {
+export function createServices(setProgress?: SetProgressInfo): Services {
+	const cancelTokenSource = axios.CancelToken.source()
+
+	function abort(message?: string) {
 		if (setProgress) {
 			setProgress(false, 0)
 		}
-		controller.abort()
+		cancelTokenSource.cancel(message)
 	}
-
 
 	function handleError(error?: Error, notification?: INotificationHandler, logger?: ILogger) {
 		if (error && error.message) {
@@ -57,14 +58,14 @@ export function createServices(controller: AbortController, setProgress?: SetPro
 		}
 
 		if (errors && Array.isArray(errors)) {
-			if (errors.findIndex(error => error.code === ErrorCode.NotAuthenticated) !== -1) {
-				window.location.href = AuthenticationRoutes.SignOutPage + "?invalidSession=1"
+			if (errors.findIndex((error) => error.code === ErrorCode.NotAuthenticated) !== -1) {
+				window.location.href = "/authentication/sign-out?invalidSession=1"
 			}
 			for (const error of errors.reverse()) {
 				switch (error.code) {
 					case ErrorCode.InvalidAntiforgeryToken:
 						printError("Your session has ended. Please refresh this page.")
-						break;
+						break
 					default:
 						printError(error.reason)
 				}
@@ -76,12 +77,12 @@ export function createServices(controller: AbortController, setProgress?: SetPro
 		abort,
 		handleError,
 		handleErrors,
-		bean: new BeanService(controller, setProgress),
-		gate: new GateService(controller, setProgress),
-		product: new ProductService(controller, setProgress),
-		release: new ReleaseService(controller, setProgress),
-		status: new StatusService(controller, setProgress),
-		user: new UserService(controller, setProgress)
+		bean: new BeanService(cancelTokenSource, void 0, setProgress),
+		gate: new GateService(cancelTokenSource, void 0, setProgress),
+		product: new ProductService(cancelTokenSource, void 0, setProgress),
+		release: new ReleaseService(cancelTokenSource, void 0, setProgress),
+		status: new StatusService(cancelTokenSource, void 0, setProgress),
+		user: new UserService(cancelTokenSource, void 0, setProgress)
 	}
 }
 

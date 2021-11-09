@@ -23,9 +23,13 @@ function UserImage({ circular = false, clickable = false, image, user }: UserIma
 
 	const userImage = <Image className={className} source={source as string} fallback={AsmrLogoImage} alt={alt} />
 
-	return clickable && user?.image
-		? <a href={user.image} target="_blank">{userImage}</a>
-		: userImage
+	return clickable && user?.image ? (
+		<a href={user.image} target="_blank">
+			{userImage}
+		</a>
+	) : (
+		userImage
+	)
 }
 
 export default UserImage

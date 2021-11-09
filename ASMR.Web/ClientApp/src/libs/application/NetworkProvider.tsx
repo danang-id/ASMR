@@ -8,8 +8,7 @@ interface NetworkProviderProps {
 
 function NetworkProvider({ children }: NetworkProviderProps): JSX.Element {
 	const logger = useLogger(NetworkProvider)
-	const [onLine, setOnLine] = useState<boolean>(
-		"navigator" in window  ? window.navigator.onLine : true)
+	const [onLine, setOnLine] = useState<boolean>("navigator" in window ? window.navigator.onLine : true)
 
 	function onNetworkChanged(event: Event) {
 		switch (event.type) {
@@ -39,11 +38,7 @@ function NetworkProvider({ children }: NetworkProviderProps): JSX.Element {
 		}
 	}, [onLine])
 
-	return (
-		<NetworkContext.Provider value={{ onLine }}>
-			{children}
-		</NetworkContext.Provider>
-	)
+	return <NetworkContext.Provider value={{ onLine }}>{children}</NetworkContext.Provider>
 }
 
 export default NetworkProvider

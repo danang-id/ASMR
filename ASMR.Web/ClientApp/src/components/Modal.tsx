@@ -31,7 +31,9 @@ function Modal({ children, className, onClose, show, title, ...props }: ModalPro
 						<Dialog.Overlay className="modal-overlay" />
 					</Transition.Child>
 
-					<span className="modal-center" aria-hidden="true">&#8203;</span>
+					<span className="modal-center" aria-hidden="true">
+						&#8203;
+					</span>
 
 					<Transition.Child
 						as={Fragment}
@@ -44,8 +46,10 @@ function Modal({ children, className, onClose, show, title, ...props }: ModalPro
 					>
 						<div className={className} {...props}>
 							<Dialog.Title className="modal-title" {...props}>
-								{title ?? "Dialog"}
-								<button onClick={onClose}><IoCloseOutline /></button>
+								{title && "Dialog"}
+								<button onClick={onClose}>
+									<IoCloseOutline />
+								</button>
 							</Dialog.Title>
 							{children}
 						</div>
@@ -62,9 +66,13 @@ export interface ModalBodyProps {
 	style?: CSSProperties
 }
 
-Modal.Body = function({ children, className, ...props }: ModalBodyProps): JSX.Element {
+Modal.Body = function ({ children, className, ...props }: ModalBodyProps): JSX.Element {
 	className = combineClassNames("modal-body", className)
-	return <div className={className} {...props}>{children}</div>
+	return (
+		<div className={className} {...props}>
+			{children}
+		</div>
+	)
 }
 
 export interface ModalFooterProps {
@@ -73,9 +81,13 @@ export interface ModalFooterProps {
 	style?: CSSProperties
 }
 
-Modal.Footer = function({ children, className, ...props }: ModalFooterProps): JSX.Element {
+Modal.Footer = function ({ children, className, ...props }: ModalFooterProps): JSX.Element {
 	className = combineClassNames("modal-footer", className)
-	return <div className={className} {...props}>{children}</div>
+	return (
+		<div className={className} {...props}>
+			{children}
+		</div>
+	)
 }
 
 export default Modal

@@ -8,12 +8,12 @@ interface QuickResponseCodeProps {
 	value: string
 }
 
-function QuickResponseCode({ size = 128, ...props}: QuickResponseCodeProps): JSX.Element {
+function QuickResponseCode({ size = 128, ...props }: QuickResponseCodeProps): JSX.Element {
 	// const [theme] = useTheme()
 
 	return (
 		<div className="quick-response-code">
-			<QRCode size={size} {...props}/>
+			<QRCode size={size} {...props} />
 		</div>
 	)
 }

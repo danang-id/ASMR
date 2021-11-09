@@ -1,11 +1,5 @@
 import { useState } from "react"
-import {
-	IoAddCircleOutline,
-	IoCreateOutline,
-	IoImageOutline,
-	IoKeyOutline,
-	IoTrashOutline
-} from "react-icons/io5"
+import { IoAddCircleOutline, IoCreateOutline, IoImageOutline, IoKeyOutline, IoTrashOutline } from "react-icons/io5"
 import BackButton from "@asmr/components/BackButton"
 import BreakpointRenderer from "@asmr/components/BreakpointRenderer"
 import Button from "@asmr/components/Button"
@@ -34,7 +28,9 @@ const UserUpdateModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagement
 const UserUpdateImageModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserUpdateImageModal"))
 const UserResetPasswordModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserResetPasswordModal"))
 const UserRemoveModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserRemoveModal"))
-const RegistrationApproveModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/RegistrationApproveModal"))
+const RegistrationApproveModal = lazy(
+	() => import("@asmr/pages/Dashboard/UsersManagementPage/RegistrationApproveModal")
+)
 const RegistrationRejectModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/RegistrationRejectModal"))
 
 function UsersManagementPage(): JSX.Element {
@@ -68,7 +64,7 @@ function UsersManagementPage(): JSX.Element {
 			setUserResetPasswordModalShown,
 			setUserRemoveModalShown,
 			setRegistrationApproveModalShown,
-			setRegistrationRejectModalShown
+			setRegistrationRejectModalShown,
 		])
 		setSelectedUser(null)
 	}
@@ -80,7 +76,7 @@ function UsersManagementPage(): JSX.Element {
 			setUserResetPasswordModalShown,
 			setUserRemoveModalShown,
 			setRegistrationApproveModalShown,
-			setRegistrationRejectModalShown
+			setRegistrationRejectModalShown,
 		])
 	}
 
@@ -92,7 +88,7 @@ function UsersManagementPage(): JSX.Element {
 			setUserResetPasswordModalShown,
 			setUserRemoveModalShown,
 			setRegistrationApproveModalShown,
-			setRegistrationRejectModalShown
+			setRegistrationRejectModalShown,
 		])
 	}
 
@@ -104,7 +100,7 @@ function UsersManagementPage(): JSX.Element {
 			setUserResetPasswordModalShown,
 			setUserRemoveModalShown,
 			setRegistrationApproveModalShown,
-			setRegistrationRejectModalShown
+			setRegistrationRejectModalShown,
 		])
 	}
 
@@ -116,7 +112,7 @@ function UsersManagementPage(): JSX.Element {
 			setUserUpdateImageModalShown,
 			setUserRemoveModalShown,
 			setRegistrationApproveModalShown,
-			setRegistrationRejectModalShown
+			setRegistrationRejectModalShown,
 		])
 	}
 
@@ -128,7 +124,7 @@ function UsersManagementPage(): JSX.Element {
 			setUserResetPasswordModalShown,
 			setUserUpdateImageModalShown,
 			setRegistrationApproveModalShown,
-			setRegistrationRejectModalShown
+			setRegistrationRejectModalShown,
 		])
 	}
 
@@ -140,7 +136,7 @@ function UsersManagementPage(): JSX.Element {
 			setUserResetPasswordModalShown,
 			setUserUpdateImageModalShown,
 			setUserRemoveModalShown,
-			setRegistrationRejectModalShown
+			setRegistrationRejectModalShown,
 		])
 	}
 
@@ -152,7 +148,7 @@ function UsersManagementPage(): JSX.Element {
 			setUserResetPasswordModalShown,
 			setUserUpdateImageModalShown,
 			setUserRemoveModalShown,
-			setRegistrationApproveModalShown
+			setRegistrationApproveModalShown,
 		])
 	}
 
@@ -269,8 +265,10 @@ function UsersManagementPage(): JSX.Element {
 			const result = await services.user.getAll()
 			if (result.isSuccess && result.data) {
 				const users = result.data.sort((a, b) => {
-					const aIsAdministrator = a.roles.findIndex(userRole => userRole.role === Role.Administrator) !== -1
-					const bIsAdministrator = b.roles.findIndex(userRole => userRole.role === Role.Administrator) !== -1
+					const aIsAdministrator =
+						a.roles.findIndex((userRole) => userRole.role === Role.Administrator) !== -1
+					const bIsAdministrator =
+						b.roles.findIndex((userRole) => userRole.role === Role.Administrator) !== -1
 					if (aIsAdministrator && bIsAdministrator) {
 						return 0
 					}
@@ -290,8 +288,8 @@ function UsersManagementPage(): JSX.Element {
 
 	function renderUserTableRow(user: User, index: number): JSX.Element {
 		const roles = user.roles
-			.sort((a, b) => a.role < b.role ? -1 : a.role > b.role ? 1 : 0)
-			.map(userRole => Role[userRole.role])
+			.sort((a, b) => (a.role < b.role ? -1 : a.role > b.role ? 1 : 0))
+			.map((userRole) => Role[userRole.role])
 
 		function ManagementActions() {
 			if (!user.isEmailConfirmed) {
@@ -299,45 +297,115 @@ function UsersManagementPage(): JSX.Element {
 			}
 
 			if (user.isWaitingForApproval) {
-				return <>
-					<Button disabled={progress.loading} key={0} icon={IoCreateOutline} size="xs" style="outline"
-							onClick={() => onShowRejectRegistrationModalButtonClicked(user)}>Reject</Button>
-					<Button disabled={progress.loading} key={1} icon={IoCreateOutline} size="xs" style="filled"
-							onClick={() => onShowApproveRegistrationModalButtonClicked(user)}>Approve</Button>
-				</>
+				return (
+					<>
+						<Button
+							disabled={progress.loading}
+							key={0}
+							icon={IoCreateOutline}
+							size="xs"
+							style="outline"
+							onClick={() => onShowRejectRegistrationModalButtonClicked(user)}
+						>
+							Reject
+						</Button>
+						<Button
+							disabled={progress.loading}
+							key={1}
+							icon={IoCreateOutline}
+							size="xs"
+							style="filled"
+							onClick={() => onShowApproveRegistrationModalButtonClicked(user)}
+						>
+							Approve
+						</Button>
+					</>
+				)
 			}
 
 			if (!user.isApproved) {
-				return <>
-					<Button disabled={progress.loading} key={0} icon={IoCreateOutline} size="xs" style="filled"
-							onClick={() => onShowApproveRegistrationModalButtonClicked(user)}>Approve</Button>
-					{
-						(user.id !== authentication.user?.id) && (
-							<Button disabled={progress.loading} key={1} icon={IoTrashOutline} size="xs" style="danger"
-									onClick={() => onShowRemoveUserModalButtonClicked(user)}>Remove</Button>
-						)
-					}
-				</>
+				return (
+					<>
+						<Button
+							disabled={progress.loading}
+							key={0}
+							icon={IoCreateOutline}
+							size="xs"
+							style="filled"
+							onClick={() => onShowApproveRegistrationModalButtonClicked(user)}
+						>
+							Approve
+						</Button>
+						{user.id !== authentication.user?.id && (
+							<Button
+								disabled={progress.loading}
+								key={1}
+								icon={IoTrashOutline}
+								size="xs"
+								style="danger"
+								onClick={() => onShowRemoveUserModalButtonClicked(user)}
+							>
+								Remove
+							</Button>
+						)}
+					</>
+				)
 			}
 
-			return <>
-				<Button disabled={progress.loading} key={0} icon={IoCreateOutline} size="xs" style="outline"
-						onClick={() => onShowUpdateUserModalButtonClicked(user)}>Modify</Button>
-				<Button disabled={progress.loading} key={1} icon={IoImageOutline} size="xs" style="outline"
-						onClick={() => onShowUpdateUserImageModalButtonClicked(user)}>Change Image</Button>
-				<Button disabled={progress.loading} key={2} icon={IoKeyOutline} size="xs" style="outline"
-						onClick={() => onShowResetUserPasswordModalButtonClicked(user)}>Reset Password</Button>
-				{
-					(user.id !== authentication.user?.id) && (
-						<Button disabled={progress.loading} key={3} icon={IoTrashOutline} size="xs" style="danger"
-								onClick={() => onShowRemoveUserModalButtonClicked(user)}>Remove</Button>
-					)
-				}
-			</>
+			return (
+				<>
+					<Button
+						disabled={progress.loading}
+						key={0}
+						icon={IoCreateOutline}
+						size="xs"
+						style="outline"
+						onClick={() => onShowUpdateUserModalButtonClicked(user)}
+					>
+						Modify
+					</Button>
+					<Button
+						disabled={progress.loading}
+						key={1}
+						icon={IoImageOutline}
+						size="xs"
+						style="outline"
+						onClick={() => onShowUpdateUserImageModalButtonClicked(user)}
+					>
+						Change Image
+					</Button>
+					<Button
+						disabled={progress.loading}
+						key={2}
+						icon={IoKeyOutline}
+						size="xs"
+						style="outline"
+						onClick={() => onShowResetUserPasswordModalButtonClicked(user)}
+					>
+						Reset Password
+					</Button>
+					{user.id !== authentication.user?.id && (
+						<Button
+							disabled={progress.loading}
+							key={3}
+							icon={IoTrashOutline}
+							size="xs"
+							style="danger"
+							onClick={() => onShowRemoveUserModalButtonClicked(user)}
+						>
+							Remove
+						</Button>
+					)}
+				</>
+			)
 		}
 
 		function renderRole(role: string, index: number) {
-			return <span key={index} className="role">&nbsp;{role}&nbsp;</span>
+			return (
+				<span key={index} className="role">
+					&nbsp;{role}&nbsp;
+				</span>
+			)
 		}
 
 		function renderUserRole() {
@@ -346,7 +414,9 @@ function UsersManagementPage(): JSX.Element {
 			}
 
 			return !user.isWaitingForApproval ? (
-				user.isApproved ? roles.map(renderRole) : (
+				user.isApproved ? (
+					roles.map(renderRole)
+				) : (
 					<span className="approval approval-rejected">Registration Rejected</span>
 				)
 			) : (
@@ -362,15 +432,15 @@ function UsersManagementPage(): JSX.Element {
 							<UserImage circular clickable user={user} />
 						</div>
 						<div className="user-names-container">
-							<p className="full-name">{user.firstName} {user.lastName}</p>
+							<p className="full-name">
+								{user.firstName} {user.lastName}
+							</p>
 							<p className="email-address">{user.emailAddress}</p>
 							<p className="username">{user.username}</p>
 						</div>
 					</div>
 					<BreakpointRenderer max="md">
-						<div className="user-roles">
-							{renderUserRole()}
-						</div>
+						<div className="user-roles">{renderUserRole()}</div>
 						<div className="management-actions">
 							<ManagementActions />
 						</div>
@@ -378,9 +448,7 @@ function UsersManagementPage(): JSX.Element {
 				</Table.DataCell>
 				<BreakpointRenderer min="lg">
 					<Table.DataCell>
-						<div className="user-roles">
-							{renderUserRole()}
-						</div>
+						<div className="user-roles">{renderUserRole()}</div>
 					</Table.DataCell>
 					<Table.DataCell>
 						<div className="management-actions">
@@ -395,12 +463,18 @@ function UsersManagementPage(): JSX.Element {
 	return (
 		<DashboardLayout>
 			<div className="header">
-				<BackButton />&nbsp;&nbsp;
-				Users Management
+				<BackButton />
+				&nbsp;&nbsp; Users Management
 			</div>
 			<div className="click-to-actions">
-				<Button disabled={progress.loading} icon={IoAddCircleOutline} size="sm"
-						onClick={onShowCreateUserModalButtonClicked}>Create User</Button>
+				<Button
+					disabled={progress.loading}
+					icon={IoAddCircleOutline}
+					size="sm"
+					onClick={onShowCreateUserModalButtonClicked}
+				>
+					Create User
+				</Button>
 			</div>
 			<div className="content">
 				<div className="table-container">
@@ -408,7 +482,7 @@ function UsersManagementPage(): JSX.Element {
 						<Table.Head>
 							<Table.Row>
 								<Table.DataCell head>
-									{ breakpoint.includes("lg") ? "Name" : "Information" }
+									{breakpoint.includes("lg") ? "Name" : "Information"}
 								</Table.DataCell>
 								<BreakpointRenderer min="lg">
 									<Table.DataCell head>Status / Assigned Roles</Table.DataCell>
@@ -417,25 +491,70 @@ function UsersManagementPage(): JSX.Element {
 							</Table.Row>
 						</Table.Head>
 						<Table.Body>
-						{ users.length > 0 ? users.map(renderUserTableRow) : (
-							<Table.Row>
-								<Table.DataCell colSpan={breakpoint.includes("lg") ? 3 : 1}>
-									{progress.loading ? "Retrieving data from server..." : "There are no users at the moment."}
-								</Table.DataCell>
-							</Table.Row>
-						) }
+							{users.length > 0 ? (
+								users.map(renderUserTableRow)
+							) : (
+								<Table.Row>
+									<Table.DataCell colSpan={breakpoint.includes("lg") ? 3 : 1}>
+										{progress.loading
+											? "Retrieving data from server..."
+											: "There are no users at the moment."}
+									</Table.DataCell>
+								</Table.Row>
+							)}
 						</Table.Body>
 					</Table>
 				</div>
 			</div>
 
-			<UserCreateModal onClose={onCloseModals} onCreateUser={createUser} progress={progress} show={userCreateModalShown} />
-			<UserUpdateModal onClose={onCloseModals} onUpdateUser={updateUser} progress={progress} show={userUpdateModalShown} user={selectedUser} />
-			<UserUpdateImageModal onClose={onCloseModals} onUpdateUser={updateUser} progress={progress} show={userUpdateImageModalShown} user={selectedUser} />
-			<UserResetPasswordModal onClose={onCloseModals} onResetUserPassword={resetUserPassword} progress={progress} show={userUpdatePasswordModalShown} user={selectedUser}  />
-			<UserRemoveModal onClose={onCloseModals} onRemoveUser={removeUser} progress={progress} show={userRemoveModalShown} user={selectedUser} />
-			<RegistrationApproveModal onClose={onCloseModals} onApproveRegistration={approveRegistration} progress={progress} show={registrationApproveModalShown}  user={selectedUser} />
-			<RegistrationRejectModal onClose={onCloseModals} onRejectRegistration={rejectRegistration} progress={progress} show={registrationRejectModalShown}  user={selectedUser} />
+			<UserCreateModal
+				onClose={onCloseModals}
+				onCreateUser={createUser}
+				progress={progress}
+				show={userCreateModalShown}
+			/>
+			<UserUpdateModal
+				onClose={onCloseModals}
+				onUpdateUser={updateUser}
+				progress={progress}
+				show={userUpdateModalShown}
+				user={selectedUser}
+			/>
+			<UserUpdateImageModal
+				onClose={onCloseModals}
+				onUpdateUser={updateUser}
+				progress={progress}
+				show={userUpdateImageModalShown}
+				user={selectedUser}
+			/>
+			<UserResetPasswordModal
+				onClose={onCloseModals}
+				onResetUserPassword={resetUserPassword}
+				progress={progress}
+				show={userUpdatePasswordModalShown}
+				user={selectedUser}
+			/>
+			<UserRemoveModal
+				onClose={onCloseModals}
+				onRemoveUser={removeUser}
+				progress={progress}
+				show={userRemoveModalShown}
+				user={selectedUser}
+			/>
+			<RegistrationApproveModal
+				onClose={onCloseModals}
+				onApproveRegistration={approveRegistration}
+				progress={progress}
+				show={registrationApproveModalShown}
+				user={selectedUser}
+			/>
+			<RegistrationRejectModal
+				onClose={onCloseModals}
+				onRejectRegistration={rejectRegistration}
+				progress={progress}
+				show={registrationRejectModalShown}
+				user={selectedUser}
+			/>
 		</DashboardLayout>
 	)
 }

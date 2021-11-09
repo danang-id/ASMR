@@ -13,9 +13,10 @@ function OfflinePage(): JSX.Element {
 	}, [])
 
 	return (
-		<ErrorPage documentTitle="Offline"
-					title="Oops!"
-					message="You are seems to be offline. Please make sure you are connected to the Internet to use this application."
+		<ErrorPage
+			documentTitle="Offline"
+			title="Oops!"
+			message="You are seems to be offline. Please make sure you are connected to the Internet to use this application."
 		/>
 	)
 }

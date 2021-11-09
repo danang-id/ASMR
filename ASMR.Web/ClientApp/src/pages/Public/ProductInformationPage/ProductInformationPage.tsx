@@ -1,38 +1,33 @@
-
 import { useEffect, useRef, useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { IoPrintOutline } from "react-icons/io5"
 import { useReactToPrint } from "react-to-print"
 import BeanDescription from "@asmr/components/BeanDescription"
 import Button from "@asmr/components/Button"
 import QuickResponseCode from "@asmr/components/QuickResponseCode"
 import Bean from "@asmr/data/models/Bean"
-import Product  from "@asmr/data/models/Product"
+import Product from "@asmr/data/models/Product"
 import BaseLayout from "@asmr/layouts/BaseLayout"
 import config from "@asmr/libs/common/config"
 import { toLocalCurrency, toLocaleUnit } from "@asmr/libs/common/locale"
 import { getBaseUrl } from "@asmr/libs/common/location"
 import useAuthentication from "@asmr/libs/hooks/authenticationHook"
 import useDocumentTitle from "@asmr/libs/hooks/documentTitleHook"
-import useInit from "@asmr/libs/hooks/initHook"
 import useLogger from "@asmr/libs/hooks/loggerHook"
 import useNotification from "@asmr/libs/hooks/notificationHook"
 import useProgress from "@asmr/libs/hooks/progressHook"
 import useServices from "@asmr/libs/hooks/servicesHook"
-import PublicRoutes from "@asmr/pages/Public/PublicRoutes"
 import "@asmr/pages/Public/ProductInformationPage/ProductInformationPage.scoped.css"
 import BeanImage from "@asmr/components/BeanImage"
 
 function ProductInformationPage(): JSX.Element {
 	useDocumentTitle("Product Information")
-	useInit(onInit)
+	const { productId } = useParams<"productId">()
 	const [bean, setBean] = useState<Bean | null>(null)
 	const [initialized, setInitialized] = useState(false)
 	const [product, setProduct] = useState<Product | null>(null)
-	const [productId, setProductId] = useState("")
 	const [quickResponseCodeValue, setQuickResponseCodeValue] = useState("")
 	const authentication = useAuthentication()
-	const history = useHistory()
 	const logger = useLogger(ProductInformationPage)
 	const notification = useNotification()
 	const [progress] = useProgress()
@@ -40,16 +35,8 @@ function ProductInformationPage(): JSX.Element {
 
 	const printComponentRef = useRef<HTMLDivElement>(null)
 	const handlePrintComponent = useReactToPrint({
-		content: () => printComponentRef.current
+		content: () => printComponentRef.current,
 	})
-
-	function onInit() {
-		const paths = history.location.pathname.split("/")
-		const shouldBeId = paths.pop()
-		if (paths.join("/") === PublicRoutes.ProductInformationPage && shouldBeId) {
-			setProductId(shouldBeId)
-		}
-	}
 
 	function onPrintButtonClicked() {
 		if (handlePrintComponent) {
@@ -59,9 +46,9 @@ function ProductInformationPage(): JSX.Element {
 
 	async function retrieveProductInformation() {
 		try {
-			const result = await services.product.getById(productId)
+			const result = await services.product.getById(productId ?? "")
 			if (result.isSuccess && result.data) {
-				const url = new URL(PublicRoutes.ProductInformationPage + "/" + result.data.id, getBaseUrl())
+				const url = new URL("/pub/product/" + result.data.id, getBaseUrl())
 				setProduct(result.data)
 				setQuickResponseCodeValue(url.toString())
 			}
@@ -110,9 +97,7 @@ function ProductInformationPage(): JSX.Element {
 					<div className="content">
 						<div className="information">
 							<div className="product">
-								<div className="name">
-									Retrieving information...
-								</div>
+								<div className="name">Retrieving information...</div>
 							</div>
 						</div>
 					</div>
@@ -135,15 +120,16 @@ function ProductInformationPage(): JSX.Element {
 						)}
 						<div className="information">
 							<div className="product">
-								<div className="name">
-									{ (bean && product) ? bean.name : "The product does not exist" }
-								</div>
+								<div className="name">{bean?.name ?? "The product does not exist"}</div>
 								<div>
-								<span className="weight-per-packaging">
-									{toLocaleUnit(product?.weightPerPackaging ?? 0, "gram")}
-								</span>
+									<span className="weight-per-packaging">
+										{toLocaleUnit(
+											product?.weightPerPackaging ? product.weightPerPackaging : 0,
+											"gram"
+										)}
+									</span>
 									<span> // </span>
-									<span className="price">{toLocalCurrency(product?.price ?? 0)}</span>
+									<span className="price">{toLocalCurrency(product?.price ? product.price : 0)}</span>
 								</div>
 								<div className="description">
 									<BeanDescription description={bean?.description} />
@@ -154,7 +140,9 @@ function ProductInformationPage(): JSX.Element {
 					<div className="about">
 						<hr />
 						<div>Product Information</div>
-						<div><strong>{config.application.name}</strong></div>
+						<div>
+							<strong>{config.application.name}</strong>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -165,7 +153,9 @@ function ProductInformationPage(): JSX.Element {
 					</div>
 					{authentication.isAuthenticated() && (
 						<div className="actions">
-							<Button onClick={onPrintButtonClicked} icon={IoPrintOutline}>Print</Button>
+							<Button onClick={onPrintButtonClicked} icon={IoPrintOutline}>
+								Print
+							</Button>
 						</div>
 					)}
 				</div>

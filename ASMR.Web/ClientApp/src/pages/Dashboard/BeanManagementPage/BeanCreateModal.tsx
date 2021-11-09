@@ -1,4 +1,3 @@
-
 import { ChangeEvent, useEffect, useState } from "react"
 import Button from "@asmr/components/Button"
 import Form from "@asmr/components/Form"
@@ -11,13 +10,13 @@ import "@asmr/pages/Dashboard/BeanManagementPage/BeansManagementModal.scoped.css
 interface BeanCreateModalProps {
 	onClose: () => void
 	onCreateBean: (requestModel: CreateBeanRequestModel, imageFile: File | null) => void
-	progress: ProgressInfo,
+	progress: ProgressInfo
 	show: boolean
 }
-function BeanCreateModal({ onClose, onCreateBean, progress, show  }: BeanCreateModalProps): JSX.Element {
+function BeanCreateModal({ onClose, onCreateBean, progress, show }: BeanCreateModalProps): JSX.Element {
 	const emptyRequestModel: CreateBeanRequestModel = {
 		name: "",
-		description: ""
+		description: "",
 	}
 	const [imageBuffer, setImageBuffer] = useState<string | ArrayBuffer | null>(null)
 	const [imageFile, setImageFile] = useState<File | null>(null)
@@ -63,8 +62,7 @@ function BeanCreateModal({ onClose, onCreateBean, progress, show  }: BeanCreateM
 					<div className="form-row">
 						<label className="form-field">Name</label>
 						<div className="form-data">
-							<Form.Input name="name" onChange={onChange}
-							/>
+							<Form.Input name="name" onChange={onChange} />
 						</div>
 					</div>
 					<div className="form-row">
@@ -76,17 +74,19 @@ function BeanCreateModal({ onClose, onCreateBean, progress, show  }: BeanCreateM
 					<div className="form-row">
 						<label className="form-field">Image</label>
 						<div className="form-data">
-							<Form.Input accept="image/png, image/jpeg, image/webp" name="image" type="file" onChange={onChange} />
+							<Form.Input
+								accept="image/png, image/jpeg, image/webp"
+								name="image"
+								type="file"
+								onChange={onChange}
+							/>
 						</div>
 					</div>
-					{
-						imageBuffer && (
-							<div className="form-row image-preview">
-								<Image source={imageBuffer as string} fallback={imageBuffer as string}
-									alt="Bean Image" />
-							</div>
-						)
-					}
+					{imageBuffer && (
+						<div className="form-row image-preview">
+							<Image source={imageBuffer as string} fallback={imageBuffer as string} alt="Bean Image" />
+						</div>
+					)}
 				</Form>
 			</Modal.Body>
 

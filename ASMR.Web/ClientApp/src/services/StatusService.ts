@@ -3,9 +3,10 @@ import DefaultResponseModel from "@asmr/data/generic/DefaultResponseModel"
 
 class StatusService extends ServiceBase {
 	public getStatus() {
-		return this.request<DefaultResponseModel>(() => (
-			this.httpClient.get("/api/status")
-		))
+		return this.httpClient
+			.get<DefaultResponseModel>("/api/status")
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 }
 

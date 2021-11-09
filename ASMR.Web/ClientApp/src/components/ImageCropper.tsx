@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react"
 import Cropper from "cropperjs"
 import "cropperjs/dist/cropper.min.css"
@@ -33,13 +32,11 @@ function ImageCropper({ alt, aspectRatio = 1, source, onCropped }: ImageCropperP
 				if (onCropped) {
 					onCropped(cropper)
 				}
-			}
-		});
+			},
+		})
 	}, [])
 
-	return (
-		<img className="image-cropper" src={source as string} alt={alt} ref={imageRef} />
-	)
+	return <img className="image-cropper" src={source as string} alt={alt} ref={imageRef} />
 }
 
 export default ImageCropper

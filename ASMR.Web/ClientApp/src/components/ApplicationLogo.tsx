@@ -24,12 +24,13 @@ function ApplicationLogo({ className, allowTheme = true, ...props }: Application
 	className = combineClassNames(className, "application-logo")
 
 	return (
-		<Image className={className}
-				source={imageSource}
-				type="image/webp"
-				fallback={fallbackImageSource}
-				alt={config.application.name}
-				{...props}
+		<Image
+			className={className}
+			source={imageSource}
+			type="image/webp"
+			fallback={fallbackImageSource}
+			alt={config.application.name}
+			{...props}
 		/>
 	)
 }

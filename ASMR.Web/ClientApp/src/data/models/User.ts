@@ -13,7 +13,7 @@ export const EmptyUser: User = {
 	isWaitingForApproval: false,
 	roles: [],
 	createdAt: new Date(),
-	lastUpdatedAt: new Date()
+	lastUpdatedAt: new Date(),
 }
 
 interface User extends DefaultModel {

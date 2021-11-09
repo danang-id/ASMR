@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, MouseEvent, useState } from "react"
-import { useHistory, useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { IoEnterOutline, IoHomeOutline, IoKey, IoMail } from "react-icons/io5"
 import ApplicationLogo from "@asmr/components/ApplicationLogo"
 import Button from "@asmr/components/Button"
@@ -11,8 +11,6 @@ import useLogger from "@asmr/libs/hooks/loggerHook"
 import useNotification from "@asmr/libs/hooks/notificationHook"
 import useProgress from "@asmr/libs/hooks/progressHook"
 import useServices from "@asmr/libs/hooks/servicesHook"
-import AuthenticationRoutes from "@asmr/pages/Authentication/AuthenticationRoutes"
-import PublicRoutes from "@asmr/pages/Public/PublicRoutes"
 import "@asmr/pages/Authentication/ResetPasswordPage/ResetPasswordPage.scoped.css"
 
 interface ResetPasswordDoneProps {
@@ -21,35 +19,35 @@ interface ResetPasswordDoneProps {
 }
 
 function ResetPasswordDone({ message, success = false }: ResetPasswordDoneProps): JSX.Element {
-	const history = useHistory()
+	const navigate = useNavigate()
 
 	function onHomeButtonClicked() {
-		history.push(PublicRoutes.HomePage)
+		navigate("/")
 	}
 
 	function onSignInButtonClicked() {
-		history.push(AuthenticationRoutes.SignInPage)
+		navigate("/authentication/sign-in")
 	}
 
 	return (
 		<BaseLayout className="page">
 			<div className="header">
-				<ApplicationLogo/>
+				<ApplicationLogo />
 				<p className="title">{config.application.name}</p>
 			</div>
 			<span className="separator" />
-			<div className="description">
-				{ message }
-			</div>
+			<div className="description">{message}</div>
 			<span className="separator" />
 			<div className="call-to-action">
-				{ success ? (
+				{success ? (
 					<Button onClick={onSignInButtonClicked}>
-						Sign In&nbsp;&nbsp;<IoEnterOutline />
+						Sign In&nbsp;&nbsp;
+						<IoEnterOutline />
 					</Button>
 				) : (
 					<Button onClick={onHomeButtonClicked}>
-						Home&nbsp;&nbsp;<IoHomeOutline />
+						Home&nbsp;&nbsp;
+						<IoHomeOutline />
 					</Button>
 				)}
 			</div>
@@ -63,7 +61,8 @@ function ResetPasswordPage(): JSX.Element {
 	const [passwordConfirmation, setPasswordConfirmation] = useState("")
 	const [resetPasswordDone, setResetPasswordDone] = useState(false)
 	const [resetPasswordMessage, setResetPasswordMessage] = useState<string | undefined>(
-		"Your reset password link is invalid.")
+		"Your reset password link is invalid."
+	)
 	const location = useLocation()
 	const logger = useLogger(ResetPasswordPage)
 	const notification = useNotification()
@@ -102,7 +101,11 @@ function ResetPasswordPage(): JSX.Element {
 
 		try {
 			const result = await services.gate.resetPassword({
-				id, emailAddress, token, password, passwordConfirmation
+				id,
+				emailAddress,
+				token,
+				password,
+				passwordConfirmation
 			})
 			if (result.isSuccess) {
 				setResetPasswordMessage(result.message)
@@ -132,41 +135,50 @@ function ResetPasswordPage(): JSX.Element {
 					<p>Reset Password</p>
 				</div>
 				<div className="card-body">
-					<Form className="reset-password-form" onSubmit={onResetPasswordFormSubmitted} >
+					<Form className="reset-password-form" onSubmit={onResetPasswordFormSubmitted}>
 						<div className="form-row">
 							<div className="form-icon">
 								<IoMail />
 							</div>
-							<Form.Input disabled readOnly
-										placeholder="Email Address"
-										type="email"
-										value={emailAddress} />
+							<Form.Input
+								disabled
+								readOnly
+								placeholder="Email Address"
+								type="email"
+								value={emailAddress}
+							/>
 						</div>
 						<div className="form-row">
 							<div className="form-icon">
 								<IoKey />
 							</div>
-							<Form.Input disabled={progress.loading}
-										placeholder="Password"
-										type="password"
-										value={password}
-										onChange={onPasswordChanged} />
+							<Form.Input
+								disabled={progress.loading}
+								placeholder="Password"
+								type="password"
+								value={password}
+								onChange={onPasswordChanged}
+							/>
 						</div>
 						<div className="form-row">
 							<div className="form-icon">
 								<IoKey />
 							</div>
-							<Form.Input disabled={progress.loading}
-										placeholder="Confirm Password"
-										type="password"
-										value={passwordConfirmation}
-										onChange={onPasswordConfirmationChanged} />
+							<Form.Input
+								disabled={progress.loading}
+								placeholder="Confirm Password"
+								type="password"
+								value={passwordConfirmation}
+								onChange={onPasswordConfirmationChanged}
+							/>
 						</div>
 						<div className="call-to-action">
-							<Button className="reset-password-button"
-									disabled={progress.loading}
-									type="submit"
-									onClick={onResetPasswordButtonClicked}>
+							<Button
+								className="reset-password-button"
+								disabled={progress.loading}
+								type="submit"
+								onClick={onResetPasswordButtonClicked}
+							>
 								Reset Password
 							</Button>
 						</div>

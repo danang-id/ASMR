@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { IoEnterOutline, IoLogoAndroid, IoLogoApple } from "react-icons/io5"
 import ApplicationLogo from "@asmr/components/ApplicationLogo"
 import AppStoreButton from "@asmr/components/AppStoreButton"
@@ -13,7 +13,6 @@ import useDocumentTitle from "@asmr/libs/hooks/documentTitleHook"
 import useInit from "@asmr/libs/hooks/initHook"
 import useLogger from "@asmr/libs/hooks/loggerHook"
 import useServices from "@asmr/libs/hooks/servicesHook"
-import DashboardRoutes from "@asmr/pages/Dashboard/DashboardRoutes"
 import AboutModal from "@asmr/pages/Public/HomePage/AboutModal"
 import "@asmr/pages/Public/HomePage/HomePage.scoped.css"
 
@@ -27,8 +26,8 @@ function HomePage(): JSX.Element {
 	const [iosDirectDownloadLink, setIosDirectDownloadLink] = useState<string | undefined>()
 	const [hasDirectDownload, setHasDirectDownload] = useState(false)
 	const [hasExternalStore, setHasExternalStore] = useState(false)
-	const history = useHistory()
 	const logger = useLogger(HomePage)
+	const navigate = useNavigate()
 	const services = useServices()
 
 	async function onInit() {
@@ -58,8 +57,8 @@ function HomePage(): JSX.Element {
 	}
 
 	function onTryAsmrButtonClicked() {
-		logger.info("Trying application, redirecting to:", DashboardRoutes.IndexPage)
-		history.push(DashboardRoutes.IndexPage)
+		logger.info("Trying application, redirecting to:", "/dashboard")
+		navigate("/dashboard")
 	}
 
 	function setAndroidReleaseInformation(releaseInformation: AndroidReleaseInformation) {
@@ -68,18 +67,22 @@ function HomePage(): JSX.Element {
 			setAndroidDirectDownloadLink(void 0)
 		}
 
-		if (releaseInformation.PlayStore &&
+		if (
+			releaseInformation.PlayStore &&
 			releaseInformation.PlayStore.Available &&
-			releaseInformation.PlayStore.Link) {
+			releaseInformation.PlayStore.Link
+		) {
 			setAndroidPlayStoreLink(releaseInformation.PlayStore.Link)
 			setHasExternalStore(true)
 		} else {
 			setAndroidPlayStoreLink(void 0)
 		}
 
-		if (releaseInformation.DirectDownload &&
+		if (
+			releaseInformation.DirectDownload &&
 			releaseInformation.DirectDownload.Available &&
-			releaseInformation.DirectDownload.Link) {
+			releaseInformation.DirectDownload.Link
+		) {
 			setAndroidDirectDownloadLink(releaseInformation.DirectDownload.Link)
 			setHasDirectDownload(true)
 		} else {
@@ -93,18 +96,18 @@ function HomePage(): JSX.Element {
 			setIosDirectDownloadLink(void 0)
 		}
 
-		if (releaseInformation.AppStore &&
-			releaseInformation.AppStore.Available &&
-			releaseInformation.AppStore.Link) {
+		if (releaseInformation.AppStore && releaseInformation.AppStore.Available && releaseInformation.AppStore.Link) {
 			setIosAppStoreLink(releaseInformation.AppStore.Link)
 			setHasExternalStore(true)
 		} else {
 			setIosAppStoreLink(void 0)
 		}
 
-		if (releaseInformation.DirectDownload &&
+		if (
+			releaseInformation.DirectDownload &&
 			releaseInformation.DirectDownload.Available &&
-			releaseInformation.DirectDownload.Link) {
+			releaseInformation.DirectDownload.Link
+		) {
 			setIosDirectDownloadLink(releaseInformation.DirectDownload.Link)
 			setHasDirectDownload(true)
 		} else {
@@ -115,7 +118,7 @@ function HomePage(): JSX.Element {
 	return (
 		<BaseLayout className="page">
 			<div className="header">
-				<ApplicationLogo/>
+				<ApplicationLogo />
 				<p className="title">{config.application.name}</p>
 			</div>
 			<div className="description">
@@ -126,18 +129,21 @@ function HomePage(): JSX.Element {
 			<span className="separator" />
 			<div className="call-to-action">
 				<Button onClick={onTryAsmrButtonClicked}>
-					Try Now&nbsp;&nbsp;<IoEnterOutline />
+					Try Now&nbsp;&nbsp;
+					<IoEnterOutline />
 				</Button>
 				{hasDirectDownload && (
 					<div className="direct-download">
 						{androidDirectDownloadLink && (
 							<Button style="outline" onClick={onOpenLink(androidDirectDownloadLink)}>
-								Download Android App&nbsp;&nbsp;<IoLogoAndroid/>
+								Download Android App&nbsp;&nbsp;
+								<IoLogoAndroid />
 							</Button>
 						)}
 						{iosDirectDownloadLink && (
 							<Button style="outline" onClick={onOpenLink(iosDirectDownloadLink)}>
-								Download iOS App&nbsp;&nbsp;<IoLogoApple/>
+								Download iOS App&nbsp;&nbsp;
+								<IoLogoApple />
 							</Button>
 						)}
 					</div>

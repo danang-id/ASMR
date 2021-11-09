@@ -1,5 +1,6 @@
 import { useEffect } from "react"
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
+import { useErrorHandler } from "react-error-boundary"
 import {
 	IoBug,
 	IoCog,
@@ -8,7 +9,8 @@ import {
 	IoLogOutOutline,
 	IoMoon,
 	IoMoonOutline,
-	IoPersonOutline, IoWarning
+	IoPersonOutline,
+	IoWarning
 } from "react-icons/io5"
 import { Action, Fab } from "react-tiny-fab"
 import copy from "copy-to-clipboard"
@@ -19,28 +21,25 @@ import useLogger from "@asmr/libs/hooks/loggerHook"
 import useNotification from "@asmr/libs/hooks/notificationHook"
 import useTheme from "@asmr/libs/hooks/themeHook"
 import useProgress from "@asmr/libs/hooks/progressHook"
-import AuthenticationRoutes from "@asmr/pages/Authentication/AuthenticationRoutes"
-import DashboardRoutes from "@asmr/pages/Dashboard/DashboardRoutes"
-import { useErrorHandler } from "react-error-boundary"
 
 function DeveloperMenu(): JSX.Element {
 	const authentication = useAuthentication()
 	const errorHandler = useErrorHandler()
-	const history = useHistory()
 	const logger = useLogger(DeveloperMenu)
+	const navigate = useNavigate()
 	const notification = useNotification()
 	const [theme, setTheme] = useTheme()
 	const [progress, setProgress] = useProgress()
 
 	function onAuthenticationButtonClicked() {
 		if (!authentication.isAuthenticated()) {
-			logger.info("Authenticated user not detected, redirecting to:", AuthenticationRoutes.SignInPage)
-			history.push(AuthenticationRoutes.SignInPage)
+			logger.info("Authenticated user not detected, redirecting to:", "/authentication/sign-in")
+			navigate("/authentication/sign-in")
 			return
 		}
 
-		logger.info("Authenticated user detected, redirecting to:", AuthenticationRoutes.SignOutPage)
-		history.push(AuthenticationRoutes.SignOutPage)
+		logger.info("Authenticated user detected, redirecting to:", "/authentication/sign-out")
+		navigate("/authentication/sign-out")
 	}
 
 	function onCopyDefaultPasswordButtonClicked() {
@@ -56,7 +55,7 @@ function DeveloperMenu(): JSX.Element {
 	}
 
 	function onShowProfileButtonClicked() {
-		history.push(DashboardRoutes.ProfilePage)
+		navigate("/dashboard/profile")
 	}
 
 	function onThrowError() {
@@ -77,7 +76,7 @@ function DeveloperMenu(): JSX.Element {
 	}
 
 	return (
-		<Fab event="hover" icon={<IoBug/>} text="Developer Menu">
+		<Fab event="hover" icon={<IoBug />} text="Developer Menu">
 			<Action text="Switch Light/Dark Theme" onClick={onSwitchThemeButtonClicked}>
 				{theme === "dark" ? <IoMoon /> : <IoMoonOutline />}
 			</Action>
@@ -87,23 +86,22 @@ function DeveloperMenu(): JSX.Element {
 			<Action text="Throw Error" onClick={onThrowError}>
 				<IoWarning />
 			</Action>
-			<Action text={authentication.isAuthenticated() ? "Sign Out" : "Sign In"} onClick={onAuthenticationButtonClicked}>
+			<Action
+				text={authentication.isAuthenticated() ? "Sign Out" : "Sign In"}
+				onClick={onAuthenticationButtonClicked}
+			>
 				{authentication.isAuthenticated() ? <IoLogOutOutline /> : <IoLogInOutline />}
 			</Action>
-			{
-				!authentication.isAuthenticated() && (
-					<Action text="Copy Default Administrator Password" onClick={onCopyDefaultPasswordButtonClicked}>
-						<IoKeyOutline />
-					</Action>
-				)
-			}
-			{
-				authentication.isAuthenticated() && (
-					<Action text="Show Profile" onClick={onShowProfileButtonClicked}>
-						<IoPersonOutline />
-					</Action>
-				)
-			}
+			{!authentication.isAuthenticated() && (
+				<Action text="Copy Default Administrator Password" onClick={onCopyDefaultPasswordButtonClicked}>
+					<IoKeyOutline />
+				</Action>
+			)}
+			{authentication.isAuthenticated() && (
+				<Action text="Show Profile" onClick={onShowProfileButtonClicked}>
+					<IoPersonOutline />
+				</Action>
+			)}
 		</Fab>
 	)
 }

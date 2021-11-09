@@ -1,7 +1,7 @@
 enum Platform {
 	Android = "Android",
 	iOS = "iOS",
-	Web = "Web"
+	Web = "Web",
 }
 
 export default Platform

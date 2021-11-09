@@ -1,3 +1,4 @@
+import { serialize } from "object-to-formdata"
 import ServiceBase from "@asmr/services/ServiceBase"
 import BeanResponseModel from "@asmr/data/response/BeanResponseModel"
 import BeansResponseModel from "@asmr/data/response/BeansResponseModel"
@@ -6,41 +7,46 @@ import UpdateBeanRequestModel from "@asmr/data/request/UpdateBeanRequestModel"
 
 class BeanService extends ServiceBase {
 	public getAll() {
-		return this.request<BeansResponseModel>(() => (
-			this.httpClient.get("/api/bean")
-		))
+		return this.httpClient
+			.get<BeansResponseModel>("/api/bean")
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 
 	public getById(id: string) {
-		return this.request<BeanResponseModel>(() => (
-			this.httpClient.get(`/api/bean/${id}`)
-		))
+		return this.httpClient
+			.get<BeanResponseModel>(`/api/bean/${id}`)
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 
 	public create(body: CreateBeanRequestModel, imageFile: File | null) {
-		const formData = this.createFormData(body)
+		const formData = serialize(body)
 		if (imageFile) {
 			formData.append("image", imageFile, imageFile.name)
 		}
-		return this.request<BeanResponseModel>(() => (
-			this.httpClient.post("/api/bean", formData)
-		))
+		return this.httpClient
+			.post<BeanResponseModel>("/api/bean", formData)
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 
 	public modify(id: string, body: UpdateBeanRequestModel, imageFile: File | null) {
-		const formData = this.createFormData(body)
+		const formData = serialize(body)
 		if (imageFile) {
 			formData.append("image", imageFile, imageFile.name)
 		}
-		return this.request<BeanResponseModel>(() => (
-			this.httpClient.patch(`/api/bean/${id}`, formData)
-		))
+		return this.httpClient
+			.patch<BeanResponseModel>(`/api/bean/${id}`, formData)
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 
 	public remove(id: string) {
-		return this.request<BeanResponseModel>(() => (
-			this.httpClient.delete(`/api/bean/${id}`)
-		))
+		return this.httpClient
+			.delete(`/api/bean/${id}`)
+			.then(this.processResponse.bind(this))
+			.finally(this.finalize.bind(this))
 	}
 }
 

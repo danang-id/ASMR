@@ -1,7 +1,7 @@
 enum PaymentStatus {
 	Invoice,
 	WaitingVerification,
-	Payed
+	Payed,
 }
 
 export default PaymentStatus

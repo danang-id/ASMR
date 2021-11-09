@@ -15,11 +15,11 @@ export interface INotificationHandler {
 
 const defaultCogoToastOptions: CTOptions = {
 	hideAfter: 5,
-	position: "top-right"
+	position: "top-right",
 }
 
 const defaultNotificationOptions: INotificationOption = {
-	permanent: false
+	permanent: false,
 }
 
 class NotificationHandler implements INotificationHandler {
@@ -34,7 +34,9 @@ class NotificationHandler implements INotificationHandler {
 			...this.options,
 			hideAfter: permanent ? 0 : this.options.hideAfter,
 			heading: title,
-			onClick: () => { notification.hide && notification.hide() }
+			onClick: () => {
+				notification.hide && notification.hide()
+			},
 		})
 		return notification
 	}
@@ -44,7 +46,9 @@ class NotificationHandler implements INotificationHandler {
 			...this.options,
 			hideAfter: permanent ? 0 : this.options.hideAfter,
 			heading: title,
-			onClick: () => { notification.hide && notification.hide() }
+			onClick: () => {
+				notification.hide && notification.hide()
+			},
 		})
 		return notification
 	}
@@ -54,7 +58,9 @@ class NotificationHandler implements INotificationHandler {
 			...this.options,
 			hideAfter: permanent ? 0 : this.options.hideAfter,
 			heading: title,
-			onClick: () => { notification.hide && notification.hide() }
+			onClick: () => {
+				notification.hide && notification.hide()
+			},
 		})
 		return notification
 	}
@@ -64,7 +70,9 @@ class NotificationHandler implements INotificationHandler {
 			...this.options,
 			hideAfter: permanent ? 0 : this.options.hideAfter,
 			heading: title,
-			onClick: () => { notification.hide && notification.hide() }
+			onClick: () => {
+				notification.hide && notification.hide()
+			},
 		})
 		return notification
 	}
@@ -74,7 +82,9 @@ class NotificationHandler implements INotificationHandler {
 			...this.options,
 			hideAfter: permanent ? 0 : this.options.hideAfter,
 			heading: title,
-			onClick: () => { notification.hide && notification.hide() }
+			onClick: () => {
+				notification.hide && notification.hide()
+			},
 		})
 		return notification
 	}

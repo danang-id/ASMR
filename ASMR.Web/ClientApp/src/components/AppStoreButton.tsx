@@ -1,4 +1,4 @@
-import * as React from "react"
+import React from "react"
 import "@asmr/components/styles/AppStoreButton.css"
 
 import AppStoreButtonImage from "@asmr/assets/app-store-button.png"

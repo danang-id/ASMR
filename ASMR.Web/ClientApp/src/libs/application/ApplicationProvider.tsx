@@ -15,9 +15,7 @@ function ApplicationProvider({ children }: ApplicationProviderProps): JSX.Elemen
 			<NetworkProvider>
 				<BreakpointProvider>
 					<ThemeProvider>
-						<AuthenticationProvider>
-							{children}
-						</AuthenticationProvider>
+						<AuthenticationProvider>{children}</AuthenticationProvider>
 					</ThemeProvider>
 				</BreakpointProvider>
 			</NetworkProvider>

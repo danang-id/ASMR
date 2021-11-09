@@ -1,5 +1,7 @@
 ﻿declare global {
-    interface Window { serviceWorkerUpdateReady?: boolean; }
+	interface Window {
+		serviceWorkerUpdateReady?: boolean
+	}
 }
 
-export { }
+export {}

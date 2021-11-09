@@ -11,7 +11,7 @@ function ProgressProvider({ children }: ProgressProviderProps): JSX.Element {
 	const logger = useLogger(ProgressProvider)
 	const [progressInfo, setProgressInfo] = useState<ProgressInfo>({
 		loading: false,
-		percentage: 0
+		percentage: 0,
 	})
 
 	function setProgress(loading: boolean, percentage: number = 0) {
@@ -23,17 +23,13 @@ function ProgressProvider({ children }: ProgressProviderProps): JSX.Element {
 		}
 		setProgressInfo({ loading, percentage: percentage })
 	}
-	
+
 	useEffect(() => {
 		const { loading, percentage } = progressInfo
 		logger.info("Loading:", loading, "Percentage:", percentage)
 	}, [progressInfo])
 
-	return (
-		<ProgressContext.Provider value={[progressInfo, setProgress]}>
-			{children}
-		</ProgressContext.Provider>
-	)
+	return <ProgressContext.Provider value={[progressInfo, setProgress]}>{children}</ProgressContext.Provider>
 }
 
 export default ProgressProvider

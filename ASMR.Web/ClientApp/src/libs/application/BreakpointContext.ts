@@ -5,7 +5,7 @@ const BreakpointContext = createContext<BreakpointContextInfo>({
 	activeList: [],
 	current: "xs",
 	includes: () => false,
-	width: -1
+	width: -1,
 })
 
 export default BreakpointContext

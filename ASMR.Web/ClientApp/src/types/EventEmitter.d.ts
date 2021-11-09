@@ -15,7 +15,7 @@ interface IEventEmitter<Events extends EventMap, Key = EventKey<Events>> {
 	listenerCount(type: Key): number
 	prependListener(event: Key, listener: EventListener<Events[Key]>): this
 	prependOnceListener(event: Key, listener: EventListener<Events[Key]>): this
-	eventNames(): (Key)[]
+	eventNames(): Key[]
 }
 
 export default IEventEmitter
