@@ -1,3 +1,6 @@
+BUILD_CONFIGURATION := Release
+BUILD_FRAMEWORK := net6.0
+
 ifeq ($(OS),Windows_NT)
     BUILD_TARGET := win
     ifeq ($(PROCESSOR_ARCHITEW6432),AMD64)
@@ -42,56 +45,62 @@ client:
 
 cross-platform:
 	npx rimraf Releases/ASMR-CrossPlatform; \
-	dotnet publish --configuration Release \
-		--framework net5.0 \
+	dotnet publish --configuration $(BUILD_CONFIGURATION) \
+		--framework $(BUILD_FRAMEWORK) \
 		--output Releases/ASMR-CrossPlatform
 
 linux-x86:
 	npx rimraf Releases/ASMR-Linux-x86; \
-	dotnet publish --configuration Release \
-		--framework net5.0 \
+	dotnet publish --configuration $(BUILD_CONFIGURATION) \
+		--framework $(BUILD_FRAMEWORK) \
 		--output Releases/ASMR-Linux-x86 \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
-		--runtime linux-x86
+		--runtime linux-x86 \
+		--self-contained true
 
 linux-x64:
 	npx rimraf Releases/ASMR-Linux-x64; \
-	dotnet publish --configuration Release \
-		--framework net5.0 \
+	dotnet publish --configuration $(BUILD_CONFIGURATION) \
+		--framework $(BUILD_FRAMEWORK) \
 		--output Releases/ASMR-Linux-x64 \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
-		--runtime linux-x64
+		--runtime linux-x64 \
+		--self-contained true
 		
 linux-x64-noopt:
 	npx rimraf Releases/ASMR-Linux-x64; \
-	dotnet publish --configuration Release \
-		--framework net5.0 \
+	dotnet publish --configuration $(BUILD_CONFIGURATION) \
+		--framework $(BUILD_FRAMEWORK) \
 		--output Releases/ASMR-Linux-x64 \
-		--runtime linux-x64;
+		--runtime linux-x64 \
+		--self-contained true
 
 osx-x64:
 	npx rimraf Releases/ASMR-macOS-x64; \
-	dotnet publish --configuration Release \
-		--framework net5.0 \
+	dotnet publish --configuration $(BUILD_CONFIGURATION) \
+		--framework $(BUILD_FRAMEWORK) \
 		--output Releases/ASMR-macOS-x64 \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
-		--runtime osx-x64
+		--runtime osx-x64 \
+		--self-contained true
 
 win-x86:
 	npx rimraf Releases/ASMR-Windows-x86; \
-	dotnet publish --configuration Release \
-		--framework net5.0 \
+	dotnet publish --configuration $(BUILD_CONFIGURATION) \
+		--framework $(BUILD_FRAMEWORK) \
 		--output Releases/ASMR-Windows-x86 \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
-		--runtime win-x86
+		--runtime win-x86 \
+		--self-contained true
 
 win-x64:
 	npx rimraf Releases/ASMR-Windows-x64; \
-	dotnet publish --configuration Release \
-		--framework net5.0 \
+	dotnet publish --configuration $(BUILD_CONFIGURATION) \
+		--framework $(BUILD_FRAMEWORK) \
 		--output Releases/ASMR-Windows-x64 \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=true \
-		--runtime win-x64
+		--runtime win-x64 \
+		--self-contained true
 
 migrations:
 	dotnet ef database drop; \
