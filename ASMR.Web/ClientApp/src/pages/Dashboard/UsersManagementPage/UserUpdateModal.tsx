@@ -29,7 +29,7 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 	function onChange(event: ChangeEvent<HTMLInputElement>) {
 		const newRequestModel = { ...requestModel }
 		if (event.target.name.startsWith("role")) {
-			const roles: Role[] = [...(newRequestModel.roles && [])]
+			const roles: Role[] = [...newRequestModel.roles]
 			const role: Role = parseInt(event.target.name.substring(5))
 			const roleIndex = roles.indexOf(role)
 			if (event.target.checked) {
@@ -51,7 +51,7 @@ function UserUpdateModal({ onClose, onUpdateUser, progress, show, user }: UserUp
 			return null
 		}
 
-		const roles = requestModel.roles ?? []
+		const roles = requestModel.roles
 		const checked = roles.includes(Number(role))
 		const readOnly = Number(role) === Role.Administrator && roles.includes(Role.Administrator)
 		return (
