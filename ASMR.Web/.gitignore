@@ -246,3 +246,6 @@ _Pvt_Extensions
 ![Ll]ogs/.gitkeep
 
 appsettings.Local.json
+*.db
+*.db-shm
+*.db-wal

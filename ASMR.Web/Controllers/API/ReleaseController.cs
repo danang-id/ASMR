@@ -108,12 +108,12 @@ namespace ASMR.Web.Controllers.API
 				} : message);
 			}
 
-			var applicationFileName = $"ASMR.Mobile.{platformName}-{releasedVersion}{platformExtension}";
+			var applicationFileName = $"asmr-mobile-{platform.ToLower()}-{releasedVersion}{platformExtension}";
 			var applicationFilePath = Path.Join(Directory.GetCurrentDirectory(),
 				"ReleaseInformation", "DirectStore", applicationFileName);
 			if (!directDownloadAvailable || !System.IO.File.Exists(applicationFilePath))
 			{
-				var message = $"ASMR for {platform} (version {releasedVersion}) is not available at the moment.";
+				var message = $"asmr for {platform} (version {releasedVersion}) is not available at the moment.";
 				return Ok(useStructuredModel ? new DefaultResponseModel
 				{
 					Message = message
@@ -122,7 +122,7 @@ namespace ASMR.Web.Controllers.API
 
 			if (!download)
 			{
-				var message = $"ASMR for {platform} (version {releasedVersion}) is available for download.";
+				var message = $"asmr for {platform} (version {releasedVersion}) is available for download.";
 				return Ok(useStructuredModel ? new DefaultResponseModel
 				{
 					Message = message
