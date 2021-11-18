@@ -155,3 +155,12 @@ fabric.properties
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
+
+# Yarn Berry without Zero-Install
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
