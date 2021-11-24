@@ -35,75 +35,82 @@ else
 endif
 
 build:
-	make $(BUILD_TARGET);
+	@make $(BUILD_TARGET);
 
 clean:
-	dotnet clean;
+	@dotnet clean;
 
 client:
-	cd ClientApp; yarn; yarn build
+	@cd ClientApp; yarn; yarn build
 
 cross-platform:
-	npx rimraf Releases/ASMR-CrossPlatform; \
+	$(eval @_RELEASE_PATH := "Releases/asmr-cross-platform")
+	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
-		--output Releases/ASMR-CrossPlatform
+		--output $(@_RELEASE_PATH)
 
 linux-x86:
-	npx rimraf Releases/ASMR-Linux-x86; \
+	$(eval @_RELEASE_PATH := "Releases/asmr-linux-x86")
+	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
-		--output Releases/ASMR-Linux-x86 \
+		--output $(@_RELEASE_PATH) \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
 		--runtime linux-x86 \
 		--self-contained true
 
 linux-x64:
-	npx rimraf Releases/ASMR-Linux-x64; \
+	$(eval @_RELEASE_PATH := "Releases/asmr-linux-x64")
+	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
-		--output Releases/ASMR-Linux-x64 \
+		--output $(@_RELEASE_PATH) \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
 		--runtime linux-x64 \
 		--self-contained true
 		
 linux-x64-noopt:
-	npx rimraf Releases/ASMR-Linux-x64; \
+	$(eval @_RELEASE_PATH := "Releases/asmr-linux-x64-noopt")
+	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
-		--output Releases/ASMR-Linux-x64 \
+		--output $(@_RELEASE_PATH) \
 		--runtime linux-x64 \
 		--self-contained true
 
 osx-x64:
-	npx rimraf Releases/ASMR-macOS-x64; \
+	$(eval @_RELEASE_PATH := "Releases/asmr-macos-x64")
+	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
-		--output Releases/ASMR-macOS-x64 \
+		--output $(@_RELEASE_PATH) \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
 		--runtime osx-x64 \
 		--self-contained true
 
 win-x86:
-	npx rimraf Releases/ASMR-Windows-x86; \
+	$(eval @_RELEASE_PATH := "Releases/asmr-win-x86")
+	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
-		--output Releases/ASMR-Windows-x86 \
+		--output $(@_RELEASE_PATH) \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
 		--runtime win-x86 \
 		--self-contained true
 
 win-x64:
-	npx rimraf Releases/ASMR-Windows-x64; \
+	$(eval @_RELEASE_PATH := "Releases/asmr-win-x64")
+	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
-		--output Releases/ASMR-Windows-x64 \
+		--output $(@_RELEASE_PATH) \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=true \
 		--runtime win-x64 \
 		--self-contained true
 
 migrations:
-	dotnet ef database drop; \
+	@dotnet ef database drop; \
 	dotnet ef migrations remove; \
 	dotnet ef migrations add CreateInitialSchema --output-dir Data/Migrations; \
 	dotnet ef database update;

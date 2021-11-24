@@ -86,12 +86,12 @@ namespace ASMR.Web.Services
                 return null;
             }
 
-            if (roastedBeanProduction.GreenBeanWeight >= 0)
+            if (roastedBeanProduction.GreenBeanWeight > 0)
             {
                 entity.GreenBeanWeight = roastedBeanProduction.GreenBeanWeight;
             }
 
-            if (roastedBeanProduction.RoastedBeanWeight >= 0)
+            if (roastedBeanProduction.RoastedBeanWeight > 0)
             {
                 entity.RoastedBeanWeight = roastedBeanProduction.RoastedBeanWeight;
             }

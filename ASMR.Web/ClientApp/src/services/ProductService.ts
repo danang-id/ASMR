@@ -15,7 +15,7 @@ class ProductService extends ServiceBase {
 	public getByBeanId(beanId: string) {
 		return this.httpClient
 			.get<ProductsResponseModel>("/api/product", {
-				params: { beanId }
+				params: { beanId },
 			})
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))

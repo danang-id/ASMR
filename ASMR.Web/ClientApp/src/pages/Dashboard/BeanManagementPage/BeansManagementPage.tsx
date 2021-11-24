@@ -6,7 +6,7 @@ import {
 	IoCreateOutline,
 	IoImageOutline,
 	IoQrCodeOutline,
-	IoTrashOutline
+	IoTrashOutline,
 } from "react-icons/io5"
 import BackButton from "@asmr/components/BackButton"
 import BeanDescription from "@asmr/components/BeanDescription"
@@ -59,7 +59,7 @@ function BeansManagementPage(): JSX.Element {
 			setBeanCreateModalShown,
 			setBeanUpdateModalShown,
 			setBeanUpdateImageModalShown,
-			setBeanRemoveModalShown
+			setBeanRemoveModalShown,
 		])
 		setSelectedBean(null)
 	}
@@ -76,7 +76,7 @@ function BeansManagementPage(): JSX.Element {
 		await singleSwitchToggle(setBeanCreateModalShown, [
 			setBeanUpdateModalShown,
 			setBeanUpdateImageModalShown,
-			setBeanRemoveModalShown
+			setBeanRemoveModalShown,
 		])
 	}
 
@@ -85,7 +85,7 @@ function BeansManagementPage(): JSX.Element {
 		await singleSwitchToggle(setBeanUpdateModalShown, [
 			setBeanCreateModalShown,
 			setBeanUpdateImageModalShown,
-			setBeanRemoveModalShown
+			setBeanRemoveModalShown,
 		])
 	}
 
@@ -94,7 +94,7 @@ function BeansManagementPage(): JSX.Element {
 		await singleSwitchToggle(setBeanUpdateImageModalShown, [
 			setBeanCreateModalShown,
 			setBeanUpdateModalShown,
-			setBeanRemoveModalShown
+			setBeanRemoveModalShown,
 		])
 	}
 
@@ -103,7 +103,7 @@ function BeansManagementPage(): JSX.Element {
 		await singleSwitchToggle(setBeanRemoveModalShown, [
 			setBeanCreateModalShown,
 			setBeanUpdateModalShown,
-			setBeanUpdateImageModalShown
+			setBeanUpdateImageModalShown,
 		])
 	}
 

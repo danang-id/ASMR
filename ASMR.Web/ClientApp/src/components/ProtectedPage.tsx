@@ -34,7 +34,7 @@ function ProtectedPage(props: ProtectedRouteProps): JSX.Element {
 				state={state}
 				to={{
 					pathname: "/authentication/sign-in",
-					search: urlSearchParams.toString()
+					search: urlSearchParams.toString(),
 				}}
 			/>
 		)
@@ -49,7 +49,10 @@ function ProtectedPage(props: ProtectedRouteProps): JSX.Element {
 	}
 
 	if (!authentication.isAuthorized(allowedRoles)) {
-		logger.warn("Not authorized, required roles:", allowedRoles.map((allowedRole) => Role[allowedRole]))
+		logger.warn(
+			"Not authorized, required roles:",
+			allowedRoles.map((allowedRole) => Role[allowedRole])
+		)
 		notification.warn("You are not authorized to this this resource.")
 		return <Navigate replace state={state} to={{ pathname: "/dashboard" }} />
 	}

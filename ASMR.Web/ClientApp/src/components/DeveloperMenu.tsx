@@ -10,7 +10,7 @@ import {
 	IoMoon,
 	IoMoonOutline,
 	IoPersonOutline,
-	IoWarning
+	IoWarning,
 } from "react-icons/io5"
 import { Action, Fab } from "react-tiny-fab"
 import copy from "copy-to-clipboard"

@@ -5,10 +5,11 @@
 			"Link": null
 		},
 		"DirectDownload": {
-			"Available": false,
+			"Available": true,
 			"Link": "https://asmr.hamzahjundi.me/api/release/mobile/update?platform=Android"
 		},
-		"Version": "1.0.0"
+		"Version": "1.0.1",
+		"VersionCode": 2001
 	},
 	"iOS": {
 		"AppStore": {
@@ -19,6 +20,7 @@
 			"Available": false,
 			"Link": "https://asmr.hamzahjundi.me/api/release/mobile/update?platform=iOS"
 		},
-		"Version": "1.0.0"
+		"Version": "1.0.1",
+		"VersionCode": 2001
 	}
 }

@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, MouseEvent, useState } from "react"
-import { Navigate, useLocation, useNavigate } from "react-router-dom"
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom"
 import { IoHomeOutline, IoKey, IoLogInOutline, IoPerson } from "react-icons/io5"
 import ApplicationLogo from "@asmr/components/ApplicationLogo"
 import Button from "@asmr/components/Button"
@@ -60,7 +60,7 @@ function AccountProblemPage({ code, description, username, password }: AccountPr
 	return (
 		<BaseLayout className="page">
 			<div className="header">
-				<ApplicationLogo />
+				<Link to="/"><ApplicationLogo /></Link>
 				<p className="title">{config.application.name}</p>
 			</div>
 			<span className="separator" />
@@ -198,7 +198,7 @@ function SignInPage(): JSX.Element {
 		<BaseLayout className="page">
 			<div className="card">
 				<div className="card-header">
-					<ApplicationLogo />
+					<Link to="/"><ApplicationLogo /></Link>
 					<p>Sign In</p>
 				</div>
 				<div className="card-body">

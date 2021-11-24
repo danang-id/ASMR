@@ -54,7 +54,7 @@ function ProductsManagementPage(): JSX.Element {
 		await singleSwitchToggle(undefined, [
 			setProductCreateModalShown,
 			setProductUpdateModalShown,
-			setProductRemoveModalShown
+			setProductRemoveModalShown,
 		])
 		setSelectedProduct(null)
 	}

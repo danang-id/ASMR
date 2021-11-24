@@ -56,7 +56,7 @@ function HomePage(): JSX.Element {
 		return () => window.open(url, "_blank")
 	}
 
-	function onTryAsmrButtonClicked() {
+	function onSignInButtonClicked() {
 		logger.info("Trying application, redirecting to:", "/dashboard")
 		navigate("/dashboard")
 	}
@@ -128,22 +128,20 @@ function HomePage(): JSX.Element {
 			</div>
 			<span className="separator" />
 			<div className="call-to-action">
-				<Button onClick={onTryAsmrButtonClicked}>
-					Try Now&nbsp;&nbsp;
+				<Button onClick={onSignInButtonClicked}>
+					Sign In&nbsp;&nbsp;
 					<IoEnterOutline />
 				</Button>
 				{hasDirectDownload && (
 					<div className="direct-download">
 						{androidDirectDownloadLink && (
 							<Button style="outline" onClick={onOpenLink(androidDirectDownloadLink)}>
-								Download Android App&nbsp;&nbsp;
-								<IoLogoAndroid />
+								<IoLogoAndroid />&nbsp;&nbsp;Download for Android
 							</Button>
 						)}
 						{iosDirectDownloadLink && (
 							<Button style="outline" onClick={onOpenLink(iosDirectDownloadLink)}>
-								Download iOS App&nbsp;&nbsp;
-								<IoLogoApple />
+								<IoLogoApple />&nbsp;&nbsp;Download for iOS
 							</Button>
 						)}
 					</div>
@@ -156,7 +154,7 @@ function HomePage(): JSX.Element {
 				)}
 			</div>
 
-			<AboutModal onClose={onCloseModals} onTryAsmr={onTryAsmrButtonClicked} show={aboutModalShown} />
+			<AboutModal onClose={onCloseModals} onTryAsmr={onSignInButtonClicked} show={aboutModalShown} />
 		</BaseLayout>
 	)
 }

@@ -17,7 +17,7 @@ class GateService extends ServiceBase {
 		}
 		return this.httpClient
 			.post<DefaultResponseModel>("/api/gate/register", formData, {
-				params: { captchaResponseToken }
+				params: { captchaResponseToken },
 			})
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
@@ -54,7 +54,7 @@ class GateService extends ServiceBase {
 	public forgetPassword(body: ForgetPasswordRequestModel, captchaResponseToken: string | null) {
 		return this.httpClient
 			.post<DefaultResponseModel>("/api/gate/password/forget", body, {
-				params: { captchaResponseToken }
+				params: { captchaResponseToken },
 			})
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))

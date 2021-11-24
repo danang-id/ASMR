@@ -82,7 +82,7 @@ export function createServices(setProgress?: SetProgressInfo): Services {
 		product: new ProductService(cancelTokenSource, void 0, setProgress),
 		release: new ReleaseService(cancelTokenSource, void 0, setProgress),
 		status: new StatusService(cancelTokenSource, void 0, setProgress),
-		user: new UserService(cancelTokenSource, void 0, setProgress)
+		user: new UserService(cancelTokenSource, void 0, setProgress),
 	}
 }
 

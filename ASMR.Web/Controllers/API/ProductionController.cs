@@ -7,6 +7,7 @@
 //
 // ProductionController.cs
 //
+using System.Linq;
 using System.Threading.Tasks;
 using ASMR.Core.Constants;
 using ASMR.Core.Entities;
@@ -42,7 +43,9 @@ namespace ASMR.Web.Controllers.API
 		
 		[AllowAccess(Role.Administrator, Role.Roaster, Role.Server)]
 		[HttpGet]
-		public async Task<IActionResult> GetAll([FromQuery] bool showMine)
+		public async Task<IActionResult> GetAll(
+			[FromQuery] bool showMine,
+			[FromQuery] bool showCancelled)
 		{
 			var authenticatedUser = await _userService.GetAuthenticatedUser(User);
 			var roastedBeanProductions = showMine 
@@ -50,6 +53,12 @@ namespace ASMR.Web.Controllers.API
 					.GetRoastedBeanProductionByUser(authenticatedUser.Id)
 				: _roastedBeanProductionService
 					.GetAllRoastedBeanProductions();
+			// If cancelled production is shown, skip this filter
+			if (!showCancelled)
+            {
+				roastedBeanProductions = roastedBeanProductions
+					.Where(production => production.IsCancelled == false);
+            }
 			
 			return Ok(new ProductionsResponseModel(roastedBeanProductions));
 		}
@@ -221,7 +230,7 @@ namespace ASMR.Web.Controllers.API
 		[AllowAccess(Role.Roaster)]
 		[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
 		[HttpDelete("cancel/{id}")]
-		public async Task<IActionResult> Cancel(string id)
+		public async Task<IActionResult> Cancel(string id, [FromQuery] bool isBeanBurnt)
 		{
 			if (string.IsNullOrEmpty(id))
 			{
@@ -255,18 +264,20 @@ namespace ASMR.Web.Controllers.API
 				return BadRequest(new ProductionResponseModel(errorModel));
 			}
 
-			var beanInventory = roastedBeanProduction.Bean.Inventory;
-			beanInventory.CurrentGreenBeanWeight += roastedBeanProduction.GreenBeanWeight;
-			await _beanService.ModifyBean(roastedBeanProduction.BeanId, new Bean
-			{
-				Inventory = beanInventory
-			});
+			if (!isBeanBurnt)
+            {
+				var beanInventory = roastedBeanProduction.Bean.Inventory;
+				beanInventory.CurrentGreenBeanWeight += roastedBeanProduction.GreenBeanWeight;
+				await _beanService.ModifyBean(roastedBeanProduction.BeanId, new Bean
+				{
+					Inventory = beanInventory
+				});
+			}
 
 			roastedBeanProduction = await _roastedBeanProductionService
 				.ModifyRoastedBeanProduction(roastedBeanProduction.Id, new RoastedBeanProduction
 				{
-					IsCancelled = true,
-					IsFinalized = true
+					IsCancelled = true
 				});
 			
 			await _roastedBeanProductionService.CommitAsync();

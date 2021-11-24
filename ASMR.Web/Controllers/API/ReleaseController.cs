@@ -62,6 +62,12 @@ namespace ASMR.Web.Controllers.API
 				"IOS" => hasReleaseInformation ? releaseInformation.iOS.Version : null,
 				_ => null
 			};
+			var releasedVersionCode = platform.ToUpper() switch
+			{
+				"ANDROID" => hasReleaseInformation ? releaseInformation.Android.VersionCode : 0,
+				"IOS" => hasReleaseInformation ? releaseInformation.iOS.VersionCode : 0,
+				_ => 0
+			};
 
 			var fromVersion = !string.IsNullOrEmpty(currentVersion) ? new Version(currentVersion) : null;
 			var toVersion = !string.IsNullOrEmpty(releasedVersion) ? new Version(releasedVersion) : null;
@@ -108,12 +114,12 @@ namespace ASMR.Web.Controllers.API
 				} : message);
 			}
 
-			var applicationFileName = $"asmr-mobile-{platform.ToLower()}-{releasedVersion}{platformExtension}";
+			var applicationFileName = $"asmr_mobile_{platform.ToLower()}_v{releasedVersion}-{releasedVersionCode}{platformExtension}";
 			var applicationFilePath = Path.Join(Directory.GetCurrentDirectory(),
 				"ReleaseInformation", "DirectStore", applicationFileName);
 			if (!directDownloadAvailable || !System.IO.File.Exists(applicationFilePath))
 			{
-				var message = $"asmr for {platform} (version {releasedVersion}) is not available at the moment.";
+				var message = $"asmr for {platform} (v{releasedVersion}-{releasedVersionCode}) is not available at the moment.";
 				return Ok(useStructuredModel ? new DefaultResponseModel
 				{
 					Message = message
@@ -122,7 +128,7 @@ namespace ASMR.Web.Controllers.API
 
 			if (!download)
 			{
-				var message = $"asmr for {platform} (version {releasedVersion}) is available for download.";
+				var message = $"asmr for {platform} (v{releasedVersion}-{releasedVersionCode}) is available for download.";
 				return Ok(useStructuredModel ? new DefaultResponseModel
 				{
 					Message = message

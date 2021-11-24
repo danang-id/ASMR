@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
@@ -7,7 +7,7 @@
 		<ReleasesRoot>Releases\</ReleasesRoot>
 		<SpaRoot>ClientApp\</SpaRoot>
 		<DefaultItemExcludes>$(DefaultItemExcludes);$(ReleasesRoot)\**;$(SpaRoot)node_modules\**</DefaultItemExcludes>
-		<ReleaseVersion>1.0.0</ReleaseVersion>
+		<ReleaseVersion>1.0.1</ReleaseVersion>
 		<StartupObject>ASMR.Web.Program</StartupObject>
 		<ApplicationIcon>ASMR.Web.ico</ApplicationIcon>
 		<AssemblyName>asmr</AssemblyName>
@@ -15,8 +15,8 @@
 		<PackageId>ASMR</PackageId>
 		<Company>Pandora Karya Digital</Company>
 		<Product>ASMR Web Server</Product>
-		<AssemblyVersion>1.0.0</AssemblyVersion>
-		<FileVersion>1.0.0</FileVersion>
+		<AssemblyVersion>1.0.1</AssemblyVersion>
+		<FileVersion>1.0.1</FileVersion>
 		<NeutralLanguage>en</NeutralLanguage>
 		<Platforms>AnyCPU</Platforms>
 		<UserSecretsId>143ab751-b354-4226-b63e-fc5e30c39def</UserSecretsId>
@@ -42,7 +42,7 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0" />
-		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.16.0" />
+		<PackageReference Include="NetEscapades.AspNetCore.SecurityHeaders" Version="0.16.1" />
 		<PackageReference Include="Serilog" Version="2.10.0" />
 		<PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
 		<PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
@@ -50,11 +50,11 @@
 		<PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
 		<PackageReference Include="Serilog.Settings.Configuration" Version="3.3.0" />
 		<PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
-		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.0" />
+		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
 		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1" />
-		<PackageReference Include="SendGrid" Version="9.24.4" />
+		<PackageReference Include="SendGrid" Version="9.25.0" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -83,16 +83,6 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
 		</Content>
-		<Content Update="ReleaseInformation\ASMR*.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
-		</Content>
-	</ItemGroup>
-	<ItemGroup>
-	  <None Remove="ClientApp\yarn.lock" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Logs" />
 	</ItemGroup>
 	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
 		<!-- Ensure NodeJS is installed -->
@@ -111,7 +101,7 @@
 	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
 		<!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
 		<Exec WorkingDirectory="$(SpaRoot)" Command="yarn install" />
-		<Exec WorkingDirectory="$(SpaRoot)" Command="yarn run build" />
+		<Exec WorkingDirectory="$(SpaRoot)" Command="yarn build" />
 
 		<!-- Include the newly-built files in the publish output -->
 		<ItemGroup>

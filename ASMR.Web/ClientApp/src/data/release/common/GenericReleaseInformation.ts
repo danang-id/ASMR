@@ -1,5 +1,6 @@
 interface GenericReleaseInformation {
-	Version: string
+	Version: string,
+	VersionCode: number
 }
 
 export default GenericReleaseInformation

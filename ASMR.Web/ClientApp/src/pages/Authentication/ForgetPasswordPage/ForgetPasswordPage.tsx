@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, MouseEvent, useRef, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { IoHomeOutline, IoMail } from "react-icons/io5"
 import ReCAPTCHA from "react-google-recaptcha"
 import ApplicationLogo from "@asmr/components/ApplicationLogo"
@@ -28,7 +28,7 @@ function InstructionSent({ emailAddress }: InstructionSentProps): JSX.Element {
 	return (
 		<BaseLayout className="page">
 			<div className="header">
-				<ApplicationLogo />
+				<Link to="/"><ApplicationLogo /></Link>
 				<p className="title">{config.application.name}</p>
 			</div>
 			<span className="separator" />
@@ -107,7 +107,7 @@ function ForgetPasswordPage(): JSX.Element {
 		<BaseLayout className="page">
 			<div className="card">
 				<div className="card-header">
-					<ApplicationLogo />
+					<Link to="/"><ApplicationLogo /></Link>
 					<p>Forget Password</p>
 				</div>
 				<div className="card-body">

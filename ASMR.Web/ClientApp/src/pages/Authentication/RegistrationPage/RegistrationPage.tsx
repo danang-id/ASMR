@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, MouseEvent, useEffect, useRef, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { IoHomeOutline, IoLogInOutline } from "react-icons/io5"
 import ReCAPTCHA from "react-google-recaptcha"
 import ApplicationLogo from "@asmr/components/ApplicationLogo"
@@ -32,7 +32,7 @@ function RegistrationDonePage({ message }: RegistrationDonePageProps): JSX.Eleme
 	return (
 		<BaseLayout className="page">
 			<div className="header">
-				<ApplicationLogo />
+				<Link to="/"><ApplicationLogo /></Link>
 				<p className="title">{config.application.name}</p>
 			</div>
 			<span className="separator" />
@@ -152,7 +152,7 @@ function RegistrationPage(): JSX.Element {
 		<BaseLayout className="page">
 			<div className="card">
 				<div className="card-header">
-					<ApplicationLogo />
+					<Link to="/"><ApplicationLogo /></Link>
 					<p>Register</p>
 				</div>
 				<div className="card-body">

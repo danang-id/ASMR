@@ -1,4 +1,3 @@
-
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from "axios"
 import Platform from "@asmr/data/enumerations/Platform"
 import { SetProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
@@ -14,7 +13,7 @@ export interface ServiceLogOptions {
 }
 
 export interface ServiceOptions {
-	log: ServiceLogOptions;
+	log: ServiceLogOptions
 }
 
 class ServiceBase {
@@ -24,18 +23,18 @@ class ServiceBase {
 	protected readonly options: ServiceOptions
 	protected readonly setProgress: SetProgressInfo
 
-	constructor(cancelTokenSource: CancelTokenSource, options?: ServiceOptions,setProgress?: SetProgressInfo) {
+	constructor(cancelTokenSource: CancelTokenSource, options?: ServiceOptions, setProgress?: SetProgressInfo) {
 		this.httpClient = axios.create({
 			baseURL: config.backEndBaseUrl ?? window.location.origin,
 			cancelToken: cancelTokenSource.token,
 			headers: {
-				Accept: 'application/json',
+				Accept: "application/json",
 			},
 			params: {
 				clientPlatform: Platform.Web,
 				clientVersion: config.application.version,
 			},
-			validateStatus: status => status >= 200 && status <= 500,
+			validateStatus: (status) => status >= 200 && status <= 500,
 			withCredentials: true,
 			xsrfCookieName: "ASMR.CSRF-Request-Token",
 			xsrfHeaderName: "X-CSRF-Token",
@@ -51,8 +50,11 @@ class ServiceBase {
 		}
 		this.setProgress = setProgress ?? (() => {})
 
-		this.httpClient.interceptors.request.use(this.onRequestFulfilled.bind(this), this.onRequestRejected.bind(this));
-		this.httpClient.interceptors.response.use(this.onResponseFulfilled.bind(this), this.onResponseRejected.bind(this));
+		this.httpClient.interceptors.request.use(this.onRequestFulfilled.bind(this), this.onRequestRejected.bind(this))
+		this.httpClient.interceptors.response.use(
+			this.onResponseFulfilled.bind(this),
+			this.onResponseRejected.bind(this)
+		)
 	}
 
 	protected logRequest(request: AxiosRequestConfig, response: AxiosResponse) {
@@ -73,7 +75,7 @@ class ServiceBase {
 
 	protected async onRequestFulfilled(request: AxiosRequestConfig) {
 		this.setProgress(true, 0)
-		return request;
+		return request
 	}
 
 	protected onRequestRejected(error: Error) {

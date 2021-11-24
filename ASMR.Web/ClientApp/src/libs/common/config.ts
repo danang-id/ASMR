@@ -15,9 +15,9 @@ const buildNumber =
 
 const config = {
 	application: {
-		name: process.env.REACT_APP_NAME ?? "ASMR",
+		name: process.env.REACT_APP_NAME ?? "asmr",
 		version: version,
-		versionFull: version + "." + buildNumber,
+		versionFull: version + "-" + buildNumber,
 		description: process.env.REACT_APP_DESCRIPTION ?? "Coffee Beans Management Solution",
 	},
 	build: {

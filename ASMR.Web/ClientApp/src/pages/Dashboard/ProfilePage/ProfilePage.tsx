@@ -68,8 +68,8 @@ function ProfilePage(): JSX.Element {
 					<span className="update-information">
 						{isAdministrator ? (
 							<>
-								Please use the <Link to="/dashboard/manage/users">User Management</Link>{" "}
-								panel to update your information.
+								Please use the <Link to="/dashboard/manage/users">User Management</Link> panel to update
+								your information.
 							</>
 						) : (
 							<>

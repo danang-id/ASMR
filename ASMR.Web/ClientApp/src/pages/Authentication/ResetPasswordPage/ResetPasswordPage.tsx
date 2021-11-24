@@ -105,7 +105,7 @@ function ResetPasswordPage(): JSX.Element {
 				emailAddress,
 				token,
 				password,
-				passwordConfirmation
+				passwordConfirmation,
 			})
 			if (result.isSuccess) {
 				setResetPasswordMessage(result.message)
