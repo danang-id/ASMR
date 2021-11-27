@@ -11,15 +11,14 @@
 using ASMR.Web.Middlewares;
 using Microsoft.AspNetCore.Builder;
 
-namespace ASMR.Web.Extensions
-{
-    public static class AntiforgeryExtension
-    {
-        public static IApplicationBuilder UseAntiforgery(this IApplicationBuilder app)
-        {
-            app.UseMiddleware<AntiforgeryMiddleware>();
+namespace ASMR.Web.Extensions;
 
-            return app;
-        }
-    }
+public static class AntiforgeryExtension
+{
+	public static IApplicationBuilder UseAntiforgery(this IApplicationBuilder app)
+	{
+		app.UseMiddleware<AntiforgeryMiddleware>();
+
+		return app;
+	}
 }

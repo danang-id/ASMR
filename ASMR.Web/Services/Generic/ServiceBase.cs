@@ -7,35 +7,35 @@
 //
 // ServiceBase.cs
 //
+
 using ASMR.Web.Data;
 using System.Threading.Tasks;
 
-namespace ASMR.Web.Services.Generic
+namespace ASMR.Web.Services.Generic;
+
+public interface IServiceBase
 {
-    public interface IServiceBase
-    {
-        public int Commit();
+	public int Commit();
 
-        public Task CommitAsync();
-    }
+	public Task CommitAsync();
+}
 
-    public class ServiceBase : IServiceBase
-    {
-        protected readonly ApplicationDbContext DbContext;
+public class ServiceBase : IServiceBase
+{
+	protected readonly ApplicationDbContext DbContext;
 
-        protected ServiceBase(ApplicationDbContext dbContext)
-        {
-            DbContext = dbContext;
-        }
+	protected ServiceBase(ApplicationDbContext dbContext)
+	{
+		DbContext = dbContext;
+	}
 
-        public int Commit()
-        {
-            return DbContext.SaveChanges();
-        }
+	public int Commit()
+	{
+		return DbContext.SaveChanges();
+	}
 
-        public Task CommitAsync()
-        {
-            return DbContext.SaveChangesAsync();
-        }
-    }
+	public Task CommitAsync()
+	{
+		return DbContext.SaveChangesAsync();
+	}
 }

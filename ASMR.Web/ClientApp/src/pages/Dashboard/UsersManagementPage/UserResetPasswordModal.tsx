@@ -1,8 +1,8 @@
-import Button from "@asmr/components/Button"
-import Modal from "@asmr/components/Modal"
-import User from "@asmr/data/models/User"
-import { ProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.css"
+import Button from "asmr/components/Button"
+import Modal from "asmr/components/Modal"
+import User from "asmr/core/entities/User"
+import { ProgressInfo } from "asmr/libs/application/ProgressContextInfo"
+import "asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.css"
 
 interface UserResetPasswordModalProps {
 	onClose: () => void

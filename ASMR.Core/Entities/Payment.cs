@@ -7,23 +7,21 @@
 //
 // Payment.cs
 //
+
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ASMR.Core.Enumerations;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.Entities
+namespace ASMR.Core.Entities;
+
+public class Payment : DefaultAbstractEntity
 {
-    public class Payment : DefaultAbstractEntity
-    {
-		[Required]
-		public PaymentMethod Method { get; set; }
+	[Required] public PaymentMethod Method { get; set; }
 
-		[Required]
-		public PaymentStatus Status { get; set; }
+	[Required] public PaymentStatus Status { get; set; }
 
-		[Required]
-		[Column(TypeName = "decimal(22,2)")]
-		public decimal Amount { get; set; }
-	}
+	[Required]
+	[Column(TypeName = "decimal(22,2)")]
+	public decimal Amount { get; set; }
 }

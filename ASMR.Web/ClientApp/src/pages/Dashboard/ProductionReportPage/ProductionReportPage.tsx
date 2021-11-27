@@ -1,6 +1,6 @@
-import DashboardLayout from "@asmr/layouts/DashboardLayout"
-import "@asmr/pages/Dashboard/ProductionReportPage/ProductionReportPage.scoped.css"
-import BackButton from "@asmr/components/BackButton"
+import DashboardLayout from "asmr/layouts/DashboardLayout"
+import "asmr/pages/Dashboard/ProductionReportPage/ProductionReportPage.scoped.css"
+import BackButton from "asmr/components/BackButton"
 
 function ProductionReportPage(): JSX.Element {
 	return (

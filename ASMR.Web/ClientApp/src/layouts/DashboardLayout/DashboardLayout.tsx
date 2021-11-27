@@ -1,7 +1,7 @@
-import NavigationHeader from "@asmr/components/NavigationHeader"
-import BaseLayout, { BaseLayoutProps } from "@asmr/layouts/BaseLayout/BaseLayout"
-import "@asmr/layouts/DashboardLayout/DashboardLayout.css"
-import { combineClassNames } from "@asmr/libs/common/styles"
+import NavigationHeader from "asmr/components/NavigationHeader"
+import BaseLayout, { BaseLayoutProps } from "asmr/layouts/BaseLayout/BaseLayout"
+import "asmr/layouts/DashboardLayout/DashboardLayout.css"
+import { combineClassNames } from "asmr/libs/common/styles"
 
 interface DashboardLayoutProps extends BaseLayoutProps {
 	contentClassName?: string

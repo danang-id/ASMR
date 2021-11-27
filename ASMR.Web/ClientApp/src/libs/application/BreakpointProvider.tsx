@@ -1,8 +1,8 @@
 import { ReactNode, useEffect, useState } from "react"
-import BreakpointContext from "@asmr/libs/application/BreakpointContext"
-import { Breakpoint } from "@asmr/libs/application/BreakpointContextInfo"
-import tailwind from "@asmr/libs/common/tailwind"
-import useLogger from "@asmr/libs/hooks/loggerHook"
+import BreakpointContext from "asmr/libs/application/BreakpointContext"
+import { Breakpoint } from "asmr/libs/application/BreakpointContextInfo"
+import tailwind from "asmr/libs/common/tailwind"
+import useLogger from "asmr/libs/hooks/loggerHook"
 
 interface BreakpointProviderProps {
 	children: ReactNode

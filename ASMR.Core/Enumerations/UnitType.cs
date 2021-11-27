@@ -7,11 +7,11 @@
 //
 // UnitType.cs
 //
-namespace ASMR.Core.Enumerations
+
+namespace ASMR.Core.Enumerations;
+
+public enum UnitType
 {
-	public enum UnitType
-	{
-		Product,
-		RawMaterial
-	}
+	Product,
+	RawMaterial
 }

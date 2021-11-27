@@ -1,11 +1,11 @@
 import { ChangeEvent, useEffect, useState } from "react"
-import Button from "@asmr/components/Button"
-import Form from "@asmr/components/Form"
-import Image from "@asmr/components/Image"
-import Modal from "@asmr/components/Modal"
-import CreateBeanRequestModel from "@asmr/data/request/CreateBeanRequestModel"
-import { ProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import "@asmr/pages/Dashboard/BeanManagementPage/BeansManagementModal.scoped.css"
+import Button from "asmr/components/Button"
+import Form from "asmr/components/Form"
+import Image from "asmr/components/Image"
+import Modal from "asmr/components/Modal"
+import CreateBeanRequestModel from "asmr/core/request/CreateBeanRequestModel"
+import { ProgressInfo } from "asmr/libs/application/ProgressContextInfo"
+import "asmr/pages/Dashboard/BeanManagementPage/BeansManagementModal.scoped.css"
 
 interface BeanCreateModalProps {
 	onClose: () => void

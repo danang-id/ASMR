@@ -7,6 +7,7 @@
 //
 // MediaFileService.cs
 //
+
 using ASMR.Core.Entities;
 using ASMR.Web.Data;
 using ASMR.Web.Services.Generic;
@@ -18,78 +19,79 @@ using System.Threading.Tasks;
 using ASMR.Web.Extensions;
 using Microsoft.AspNetCore.Http;
 
-namespace ASMR.Web.Services
+namespace ASMR.Web.Services;
+
+public interface IMediaFileService : IServiceBase
 {
-    public interface IMediaFileService : IServiceBase
-    {
-        public Task<MediaFile> GetMediaFileById(string id);
+	public Task<MediaFile> GetMediaFileById(string id);
 
-        public Task<MediaFile> CreateMediaFile(MediaFile media);
-        
-        public Task<MediaFile> CreateMediaFile(User user, IFormFile formFile);
+	public Task<MediaFile> CreateMediaFile(MediaFile media);
 
-        public Task<MediaFile> CreateMediaFile(string userId, IFormFile formFile);
+	public Task<MediaFile> CreateMediaFile(User user, IFormFile formFile);
 
-        public Task<MediaFile> RemoveMediaFile(string id);
+	public Task<MediaFile> CreateMediaFile(string userId, IFormFile formFile);
 
-    }
+	public Task<MediaFile> RemoveMediaFile(string id);
+}
 
-    public class MediaFileService : ServiceBase, IMediaFileService
-    {
-        public MediaFileService(ApplicationDbContext dbContext) : base(dbContext) {}
-        
-        public Task<MediaFile> GetMediaFileById(string id)
-        {
-            return DbContext.MediaFiles
-                .Include(e => e.User)
-                .Where(e => e.Id == id)
-                .FirstOrDefaultAsync();
-        }
+public class MediaFileService : ServiceBase, IMediaFileService
+{
+	public MediaFileService(ApplicationDbContext dbContext) : base(dbContext)
+	{
+	}
 
-        public async Task<MediaFile> CreateMediaFile(MediaFile mediaFile)
-        {
-            if (mediaFile.Id is null || mediaFile.Id == Guid.Empty.ToString())
-            {
-                mediaFile.Id = Guid.NewGuid().ToString();
-            }
-            await DbContext.MediaFiles.AddAsync(mediaFile);
+	public Task<MediaFile> GetMediaFileById(string id)
+	{
+		return DbContext.MediaFiles
+			.Include(e => e.User)
+			.Where(e => e.Id == id)
+			.FirstOrDefaultAsync();
+	}
 
-            return mediaFile;
-        }
+	public async Task<MediaFile> CreateMediaFile(MediaFile mediaFile)
+	{
+		if (mediaFile.Id is null || mediaFile.Id == Guid.Empty.ToString())
+		{
+			mediaFile.Id = Guid.NewGuid().ToString();
+		}
 
-        public Task<MediaFile> CreateMediaFile(User user, IFormFile formFile)
-        {
-            return CreateMediaFile(user.Id, formFile);
-        }
+		await DbContext.MediaFiles.AddAsync(mediaFile);
 
-        public async Task<MediaFile> CreateMediaFile(string userId, IFormFile formFile)
-        {
-            var mediaFile = await formFile.SaveResourceWithRandomNameAsync();
-            mediaFile.UserId = userId;
+		return mediaFile;
+	}
 
-            return await CreateMediaFile(mediaFile);
-        }
+	public Task<MediaFile> CreateMediaFile(User user, IFormFile formFile)
+	{
+		return CreateMediaFile(user.Id, formFile);
+	}
 
-        public async Task<MediaFile> RemoveMediaFile(string id)
-        {
-            var entity = await DbContext.MediaFiles
-                .Include(e => e.User)
-                .Where(e => e.Id == id)
-                .FirstOrDefaultAsync();
-            if (entity is null)
-            {
-                return null;
-            }
+	public async Task<MediaFile> CreateMediaFile(string userId, IFormFile formFile)
+	{
+		var mediaFile = await formFile.SaveResourceWithRandomNameAsync();
+		mediaFile.UserId = userId;
 
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), entity.Location);
-            if (File.Exists(filePath))
-            {
-                File.Delete(filePath);
-            }
-            
-            DbContext.MediaFiles.Remove(entity);
+		return await CreateMediaFile(mediaFile);
+	}
 
-            return entity;
-        }
-    }
+	public async Task<MediaFile> RemoveMediaFile(string id)
+	{
+		var entity = await DbContext.MediaFiles
+			.Include(e => e.User)
+			.Where(e => e.Id == id)
+			.FirstOrDefaultAsync();
+		if (entity is null)
+		{
+			return null;
+		}
+
+		var filePath = Path.Combine(Directory.GetCurrentDirectory(), entity.Location);
+		if (File.Exists(filePath))
+		{
+			File.Delete(filePath);
+		}
+
+		DbContext.MediaFiles.Remove(entity);
+
+		return entity;
+	}
 }

@@ -7,28 +7,28 @@
 //
 // BeansResponseModel.cs
 //
+
 using System.Collections.Generic;
 using ASMR.Core.Entities;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.ResponseModel
+namespace ASMR.Core.ResponseModel;
+
+public class IncomingGreenBeansResponseModel : DefaultResponseModel<IEnumerable<IncomingGreenBean>>
 {
-	public class IncomingGreenBeansResponseModel : DefaultResponseModel<IEnumerable<IncomingGreenBean>>
+	public IncomingGreenBeansResponseModel()
 	{
-		public IncomingGreenBeansResponseModel()
-		{
-		}
+	}
 
-		public IncomingGreenBeansResponseModel(IEnumerable<IncomingGreenBean> incomingGreenBeans) : base(incomingGreenBeans)
-		{
-		}
+	public IncomingGreenBeansResponseModel(IEnumerable<IncomingGreenBean> incomingGreenBeans) : base(incomingGreenBeans)
+	{
+	}
 
-		public IncomingGreenBeansResponseModel(ResponseError error) : base(error)
-		{
-		}
+	public IncomingGreenBeansResponseModel(ResponseError error) : base(error)
+	{
+	}
 
-		public IncomingGreenBeansResponseModel(IEnumerable<ResponseError> errors) : base(errors)
-		{
-		}
+	public IncomingGreenBeansResponseModel(IEnumerable<ResponseError> errors) : base(errors)
+	{
 	}
 }

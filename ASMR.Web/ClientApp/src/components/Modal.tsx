@@ -1,8 +1,8 @@
 import { CSSProperties, Fragment, ReactNode } from "react"
 import { Dialog, Transition } from "@headlessui/react"
 import { IoCloseOutline } from "react-icons/io5"
-import { combineClassNames } from "@asmr/libs/common/styles"
-import "@asmr/components/styles/Modal.css"
+import { combineClassNames } from "asmr/libs/common/styles"
+import "asmr/components/styles/Modal.css"
 
 export interface ModalProps {
 	children?: ReactNode

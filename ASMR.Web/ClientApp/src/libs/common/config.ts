@@ -1,4 +1,4 @@
-import build from "@asmr/build.json"
+const build = require("asmr/build.json")
 
 const now = new Date()
 const monthDigitList = "ABCDEFGHIJKL"
@@ -8,7 +8,7 @@ const monthDigit = monthDigitList.charAt(now.getMonth())
 const dateDigit = dateDigitList.charAt(now.getDate() - 1)
 const timeDigit = now.getHours() >= 10 ? now.getHours().toString() : `0${now.getHours()}`
 
-const version = process.env.REACT_APP_VERSION ?? "1.0"
+const version = process.env.REACT_APP_VERSION ?? "1.0.0"
 
 const buildNumber =
 	process.env.NODE_ENV === "production" ? build.number ?? "00000000" : yearDigit + monthDigit + dateDigit + timeDigit

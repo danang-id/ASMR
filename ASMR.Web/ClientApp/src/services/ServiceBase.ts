@@ -1,9 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, CancelTokenSource } from "axios"
-import Platform from "@asmr/data/enumerations/Platform"
-import { SetProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import config from "@asmr/libs/common/config"
-import { ILogger } from "@asmr/libs/common/logger"
-import useLogger from "@asmr/libs/hooks/loggerHook"
+import Platform from "asmr/core/enums/Platform"
+import { SetProgressInfo } from "asmr/libs/application/ProgressContextInfo"
+import config from "asmr/libs/common/config"
+import { ILogger } from "asmr/libs/common/logger"
+import useLogger from "asmr/libs/hooks/loggerHook"
 
 export interface ServiceLogOptions {
 	requestHeader?: boolean

@@ -1,4 +1,4 @@
-import Logger, { ILogger, NoLogger } from "@asmr/libs/common/logger"
+import Logger, { ILogger, NoLogger } from "asmr/libs/common/logger"
 
 function useLogger(fun: Function): ILogger
 function useLogger(name: string): ILogger

@@ -7,6 +7,7 @@
 //
 // CookieAuthenticationConstants.cs
 //
+
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -17,34 +18,33 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
 
-namespace ASMR.Web.Constants
+namespace ASMR.Web.Constants;
+
+public static class CookieAuthenticationConstants
 {
-    public static class CookieAuthenticationConstants
-    {
-        public const string ClaimIssuer = "ASMR.AuthManager";
+	public const string ClaimIssuer = "ASMR.AuthManager";
 
-        public const bool CookieHttpOnly = true;
+	public const bool CookieHttpOnly = true;
 
-        public static readonly TimeSpan ExpireTimeSpan = TimeSpan.FromDays(90);
+	public static readonly TimeSpan ExpireTimeSpan = TimeSpan.FromDays(90);
 
-        public static async Task OnRedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+	public static async Task OnRedirectToLogin(RedirectContext<CookieAuthenticationOptions> context)
+	{
+		context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
 
-            var errorModel = new ResponseError(ErrorCodeConstants.NotAuthenticated,
-                "You are not authenticated. Please sign in to continue.");
-            await context.Response.WriteAsJsonAsync(new DefaultResponseModel(errorModel),
-                JsonConstants.DefaultJsonSerializerOptions);
-        }
+		var errorModel = new ResponseError(ErrorCodeConstants.NotAuthenticated,
+			"You are not authenticated. Please sign in to continue.");
+		await context.Response.WriteAsJsonAsync(new DefaultResponseModel(errorModel),
+			JsonConstants.DefaultJsonSerializerOptions);
+	}
 
-        public static async Task OnRedirectToAccessDenied(RedirectContext<CookieAuthenticationOptions> context)
-        {
-            context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
+	public static async Task OnRedirectToAccessDenied(RedirectContext<CookieAuthenticationOptions> context)
+	{
+		context.Response.StatusCode = (int)HttpStatusCode.Forbidden;
 
-            var errorModel = new ResponseError(ErrorCodeConstants.NotAuthorized,
-                "You are not authorized to access this resource.");
-            await context.Response.WriteAsJsonAsync(new DefaultResponseModel(errorModel),
-                JsonConstants.DefaultJsonSerializerOptions);
-        }
-    }
+		var errorModel = new ResponseError(ErrorCodeConstants.NotAuthorized,
+			"You are not authorized to access this resource.");
+		await context.Response.WriteAsJsonAsync(new DefaultResponseModel(errorModel),
+			JsonConstants.DefaultJsonSerializerOptions);
+	}
 }

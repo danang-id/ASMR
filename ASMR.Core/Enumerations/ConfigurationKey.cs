@@ -8,10 +8,9 @@
 // ConfigurationKey.cs
 //
 
-namespace ASMR.Core.Enumerations
+namespace ASMR.Core.Enumerations;
+
+public enum ConfigurationKey
 {
-    public enum ConfigurationKey
-    {
-        DataSeedDone
-    }
+	DataSeedDone
 }

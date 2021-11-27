@@ -2,12 +2,12 @@ import { ReactNode, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { IoAnalytics, IoBag, IoCash, IoPeople, IoPerson } from "react-icons/io5"
 import { GiCoffeeBeans } from "react-icons/gi"
-import Role from "@asmr/data/enumerations/Role"
-import DashboardLayout from "@asmr/layouts/DashboardLayout"
-import useAuthentication from "@asmr/libs/hooks/authenticationHook"
-import useDocumentTitle from "@asmr/libs/hooks/documentTitleHook"
-import useNotification from "@asmr/libs/hooks/notificationHook"
-import "@asmr/pages/Dashboard/IndexPage/IndexPage.scoped.css"
+import Role from "asmr/core/enums/Role"
+import DashboardLayout from "asmr/layouts/DashboardLayout"
+import useAuthentication from "asmr/libs/hooks/authenticationHook"
+import useDocumentTitle from "asmr/libs/hooks/documentTitleHook"
+import useNotification from "asmr/libs/hooks/notificationHook"
+import "asmr/pages/Dashboard/IndexPage/IndexPage.scoped.css"
 
 type FeaturePage = {
 	id: number

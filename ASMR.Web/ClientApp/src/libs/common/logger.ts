@@ -1,4 +1,4 @@
-import environment from "@asmr/libs/common/environment"
+import environment from "asmr/libs/common/environment"
 
 type WriterFunction = (...args: any[]) => void
 

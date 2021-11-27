@@ -1,8 +1,8 @@
 import { Navigate, useLocation } from "react-router-dom"
-import Role from "@asmr/data/enumerations/Role"
-import useAuthentication from "@asmr/libs/hooks/authenticationHook"
-import useLogger from "@asmr/libs/hooks/loggerHook"
-import useNotification from "@asmr/libs/hooks/notificationHook"
+import Role from "asmr/core/enums/Role"
+import useAuthentication from "asmr/libs/hooks/authenticationHook"
+import useLogger from "asmr/libs/hooks/loggerHook"
+import useNotification from "asmr/libs/hooks/notificationHook"
 import { ReactNode } from "react"
 
 interface ProtectedRouteProps {

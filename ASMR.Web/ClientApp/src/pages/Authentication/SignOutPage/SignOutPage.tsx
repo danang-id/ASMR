@@ -1,11 +1,11 @@
 import { useEffect } from "react"
 import { Navigate, useLocation } from "react-router-dom"
-import BaseLayout from "@asmr/layouts/BaseLayout"
-import useAuthentication from "@asmr/libs/hooks/authenticationHook"
-import useDocumentTitle from "@asmr/libs/hooks/documentTitleHook"
-import useLogger from "@asmr/libs/hooks/loggerHook"
-import useNotification from "@asmr/libs/hooks/notificationHook"
-import "@asmr/pages/Authentication/SignOutPage/SignOutPage.scoped.css"
+import BaseLayout from "asmr/layouts/BaseLayout"
+import useAuthentication from "asmr/libs/hooks/authenticationHook"
+import useDocumentTitle from "asmr/libs/hooks/documentTitleHook"
+import useLogger from "asmr/libs/hooks/loggerHook"
+import useNotification from "asmr/libs/hooks/notificationHook"
+import "asmr/pages/Authentication/SignOutPage/SignOutPage.scoped.css"
 
 function SignOutPage(): JSX.Element {
 	useDocumentTitle("Sign Out")

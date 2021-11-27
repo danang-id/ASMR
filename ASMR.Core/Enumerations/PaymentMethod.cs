@@ -7,11 +7,11 @@
 //
 // PaymentMethod.cs
 //
-namespace ASMR.Core.Enumerations
+
+namespace ASMR.Core.Enumerations;
+
+public enum PaymentMethod
 {
-	public enum PaymentMethod
-	{
-		Cash,
-		DebitCreditCard
-	}
+	Cash,
+	DebitCreditCard
 }

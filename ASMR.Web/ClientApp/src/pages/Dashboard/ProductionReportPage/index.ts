@@ -1,3 +1,3 @@
-import ProductionReportPage from "@asmr/pages/Dashboard/ProductionReportPage/ProductionReportPage"
+import ProductionReportPage from "asmr/pages/Dashboard/ProductionReportPage/ProductionReportPage"
 
 export default ProductionReportPage

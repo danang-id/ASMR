@@ -3,29 +3,27 @@ using System.ComponentModel.DataAnnotations;
 using ASMR.Core.Enumerations;
 using Microsoft.AspNetCore.Identity;
 
-namespace ASMR.Core.Entities
+namespace ASMR.Core.Entities;
+
+public class UserRole : IdentityRole
 {
-	public class UserRole : IdentityRole
+	public UserRole()
 	{
-		public UserRole()
-		{
-			CreatedAt = DateTimeOffset.Now;
-		}
-        
-		[Required]
-		public DateTimeOffset CreatedAt { get; set; }
+		CreatedAt = DateTimeOffset.Now;
+	}
 
-		public DateTimeOffset? LastUpdatedAt { get; set; }
+	[Required] public DateTimeOffset CreatedAt { get; set; }
 
-		public NormalizedUserRole ToNormalizedUserRole()
+	public DateTimeOffset? LastUpdatedAt { get; set; }
+
+	public SanitizedUserRole SanitizeUserRole()
+	{
+		return new SanitizedUserRole
 		{
-			return new NormalizedUserRole
-			{
-				Id = Id,
-				Role = (Role)Enum.Parse(typeof(Role), Name),
-				CreatedAt = CreatedAt,
-				LastUpdatedAt = LastUpdatedAt
-			};
-		}
+			Id = Id,
+			Role = (Role)Enum.Parse(typeof(Role), Name),
+			CreatedAt = CreatedAt,
+			LastUpdatedAt = LastUpdatedAt
+		};
 	}
 }

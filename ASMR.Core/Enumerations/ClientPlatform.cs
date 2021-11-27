@@ -1,10 +1,9 @@
-﻿namespace ASMR.Core.Enumerations
+﻿namespace ASMR.Core.Enumerations;
+
+// ReSharper disable once InconsistentNaming
+public enum ClientPlatform
 {
-    // ReSharper disable once InconsistentNaming
-    public enum ClientPlatform
-    {
-        Android,
-        iOS,
-        Web
-    }
+	Android,
+	iOS,
+	Web
 }

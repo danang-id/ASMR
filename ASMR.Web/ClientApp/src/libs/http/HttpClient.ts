@@ -1,14 +1,14 @@
 import { EventEmitter } from "events"
 
-import HttpClientOptions, { DefaultHttpClientOptions } from "@asmr/libs/http/HttpClientOptions"
-import HttpInterceptor, { DefaultHttpInterceptor } from "@asmr/libs/http/HttpInterceptor"
-import HttpMethod from "@asmr/libs/http/HttpMethod"
-import HttpRequestBody from "@asmr/libs/http/HttpRequestBody"
-import HttpRequestOptions from "@asmr/libs/http/HttpRequestOptions"
-import HttpResponse from "@asmr/libs/http/HttpResponse"
-import HttpErrorInterceptor from "@asmr/libs/http/HttpErrorInterceptor"
-import HttpResponseInterceptor from "@asmr/libs/http/HttpResponseInterceptor"
-import HttpRequestInterceptor from "@asmr/libs/http/HttpRequestInterceptor"
+import HttpClientOptions, { DefaultHttpClientOptions } from "asmr/libs/http/HttpClientOptions"
+import HttpInterceptor, { DefaultHttpInterceptor } from "asmr/libs/http/HttpInterceptor"
+import HttpMethod from "asmr/libs/http/HttpMethod"
+import HttpRequestBody from "asmr/libs/http/HttpRequestBody"
+import HttpRequestOptions from "asmr/libs/http/HttpRequestOptions"
+import HttpResponse from "asmr/libs/http/HttpResponse"
+import HttpErrorInterceptor from "asmr/libs/http/HttpErrorInterceptor"
+import HttpResponseInterceptor from "asmr/libs/http/HttpResponseInterceptor"
+import HttpRequestInterceptor from "asmr/libs/http/HttpRequestInterceptor"
 
 class HttpClient extends EventEmitter {
 	private readonly options: HttpClientOptions
@@ -36,7 +36,7 @@ class HttpClient extends EventEmitter {
 		if (body instanceof FormData) {
 			requestInit.body = body
 			requestInit.headers = {
-				// "Content-Type": "multipart/form-data",
+				// "Content-Type": "multipart/form-core",
 				...requestInit.headers,
 			}
 		} else if (body instanceof URLSearchParams) {
@@ -79,7 +79,7 @@ class HttpClient extends EventEmitter {
 			return clonedResponse.json() as Promise<TResponse>
 		}
 
-		if (contentType.startsWith("multipart/form-data")) {
+		if (contentType.startsWith("multipart/form-core")) {
 			return clonedResponse.formData()
 		}
 

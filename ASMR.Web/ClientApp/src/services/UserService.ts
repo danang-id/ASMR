@@ -1,11 +1,11 @@
 import { serialize } from "object-to-formdata"
-import DefaultResponseModel from "@asmr/data/generic/DefaultResponseModel"
-import CreateUserRequestModel from "@asmr/data/request/CreateUserRequestModel"
-import UpdateUserRequestModel from "@asmr/data/request/UpdateUserRequestModel"
-import ApproveRegistrationRequestModel from "@asmr/data/request/ApproveRegistrationRequestModel"
-import UserResponseModel from "@asmr/data/response/UserResponseModel"
-import UsersResponseModel from "@asmr/data/response/UsersResponseModel"
-import ServiceBase from "@asmr/services/ServiceBase"
+import ResponseModelBase from "asmr/core/common/ResponseModelBase"
+import CreateUserRequestModel from "asmr/core/request/CreateUserRequestModel"
+import UpdateUserRequestModel from "asmr/core/request/UpdateUserRequestModel"
+import ApproveRegistrationRequestModel from "asmr/core/request/ApproveRegistrationRequestModel"
+import UserResponseModel from "asmr/core/response/UserResponseModel"
+import UsersResponseModel from "asmr/core/response/UsersResponseModel"
+import ServiceBase from "asmr/services/ServiceBase"
 
 class UserService extends ServiceBase {
 	public getAll() {
@@ -46,7 +46,7 @@ class UserService extends ServiceBase {
 
 	public resetPassword(id: string) {
 		return this.httpClient
-			.post<DefaultResponseModel>(`/api/user/${id}/password-reset`)
+			.post<ResponseModelBase>(`/api/user/${id}/password-reset`)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}

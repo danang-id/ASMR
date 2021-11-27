@@ -1,8 +1,8 @@
 import { ComponentType, MouseEvent, ReactNode } from "react"
 import { IoCogOutline } from "react-icons/io5"
-import { combineClassNames } from "@asmr/libs/common/styles"
-import useProgress from "@asmr/libs/hooks/progressHook"
-import "@asmr/components/styles/Button.css"
+import { combineClassNames } from "asmr/libs/common/styles"
+import useProgress from "asmr/libs/hooks/progressHook"
+import "asmr/components/styles/Button.css"
 
 interface ButtonProps {
 	children?: ReactNode

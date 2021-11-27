@@ -7,22 +7,22 @@
 //
 // Argon2Options.cs
 //
+
 using System.Text;
 
-namespace ASMR.Common.Cryptography
+namespace ASMR.Common.Cryptography;
+
+public class Argon2Options
 {
-	public class Argon2Options
-	{
-		public int Algorithm { get; } = LibSodium.crypto_pwhash_argon2id_ALG_ARGON2ID13;
+	public int Algorithm { get; } = LibSodium.crypto_pwhash_argon2id_ALG_ARGON2ID13;
 
-		public int BufferLength { get; set; } = 16;
+	public int BufferLength { get; set; } = 16;
 
-		public Encoding Encoding { get; set; } = Encoding.UTF8;
+	public Encoding Encoding { get; set; } = Encoding.UTF8;
 
-		public long IterationLimit { get; set; } = LibSodium.crypto_pwhash_argon2id_OPSLIMIT_SENSITIVE;
+	public long IterationLimit { get; set; } = LibSodium.crypto_pwhash_argon2id_OPSLIMIT_SENSITIVE;
 
-		public int MemoryLimit { get; set; } = LibSodium.crypto_pwhash_argon2id_MEMLIMIT_SENSITIVE;
+	public int MemoryLimit { get; set; } = LibSodium.crypto_pwhash_argon2id_MEMLIMIT_SENSITIVE;
 
-		public int SaltLength { get; set; } = 16;
-	}
+	public int SaltLength { get; set; } = 16;
 }

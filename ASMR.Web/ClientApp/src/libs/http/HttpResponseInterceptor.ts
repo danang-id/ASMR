@@ -1,4 +1,4 @@
-import HttpResponse from "@asmr/libs/http/HttpResponse"
+import HttpResponse from "asmr/libs/http/HttpResponse"
 
 type HttpResponseInterceptor = <TResponse = unknown>(
 	response: HttpResponse<TResponse>

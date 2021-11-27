@@ -12,4 +12,4 @@ This is a closed-integrated information system that tied to a specific workplace
 
 ## Engineering
 
-Powered with [.NET 5.0](https://dotnet.microsoft.com/)
+Powered with [.NET 6.0](https://dotnet.microsoft.com/)

@@ -1,9 +1,9 @@
 import { serialize } from "object-to-formdata"
-import ServiceBase from "@asmr/services/ServiceBase"
-import BeanResponseModel from "@asmr/data/response/BeanResponseModel"
-import BeansResponseModel from "@asmr/data/response/BeansResponseModel"
-import CreateBeanRequestModel from "@asmr/data/request/CreateBeanRequestModel"
-import UpdateBeanRequestModel from "@asmr/data/request/UpdateBeanRequestModel"
+import ServiceBase from "asmr/services/ServiceBase"
+import BeanResponseModel from "asmr/core/response/BeanResponseModel"
+import BeansResponseModel from "asmr/core/response/BeansResponseModel"
+import CreateBeanRequestModel from "asmr/core/request/CreateBeanRequestModel"
+import UpdateBeanRequestModel from "asmr/core/request/UpdateBeanRequestModel"
 
 class BeanService extends ServiceBase {
 	public getAll() {

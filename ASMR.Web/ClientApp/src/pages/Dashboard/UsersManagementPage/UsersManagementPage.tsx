@@ -1,37 +1,35 @@
 import { useState } from "react"
 import { IoAddCircleOutline, IoCreateOutline, IoImageOutline, IoKeyOutline, IoTrashOutline } from "react-icons/io5"
-import BackButton from "@asmr/components/BackButton"
-import BreakpointRenderer from "@asmr/components/BreakpointRenderer"
-import Button from "@asmr/components/Button"
-import Table from "@asmr/components/Table"
-import UserImage from "@asmr/components/UserImage"
-import Role from "@asmr/data/enumerations/Role"
-import User from "@asmr/data/models/User"
-import CreateUserRequestModel from "@asmr/data/request/CreateUserRequestModel"
-import UpdateUserRequestModel from "@asmr/data/request/UpdateUserRequestModel"
-import ApproveRegistrationRequestModel from "@asmr/data/request/ApproveRegistrationRequestModel"
-import DashboardLayout from "@asmr/layouts/DashboardLayout"
-import lazy from "@asmr/libs/common/lazy"
-import { singleSwitchToggle } from "@asmr/libs/common/toggle"
-import useAuthentication from "@asmr/libs/hooks/authenticationHook"
-import useBreakpoint from "@asmr/libs/hooks/breakpointHook"
-import useDocumentTitle from "@asmr/libs/hooks/documentTitleHook"
-import useInit from "@asmr/libs/hooks/initHook"
-import useLogger from "@asmr/libs/hooks/loggerHook"
-import useNotification from "@asmr/libs/hooks/notificationHook"
-import useProgress from "@asmr/libs/hooks/progressHook"
-import useServices from "@asmr/libs/hooks/servicesHook"
-import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementPage.scoped.css"
+import BackButton from "asmr/components/BackButton"
+import BreakpointRenderer from "asmr/components/BreakpointRenderer"
+import Button from "asmr/components/Button"
+import Table from "asmr/components/Table"
+import UserImage from "asmr/components/UserImage"
+import Role from "asmr/core/enums/Role"
+import User from "asmr/core/entities/User"
+import CreateUserRequestModel from "asmr/core/request/CreateUserRequestModel"
+import UpdateUserRequestModel from "asmr/core/request/UpdateUserRequestModel"
+import ApproveRegistrationRequestModel from "asmr/core/request/ApproveRegistrationRequestModel"
+import DashboardLayout from "asmr/layouts/DashboardLayout"
+import lazy from "asmr/libs/common/lazy"
+import { singleSwitchToggle } from "asmr/libs/common/toggle"
+import useAuthentication from "asmr/libs/hooks/authenticationHook"
+import useBreakpoint from "asmr/libs/hooks/breakpointHook"
+import useDocumentTitle from "asmr/libs/hooks/documentTitleHook"
+import useInit from "asmr/libs/hooks/initHook"
+import useLogger from "asmr/libs/hooks/loggerHook"
+import useNotification from "asmr/libs/hooks/notificationHook"
+import useProgress from "asmr/libs/hooks/progressHook"
+import useServices from "asmr/libs/hooks/servicesHook"
+import "asmr/pages/Dashboard/UsersManagementPage/UsersManagementPage.scoped.css"
 
-const UserCreateModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserCreateModal"))
-const UserUpdateModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserUpdateModal"))
-const UserUpdateImageModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserUpdateImageModal"))
-const UserResetPasswordModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserResetPasswordModal"))
-const UserRemoveModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/UserRemoveModal"))
-const RegistrationApproveModal = lazy(
-	() => import("@asmr/pages/Dashboard/UsersManagementPage/RegistrationApproveModal")
-)
-const RegistrationRejectModal = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage/RegistrationRejectModal"))
+const UserCreateModal = lazy(() => import("asmr/pages/Dashboard/UsersManagementPage/UserCreateModal"))
+const UserUpdateModal = lazy(() => import("asmr/pages/Dashboard/UsersManagementPage/UserUpdateModal"))
+const UserUpdateImageModal = lazy(() => import("asmr/pages/Dashboard/UsersManagementPage/UserUpdateImageModal"))
+const UserResetPasswordModal = lazy(() => import("asmr/pages/Dashboard/UsersManagementPage/UserResetPasswordModal"))
+const UserRemoveModal = lazy(() => import("asmr/pages/Dashboard/UsersManagementPage/UserRemoveModal"))
+const RegistrationApproveModal = lazy(() => import("asmr/pages/Dashboard/UsersManagementPage/RegistrationApproveModal"))
+const RegistrationRejectModal = lazy(() => import("asmr/pages/Dashboard/UsersManagementPage/RegistrationRejectModal"))
 
 function UsersManagementPage(): JSX.Element {
 	useDocumentTitle("Manage Users")
@@ -497,7 +495,7 @@ function UsersManagementPage(): JSX.Element {
 								<Table.Row>
 									<Table.DataCell colSpan={breakpoint.includes("lg") ? 3 : 1}>
 										{progress.loading
-											? "Retrieving data from server..."
+											? "Retrieving core from server..."
 											: "There are no users at the moment."}
 									</Table.DataCell>
 								</Table.Row>

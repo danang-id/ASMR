@@ -7,35 +7,29 @@
 //
 // Bean.cs
 //
+
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.Entities
+namespace ASMR.Core.Entities;
+
+public class Bean : DefaultAbstractEntity
 {
-	public class Bean : DefaultAbstractEntity
-	{
-		[Required]
-		public string Name { get; set; }
+	[Required] public string Name { get; set; }
 
-		[Required]
-		public string Description { get; set; }
+	[Required] public string Description { get; set; }
 
-		[Required]
-		public string Image { get; set; }
+	[Required] public string Image { get; set; }
 
-		[Required]
-		public BeanInventory Inventory { get; set; }
+	[Required] public BeanInventory Inventory { get; set; }
 
-		[Required]
-		[JsonIgnore]
-		public string InventoryId { get; set; }
+	[Required] [JsonIgnore] public string InventoryId { get; set; }
 
-		public IEnumerable<IncomingGreenBean> IncomingGreenBeans { get; set; }
+	public IEnumerable<IncomingGreenBean> IncomingGreenBeans { get; set; }
 
-		public IEnumerable<RoastedBeanProduction> RoastedBeanProductions { get; set; }
+	public IEnumerable<RoastingSession> RoastingSessions { get; set; }
 
-		public IEnumerable<Product> Products { get; set; }
-	}
+	public IEnumerable<Product> Products { get; set; }
 }

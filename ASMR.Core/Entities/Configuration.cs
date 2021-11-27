@@ -7,18 +7,16 @@
 //
 // Configuration.cs
 //
+
 using System.ComponentModel.DataAnnotations;
 using ASMR.Core.Enumerations;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.Entities
-{
-    public class Configuration : DefaultAbstractEntity
-    {
-        [Required]
-        public ConfigurationKey Key { get; set; }
+namespace ASMR.Core.Entities;
 
-        [Required]
-        public string Value { get; set; }
-    }
+public class Configuration : DefaultAbstractEntity
+{
+	[Required] public ConfigurationKey Key { get; set; }
+
+	[Required] public string Value { get; set; }
 }

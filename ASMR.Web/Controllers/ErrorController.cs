@@ -7,6 +7,7 @@
 //
 // ErrorController.cs
 //
+
 using System.Diagnostics;
 using System.Net;
 using ASMR.Core.Constants;
@@ -17,36 +18,35 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace ASMR.Web.Controllers
+namespace ASMR.Web.Controllers;
+
+public class ErrorController : DefaultAbstractController
 {
-    public class ErrorController : DefaultAbstractController
-    {
-        public ErrorController(ILogger<ErrorController> logger): base(logger)
-        {
-        }
+	public ErrorController(ILogger<ErrorController> logger) : base(logger)
+	{
+	}
 
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Index()
-        {
-            if (!Request.Path.StartsWithSegments("/api"))
-            {
-                return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-            }
+	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+	public IActionResult Index()
+	{
+		if (!Request.Path.StartsWithSegments("/api"))
+		{
+			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+		}
 
-            var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            var errorModel = new ResponseError(ErrorCodeConstants.GenericServerError,
-                exceptionHandlerFeature.Error?.Message ?? "Something went wrong.");
+		var exceptionHandlerFeature = HttpContext.Features.Get<IExceptionHandlerFeature>();
+		var errorModel = new ResponseError(ErrorCodeConstants.GenericServerError,
+			exceptionHandlerFeature.Error?.Message ?? "Something went wrong.");
 
-            return StatusCode((int) HttpStatusCode.InternalServerError,
-                new DefaultResponseModel(errorModel));
-        }
+		return StatusCode((int)HttpStatusCode.InternalServerError,
+			new DefaultResponseModel(errorModel));
+	}
 
-        [HttpGet("not-found")]
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult PageNotFound()
-        {
-            return View();
-        }
-    }
+	[HttpGet("not-found")]
+	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+	public IActionResult PageNotFound()
+	{
+		return View();
+	}
 }

@@ -8,32 +8,32 @@ import {
 	IoQrCodeOutline,
 	IoTrashOutline,
 } from "react-icons/io5"
-import BackButton from "@asmr/components/BackButton"
-import BeanDescription from "@asmr/components/BeanDescription"
-import BeanImage from "@asmr/components/BeanImage"
-import BreakpointRenderer from "@asmr/components/BreakpointRenderer"
-import Button from "@asmr/components/Button"
-import Table from "@asmr/components/Table"
-import Bean from "@asmr/data/models/Bean"
-import BeanInventory from "@asmr/data/models/BeanInventory"
-import CreateBeanRequestModel from "@asmr/data/request/CreateBeanRequestModel"
-import UpdateBeanRequestModel from "@asmr/data/request/UpdateBeanRequestModel"
-import DashboardLayout from "@asmr/layouts/DashboardLayout"
-import lazy from "@asmr/libs/common/lazy"
-import { toLocaleUnit } from "@asmr/libs/common/locale"
-import { singleSwitchToggle } from "@asmr/libs/common/toggle"
-import useDocumentTitle from "@asmr/libs/hooks/documentTitleHook"
-import useInit from "@asmr/libs/hooks/initHook"
-import useLogger from "@asmr/libs/hooks/loggerHook"
-import useNotification from "@asmr/libs/hooks/notificationHook"
-import useProgress from "@asmr/libs/hooks/progressHook"
-import useServices from "@asmr/libs/hooks/servicesHook"
-import "@asmr/pages/Dashboard/BeanManagementPage/BeansManagementPage.scoped.css"
+import BackButton from "asmr/components/BackButton"
+import BeanDescription from "asmr/components/BeanDescription"
+import BeanImage from "asmr/components/BeanImage"
+import BreakpointRenderer from "asmr/components/BreakpointRenderer"
+import Button from "asmr/components/Button"
+import Table from "asmr/components/Table"
+import Bean from "asmr/core/entities/Bean"
+import BeanInventory from "asmr/core/entities/BeanInventory"
+import CreateBeanRequestModel from "asmr/core/request/CreateBeanRequestModel"
+import UpdateBeanRequestModel from "asmr/core/request/UpdateBeanRequestModel"
+import DashboardLayout from "asmr/layouts/DashboardLayout"
+import lazy from "asmr/libs/common/lazy"
+import { toLocaleUnit } from "asmr/libs/common/locale"
+import { singleSwitchToggle } from "asmr/libs/common/toggle"
+import useDocumentTitle from "asmr/libs/hooks/documentTitleHook"
+import useInit from "asmr/libs/hooks/initHook"
+import useLogger from "asmr/libs/hooks/loggerHook"
+import useNotification from "asmr/libs/hooks/notificationHook"
+import useProgress from "asmr/libs/hooks/progressHook"
+import useServices from "asmr/libs/hooks/servicesHook"
+import "asmr/pages/Dashboard/BeanManagementPage/BeansManagementPage.scoped.css"
 
-const BeanCreateModal = lazy(() => import("@asmr/pages/Dashboard/BeanManagementPage/BeanCreateModal"))
-const BeanUpdateModal = lazy(() => import("@asmr/pages/Dashboard/BeanManagementPage/BeanUpdateModal"))
-const BeanUpdateImageModal = lazy(() => import("@asmr/pages/Dashboard/BeanManagementPage/BeanUpdateImageModal"))
-const BeanRemoveModal = lazy(() => import("@asmr/pages/Dashboard/BeanManagementPage/BeanRemoveModal"))
+const BeanCreateModal = lazy(() => import("asmr/pages/Dashboard/BeanManagementPage/BeanCreateModal"))
+const BeanUpdateModal = lazy(() => import("asmr/pages/Dashboard/BeanManagementPage/BeanUpdateModal"))
+const BeanUpdateImageModal = lazy(() => import("asmr/pages/Dashboard/BeanManagementPage/BeanUpdateImageModal"))
+const BeanRemoveModal = lazy(() => import("asmr/pages/Dashboard/BeanManagementPage/BeanRemoveModal"))
 
 function BeansManagementPage(): JSX.Element {
 	useDocumentTitle("Manage Beans")
@@ -313,7 +313,7 @@ function BeansManagementPage(): JSX.Element {
 								<Table.Row>
 									<Table.DataCell colSpan={3}>
 										{progress.loading
-											? "Retrieving data from server..."
+											? "Retrieving core from server..."
 											: "There are no beans at the moment."}
 									</Table.DataCell>
 								</Table.Row>

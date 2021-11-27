@@ -1,5 +1,5 @@
 .core-information-page {
-	@apply px-8 py-4 min-h-full flex flex-col gap-2;
+	@apply px-2 sm:px-4 md:px-8 py-4 min-h-full flex flex-col gap-2;
 
 	.header {
 		@apply flex justify-start items-center w-full font-semibold text-xl px-2 mb-2;

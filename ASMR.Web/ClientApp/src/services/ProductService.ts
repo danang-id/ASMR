@@ -1,8 +1,8 @@
-import ServiceBase from "@asmr/services/ServiceBase"
-import CreateProductRequestModel from "@asmr/data/request/CreateProductRequestModel"
-import UpdateProductRequestModel from "@asmr/data/request/UpdateProductRequestModel"
-import ProductResponseModel from "@asmr/data/response/ProductResponseModel"
-import ProductsResponseModel from "@asmr/data/response/ProductsResponseModel"
+import ServiceBase from "asmr/services/ServiceBase"
+import CreateProductRequestModel from "asmr/core/request/CreateProductRequestModel"
+import UpdateProductRequestModel from "asmr/core/request/UpdateProductRequestModel"
+import ProductResponseModel from "asmr/core/response/ProductResponseModel"
+import ProductsResponseModel from "asmr/core/response/ProductsResponseModel"
 
 class ProductService extends ServiceBase {
 	public getAll() {

@@ -7,17 +7,14 @@
 //
 // ReadUpdateDeleteRawMaterialRequestModel.cs
 //
+
 using System.ComponentModel.DataAnnotations;
 
-namespace ASMR.Core.RequestModel
+namespace ASMR.Core.RequestModel;
+
+public class UpdateBeanRequestModel
 {
-    public class UpdateBeanRequestModel
-    {
-        [DataType(DataType.Text)]
-        public string Name { get; set; }
+	[DataType(DataType.Text)] public string Name { get; set; }
 
-        [DataType(DataType.Text)]
-        public string Description { get; set; }
-
-    }
+	[DataType(DataType.Text)] public string Description { get; set; }
 }

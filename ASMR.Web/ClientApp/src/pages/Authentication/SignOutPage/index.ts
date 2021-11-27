@@ -1,3 +1,3 @@
-import SignOutPage from "@asmr/pages/Authentication/SignOutPage/SignOutPage"
+import SignOutPage from "asmr/pages/Authentication/SignOutPage/SignOutPage"
 
 export default SignOutPage

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
 import Cropper from "cropperjs"
 import "cropperjs/dist/cropper.min.css"
-import "@asmr/components/styles/ImageCropper.css"
+import "asmr/components/styles/ImageCropper.css"
 
 interface ImageCropperProps {
 	alt: string

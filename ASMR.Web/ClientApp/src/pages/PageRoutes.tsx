@@ -1,4 +1,4 @@
-import ProtectedPage from "@asmr/components/ProtectedPage"
+import ProtectedPage from "asmr/components/ProtectedPage"
 
 declare global {
 	interface Window {
@@ -8,41 +8,40 @@ declare global {
 
 import { useEffect } from "react"
 import ReactGA from "react-ga"
-import { Route, Routes, useLocation } from "react-router-dom"
-import { Location } from "history"
-import lazy from "@asmr/libs/common/lazy"
-import { getBaseUrl } from "@asmr/libs/common/location"
-import useInit from "@asmr/libs/hooks/initHook"
-import useLogger from "@asmr/libs/hooks/loggerHook"
-import useNetwork from "@asmr/libs/hooks/networkHook"
-import OfflinePage from "@asmr/pages/Errors/OfflinePage"
-import Role from "@asmr/data/enumerations/Role"
+import { Location, Route, Routes, useLocation } from "react-router-dom"
+import lazy from "asmr/libs/common/lazy"
+import { getBaseUrl } from "asmr/libs/common/location"
+import useInit from "asmr/libs/hooks/initHook"
+import useLogger from "asmr/libs/hooks/loggerHook"
+import useNetwork from "asmr/libs/hooks/networkHook"
+import OfflinePage from "asmr/pages/Errors/OfflinePage"
+import Role from "asmr/core/enums/Role"
 
 // Public Pages
-const HomePage = lazy(() => import("@asmr/pages/Public/HomePage"))
-const CoreInformationPage = lazy(() => import("@asmr/pages/Public/CoreInformationPage"))
-const BeanInformationPage = lazy(() => import("@asmr/pages/Public/BeanInformationPage"))
-const ProductInformationPage = lazy(() => import("@asmr/pages/Public/ProductInformationPage"))
+const HomePage = lazy(() => import("asmr/pages/Public/HomePage"))
+const CoreInformationPage = lazy(() => import("asmr/pages/Public/CoreInformationPage"))
+const BeanInformationPage = lazy(() => import("asmr/pages/Public/BeanInformationPage"))
+const ProductInformationPage = lazy(() => import("asmr/pages/Public/ProductInformationPage"))
 
 // Authentication Pages
-const RegistrationPage = lazy(() => import("@asmr/pages/Authentication/RegistrationPage"))
-const ConfirmEmailAddressPage = lazy(() => import("@asmr/pages/Authentication/ConfirmEmailAddressPage"))
-const SignInPage = lazy(() => import("@asmr/pages/Authentication/SignInPage"))
-const SignOutPage = lazy(() => import("@asmr/pages/Authentication/SignOutPage"))
-const ForgetPasswordPage = lazy(() => import("@asmr/pages/Authentication/ForgetPasswordPage"))
-const ResetPasswordPage = lazy(() => import("@asmr/pages/Authentication/ResetPasswordPage"))
+const RegistrationPage = lazy(() => import("asmr/pages/Authentication/RegistrationPage"))
+const ConfirmEmailAddressPage = lazy(() => import("asmr/pages/Authentication/ConfirmEmailAddressPage"))
+const SignInPage = lazy(() => import("asmr/pages/Authentication/SignInPage"))
+const SignOutPage = lazy(() => import("asmr/pages/Authentication/SignOutPage"))
+const ForgetPasswordPage = lazy(() => import("asmr/pages/Authentication/ForgetPasswordPage"))
+const ResetPasswordPage = lazy(() => import("asmr/pages/Authentication/ResetPasswordPage"))
 
 // Dashboard Pages
-const IndexPage = lazy(() => import("@asmr/pages/Dashboard/IndexPage"))
-const ProfilePage = lazy(() => import("@asmr/pages/Dashboard/ProfilePage"))
-const UsersManagementPage = lazy(() => import("@asmr/pages/Dashboard/UsersManagementPage"))
-const BeansManagementPage = lazy(() => import("@asmr/pages/Dashboard/BeanManagementPage"))
-const ProductsManagementPage = lazy(() => import("@asmr/pages/Dashboard/ProductsManagementPage"))
-const ProductionReportPage = lazy(() => import("@asmr/pages/Dashboard/ProductionReportPage"))
-const ProductTransactionsPage = lazy(() => import("@asmr/pages/Dashboard/ProductTransactionsPage"))
+const IndexPage = lazy(() => import("asmr/pages/Dashboard/IndexPage"))
+const ProfilePage = lazy(() => import("asmr/pages/Dashboard/ProfilePage"))
+const UsersManagementPage = lazy(() => import("asmr/pages/Dashboard/UsersManagementPage"))
+const BeansManagementPage = lazy(() => import("asmr/pages/Dashboard/BeanManagementPage"))
+const ProductsManagementPage = lazy(() => import("asmr/pages/Dashboard/ProductsManagementPage"))
+const ProductionReportPage = lazy(() => import("asmr/pages/Dashboard/ProductionReportPage"))
+const ProductTransactionsPage = lazy(() => import("asmr/pages/Dashboard/ProductTransactionsPage"))
 
 // Misc Pages
-const NotFoundPage = lazy(() => import("@asmr/pages/Errors/NotFoundPage"))
+const NotFoundPage = lazy(() => import("asmr/pages/Errors/NotFoundPage"))
 
 function PageRoutes(): JSX.Element {
 	useInit(onInit)

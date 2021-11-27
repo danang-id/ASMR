@@ -1,10 +1,8 @@
 using System.Text.Json.Serialization;
 
-namespace ASMR.Web.ReleaseInformation.Common
+namespace ASMR.Web.ReleaseInformation.Common;
+
+public class AndroidReleaseInformation : AppReleaseInformation
 {
-	public class AndroidReleaseInformation : AppReleaseInformation
-	{
-		[JsonPropertyName("PlayStore")]
-		public StoreReleaseInformation PlayStore { get; set; }
-	}
+	[JsonPropertyName("PlayStore")] public StoreReleaseInformation PlayStore { get; set; }
 }

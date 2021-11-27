@@ -7,6 +7,7 @@
 //
 // Startup.cs
 //
+
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -33,222 +34,209 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 
-// ReSharper disable once StringLiteralTypo
-namespace ASMR.Web
+namespace ASMR.Web;
+
+public class Startup
 {
-    public class Startup
-    {
-        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
-        {
-            Configuration = configuration;
-            Environment = environment;
-        }
+	public Startup(IConfiguration configuration)
+	{
+		Configuration = configuration;
+	}
 
-        private IConfiguration Configuration { get; }
-        private IWebHostEnvironment Environment { get; }
+	private IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            // Add options
-            services.AddOptions<CaptchaOptions>()
-                .BindConfiguration("Google:reCAPTCHA");
-            services.AddOptions<JsonWebTokenOptions>()
-                .BindConfiguration("JsonWebToken");
-            services.AddOptions<MailOptions>()
-                .BindConfiguration("SendGrid");
-            
-            //
-            // Custom Services
-            //
-            // Transient lifetime services are created each time they are requested.
-            // This lifetime works best for lightweight, stateless services.
-            //
-            // Scoped lifetime services are created once per request.
-            //
-            // Singleton lifetime services are created the first time they are requested
-            // (or when ConfigureServices is run if you specify an instance there) and
-            // then every subsequent request will use the same instance.
-            //
-            services.AddScoped<IPasswordHasher<User>, Argon2PasswordHashingService>();
-            services.AddScoped<ICaptchaService, CaptchaService>();
-            services.AddScoped<IEmailService, EmailService>();
-            services.AddScoped<IBeanService, BeanService>();
-            services.AddScoped<IMediaFileService, MediaFileService>();
-            services.AddScoped<IRoastedBeanProductionService, RoastedBeanProductionService>();
-            services.AddScoped<IProductService, ProductService>();
-            services.AddScoped<ITokenService, TokenService>();
-            services.AddScoped<IUserService, UserService>();
-            
-            services.AddAntiforgery(options =>
-            {
-                options.Cookie.HttpOnly = AntiforgeryConstants.CookieHttpOnly;
-                options.Cookie.Name = AntiforgeryConstants.CookieName;
-                options.Cookie.SameSite = SameSiteMode.Strict;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.FormFieldName = AntiforgeryConstants.FormFieldName;
-                options.HeaderName = AntiforgeryConstants.HeaderName;
-                options.SuppressXFrameOptionsHeader = AntiforgeryConstants.SuppressXFrameOptionsHeader;
-            });
-            
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = true,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["JsonWebToken:Issuer"],
-                    ValidAudience = Configuration["JsonWebToken:Issuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(Configuration["JsonWebToken:Key"]))
-                };
-            });
+	// This method gets called by the runtime. Use this method to add services to the container.
+	public void ConfigureServices(IServiceCollection services, IWebHostEnvironment environment)
+	{
+		// Add options
+		services.AddOptions<CaptchaOptions>().BindConfiguration("Google:reCAPTCHA");
+		services.AddOptions<JsonWebTokenOptions>().BindConfiguration("JsonWebToken");
+		services.AddOptions<MailOptions>().BindConfiguration("SendGrid");
 
-            services.AddControllersWithViews(options =>
-                {
-                    options.CacheProfiles.Add("MediaFileCache", new CacheProfile()
-                    {
-                        Duration = 60 * 60 * 24 * 365,
-                        Location = ResponseCacheLocation.Any
-                    });
-                })
-                .AddJsonOptions(options => {
-                    options.JsonSerializerOptions.DefaultIgnoreCondition =
-                        JsonConstants.DefaultJsonSerializerOptions.DefaultIgnoreCondition;
-                    options.JsonSerializerOptions.PropertyNamingPolicy =
-                        JsonConstants.DefaultJsonSerializerOptions.PropertyNamingPolicy;
-                });
+		//
+		// Custom Services
+		//
+		// Transient lifetime services are created each time they are requested.
+		// This lifetime works best for lightweight, stateless services.
+		//
+		// Scoped lifetime services are created once per request.
+		//
+		// Singleton lifetime services are created the first time they are requested
+		// (or when ConfigureServices is run if you specify an instance there) and
+		// then every subsequent request will use the same instance.
+		//
+		services.AddScoped<IPasswordHasher<User>, Argon2PasswordHashingService>();
+		services.AddScoped<ICaptchaService, CaptchaService>();
+		services.AddScoped<IEmailService, EmailService>();
+		services.AddScoped<IBeanService, BeanService>();
+		services.AddScoped<IMediaFileService, MediaFileService>();
+		services.AddScoped<IRoastingSessionService, RoastingSessionService>();
+		services.AddScoped<IProductService, ProductService>();
+		services.AddScoped<ITokenService, TokenService>();
+		services.AddScoped<IUserService, UserService>();
 
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.AllowCredentials();
-                    builder.AllowAnyHeader();
-                    builder.AllowAnyMethod();
-                });
-            });
+		services.AddAntiforgery(options =>
+		{
+			options.Cookie.HttpOnly = AntiforgeryConstants.CookieHttpOnly;
+			options.Cookie.Name = AntiforgeryConstants.CookieName;
+			options.Cookie.SameSite = SameSiteMode.Strict;
+			options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+			options.FormFieldName = AntiforgeryConstants.FormFieldName;
+			options.HeaderName = AntiforgeryConstants.HeaderName;
+			options.SuppressXFrameOptionsHeader = AntiforgeryConstants.SuppressXFrameOptionsHeader;
+		});
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-            {
-                options.EnableSensitiveDataLogging(Environment.IsDevelopment());
-                options.UseSqlite(
-                    Configuration.GetConnectionString(DatabaseContants.ConnectionStringName), 
-                    configure =>
-                    {
-                        configure.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-                    });
-            });
-            
-            services.AddIdentity<User, UserRole>(options =>
-                {
-                    options.User.RequireUniqueEmail = true;
-                    options.User.AllowedUserNameCharacters =
-                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
-                    
-                    // Identity : Default password settings
-                    options.Password.RequireDigit = true;
-                    options.Password.RequireLowercase = true;
-                    options.Password.RequireNonAlphanumeric = true;
-                    options.Password.RequireUppercase = true;
-                    options.Password.RequiredLength = 6;
-                    options.Password.RequiredUniqueChars = 1;
-                })
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+		services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+		{
+			options.TokenValidationParameters = new TokenValidationParameters
+			{
+				ValidateIssuer = true,
+				ValidateAudience = true,
+				ValidateLifetime = true,
+				ValidateIssuerSigningKey = true,
+				ValidIssuer = Configuration["JsonWebToken:Issuer"],
+				ValidAudience = Configuration["JsonWebToken:Issuer"],
+				IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JsonWebToken:Key"]))
+			};
+		});
 
-            services.AddDataProtection()
-                .SetApplicationName(typeof(Startup).Assembly.GetName().Name ?? "ASMR.Web")
-                .ProtectKeysWithCertificate(new X509Certificate2(
-                    Path.Join("Keys", Configuration["DataProtection:Certificate:FileName"]),
-                    Configuration["DataProtection:Certificate:Password"]))
-                .PersistKeysToDbContext<ApplicationDbContext>();
+		services.AddControllersWithViews(options =>
+			{
+				options.CacheProfiles.Add("MediaFileCache", new CacheProfile()
+				{
+					Duration = 60 * 60 * 24 * 365,
+					Location = ResponseCacheLocation.Any
+				});
+			})
+			.AddJsonOptions(options =>
+			{
+				options.JsonSerializerOptions.DefaultIgnoreCondition =
+					JsonConstants.DefaultJsonSerializerOptions.DefaultIgnoreCondition;
+				options.JsonSerializerOptions.PropertyNamingPolicy =
+					JsonConstants.DefaultJsonSerializerOptions.PropertyNamingPolicy;
+			});
 
-            services.AddResponseCaching();
-            services.AddResponseCompression();
+		services.AddCors(options =>
+		{
+			options.AddDefaultPolicy(builder =>
+			{
+				builder.AllowCredentials();
+				builder.AllowAnyHeader();
+				builder.AllowAnyMethod();
+			});
+		});
 
-            services.AddRouting(options =>
-            {
-                options.LowercaseUrls = true;
-                options.AppendTrailingSlash = false;
-                options.LowercaseQueryStrings = true;
-            });
+		services.AddDbContext<ApplicationDbContext>(options =>
+		{
+			options.EnableSensitiveDataLogging(environment.IsDevelopment());
+			options.UseSqlite(
+				Configuration.GetConnectionString(DatabaseConstants.ConnectionStringName),
+				configure => { configure.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery); });
+		});
 
-            // In production, the React files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/build";
-            });
-            
-            services.Configure<FormOptions>(options => {
-                options.ValueLengthLimit = int.MaxValue;
-                options.MultipartBodyLengthLimit = int.MaxValue;
-                options.MemoryBufferThreshold = int.MaxValue;
-            });
-            
-            services.ConfigureApplicationCookie(options =>
-            {
-                options.ClaimsIssuer = CookieAuthenticationConstants.ClaimIssuer;
-                options.Cookie.HttpOnly = CookieAuthenticationConstants.CookieHttpOnly;
-                options.Cookie.Name = AuthenticationConstants.CookieName;
-                options.Cookie.SameSite = SameSiteMode.Strict;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.ExpireTimeSpan = CookieAuthenticationConstants.ExpireTimeSpan;
-                options.Events.OnRedirectToLogin = CookieAuthenticationConstants.OnRedirectToLogin;
-                options.Events.OnRedirectToAccessDenied = CookieAuthenticationConstants.OnRedirectToAccessDenied;
-            });
-        }
+		services.AddIdentity<User, UserRole>(options =>
+			{
+				options.User.RequireUniqueEmail = true;
+				options.User.AllowedUserNameCharacters =
+					"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app)
-        {
-            if (Environment.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSecurityHeaders(SecurityHeadersConstants.DevelopmentHeaderPolicyCollection);
-            }
-            else
-            {
-                app.UseExceptionHandler("/error");
-                app.UseSecurityHeaders(SecurityHeadersConstants.DefaultHeaderPolicyCollection);
-                // The default HSTS value is 30 days.
-                // You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+				// Identity : Default password settings
+				options.Password.RequireDigit = true;
+				options.Password.RequireLowercase = true;
+				options.Password.RequireNonAlphanumeric = true;
+				options.Password.RequireUppercase = true;
+				options.Password.RequiredLength = 6;
+				options.Password.RequiredUniqueChars = 1;
+			})
+			.AddEntityFrameworkStores<ApplicationDbContext>()
+			.AddDefaultTokenProviders();
 
-            app.UseSerilogRequestLogging();
+		services.AddDataProtection()
+			.SetApplicationName(typeof(Startup).Assembly.GetName().Name ?? "asmr")
+			.ProtectKeysWithCertificate(new X509Certificate2(
+				Path.Join("Keys", Configuration["DataProtection:Certificate:FileName"]),
+				Configuration["DataProtection:Certificate:Password"]))
+			.PersistKeysToDbContext<ApplicationDbContext>();
 
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
-            app.UseHttpsRedirection();
-            app.UseHttpStatusHandler();
-            
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+		services.AddResponseCaching();
+		services.AddResponseCompression();
 
-            app.UseRouting();
-            app.UseCors();
-            app.UseResponseCaching();
-            app.UseResponseCompression();
+		services.AddRouting(options =>
+		{
+			options.LowercaseUrls = true;
+			options.AppendTrailingSlash = false;
+			options.LowercaseQueryStrings = true;
+		});
 
-            app.UseClientPlatformVerification();
-            app.UseAntiforgery();
-            app.UseAuthentication();
-            app.UseAuthorization();
+		// In production, the React files will be served from this directory
+		services.AddSpaStaticFiles(configuration => { configuration.RootPath = ClientAppConstants.BuildPath; });
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-            });
-            app.UseApiRouting();
+		services.Configure<FormOptions>(options =>
+		{
+			options.ValueLengthLimit = int.MaxValue;
+			options.MultipartBodyLengthLimit = int.MaxValue;
+			options.MemoryBufferThreshold = int.MaxValue;
+		});
 
-            app.UseClientApp(Environment);
-        }
-    }
+		services.ConfigureApplicationCookie(options =>
+		{
+			options.ClaimsIssuer = CookieAuthenticationConstants.ClaimIssuer;
+			options.Cookie.HttpOnly = CookieAuthenticationConstants.CookieHttpOnly;
+			options.Cookie.Name = AuthenticationConstants.CookieName;
+			options.Cookie.SameSite = SameSiteMode.Strict;
+			options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+			options.ExpireTimeSpan = CookieAuthenticationConstants.ExpireTimeSpan;
+			options.Events.OnRedirectToLogin = CookieAuthenticationConstants.OnRedirectToLogin;
+			options.Events.OnRedirectToAccessDenied = CookieAuthenticationConstants.OnRedirectToAccessDenied;
+		});
+	}
+
+	// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+	public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
+	{
+		if (!environment.IsDevelopment())
+		{
+			app.UseExceptionHandler("/error");
+			app.UseSecurityHeaders(SecurityHeadersConstants.DefaultHeaderPolicyCollection);
+			// The default HSTS value is 30 days. You may want to change this for production
+			// scenarios, see https://aka.ms/aspnetcore-hsts.
+			app.UseHsts();
+		}
+		else
+		{
+			app.UseSecurityHeaders(SecurityHeadersConstants.DevelopmentHeaderPolicyCollection);
+		}
+
+		app.UseSerilogRequestLogging();
+
+		app.UseForwardedHeaders(new ForwardedHeadersOptions
+		{
+			ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+		});
+		app.UseHttpsRedirection();
+		app.UseHttpStatusHandler();
+
+		app.UseStaticFiles();
+		app.UseSpaStaticFiles();
+
+		app.UseRouting();
+		app.UseCors();
+		app.UseResponseCaching();
+		app.UseResponseCompression();
+
+		app.UseClientPlatformVerification();
+		app.UseAntiforgery();
+		app.UseAuthentication();
+		app.UseAuthorization();
+
+		app.UseEndpoints(endpoints =>
+		{
+			endpoints.MapControllerRoute(
+				name: "default",
+				pattern: "{controller}/{action=Index}/{id?}");
+		});
+		app.UseApiRouting();
+
+		app.UseClientApp(environment);
+	}
 }

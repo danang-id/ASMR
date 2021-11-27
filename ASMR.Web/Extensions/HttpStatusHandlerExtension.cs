@@ -7,18 +7,18 @@
 //
 // HttpStatusHandlerExtension.cs
 //
+
 using ASMR.Web.Middlewares;
 using Microsoft.AspNetCore.Builder;
 
-namespace ASMR.Web.Extensions
-{
-    public static class HttpStatusHandlerExtension
-    {
-        public static IApplicationBuilder UseHttpStatusHandler(this IApplicationBuilder app)
-        {
-            app.UseMiddleware<HttpStatusHandlerMiddleware>();
+namespace ASMR.Web.Extensions;
 
-            return app;
-        }
-    }
+public static class HttpStatusHandlerExtension
+{
+	public static IApplicationBuilder UseHttpStatusHandler(this IApplicationBuilder app)
+	{
+		app.UseMiddleware<HttpStatusHandlerMiddleware>();
+
+		return app;
+	}
 }

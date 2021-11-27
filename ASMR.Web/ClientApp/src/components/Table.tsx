@@ -1,6 +1,6 @@
 import { CSSProperties, ReactNode } from "react"
-import { combineClassNames } from "@asmr/libs/common/styles"
-import "@asmr/components/styles/Table.css"
+import { combineClassNames } from "asmr/libs/common/styles"
+import "asmr/components/styles/Table.css"
 
 export interface TableProps {
 	children?: ReactNode
@@ -71,9 +71,9 @@ export interface TableDataCellProps {
 }
 
 Table.DataCell = function ({ children, className, head = false, ...props }: TableDataCellProps): JSX.Element {
-	let addedClassName = combineClassNames("table-data-cell")
+	let addedClassName = combineClassNames("table-core-cell")
 	if (head) {
-		addedClassName = combineClassNames(addedClassName, "table-data-cell-head")
+		addedClassName = combineClassNames(addedClassName, "table-core-cell-head")
 	}
 	className = combineClassNames(addedClassName, className)
 

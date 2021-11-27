@@ -7,27 +7,23 @@
 //
 // DefaultAbstractEntity.cs
 //
+
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ASMR.Core.Generic
+namespace ASMR.Core.Generic;
+
+public abstract class DefaultAbstractEntity
 {
-    public abstract class DefaultAbstractEntity
-    {
-        public DefaultAbstractEntity()
-        {
-            Id = Guid.Empty.ToString();
-            CreatedAt = DateTimeOffset.Now;
-        }
+	public DefaultAbstractEntity()
+	{
+		Id = Guid.Empty.ToString();
+		CreatedAt = DateTimeOffset.Now;
+	}
 
-        [Required]
-        [Key]
-        public string Id { get; set; }
+	[Required] [Key] public string Id { get; set; }
 
-        [Required]
-        public DateTimeOffset CreatedAt { get; set; }
+	[Required] public DateTimeOffset CreatedAt { get; set; }
 
-        public DateTimeOffset? LastUpdatedAt { get; set; }
-
-    }
+	public DateTimeOffset? LastUpdatedAt { get; set; }
 }

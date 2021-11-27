@@ -1,6 +1,6 @@
 import { createContext } from "react"
 
-import AuthenticationContextInfo from "@asmr/libs/security/AuthenticationContextInfo"
+import AuthenticationContextInfo from "asmr/libs/security/AuthenticationContextInfo"
 
 const AuthenticationContext = createContext<AuthenticationContextInfo>({
 	abort: () => {},

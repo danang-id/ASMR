@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, ReactNode } from "react"
-import { combineClassNames } from "@asmr/libs/common/styles"
-import useProgress from "@asmr/libs/hooks/progressHook"
-import "@asmr/components/styles/Form.css"
+import { combineClassNames } from "asmr/libs/common/styles"
+import useProgress from "asmr/libs/hooks/progressHook"
+import "asmr/components/styles/Form.css"
 
 export interface FormProps {
 	children?: ReactNode

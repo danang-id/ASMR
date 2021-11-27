@@ -7,30 +7,23 @@
 // 
 // Packaging.cs
 //
+
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.Entities
+namespace ASMR.Core.Entities;
+
+public class Packaging : DefaultAbstractEntity
 {
-	public class Packaging : DefaultAbstractEntity
-	{
-		[Required]
-		[JsonIgnore]
-		public Bean Bean { get; set; }
-		
-		[Required]
-		[JsonIgnore]
-		public string BeanId { get; set; }
-		
-		[Required]
-		public User Roaster { get; set; }
+	[Required] [JsonIgnore] public Bean Bean { get; set; }
 
-		[Required]
-		[JsonIgnore]
-		public string RoasterId { get; set; }
+	[Required] public string BeanId { get; set; }
 
-		public IEnumerable<PackagingResult> Results { get; set; }
-	}
+	[Required] [JsonIgnore] public User User { get; set; }
+
+	[Required] public string UserId { get; set; }
+
+	public IEnumerable<PackagingResult> Results { get; set; }
 }

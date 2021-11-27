@@ -1,3 +1,3 @@
-import BeanInformationPage from "@asmr/pages/Public/BeanInformationPage/BeanInformationPage"
+import BeanInformationPage from "asmr/pages/Public/BeanInformationPage/BeanInformationPage"
 
 export default BeanInformationPage

@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
-import { Breakpoint } from "@asmr/libs/application/BreakpointContextInfo"
-import useBreakpoint from "@asmr/libs/hooks/breakpointHook"
+import { Breakpoint } from "asmr/libs/application/BreakpointContextInfo"
+import useBreakpoint from "asmr/libs/hooks/breakpointHook"
 
 interface BreakpointProps {
 	max?: Breakpoint

@@ -1,5 +1,5 @@
 import { useContext } from "react"
-import AuthenticationContext from "@asmr/libs/security/AuthenticationContext"
+import AuthenticationContext from "asmr/libs/security/AuthenticationContext"
 
 function useAuthentication() {
 	return useContext(AuthenticationContext)

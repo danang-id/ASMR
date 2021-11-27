@@ -1,7 +1,7 @@
 import React from "react"
-import "@asmr/components/styles/AppStoreButton.css"
+import "asmr/components/styles/AppStoreButton.css"
 
-import AppStoreButtonImage from "@asmr/assets/app-store-button.png"
+import AppStoreButtonImage from "asmr/assets/app-store-button.png"
 
 interface AppStoreButtonProps {
 	link: string

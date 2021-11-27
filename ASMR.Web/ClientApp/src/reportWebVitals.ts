@@ -1,5 +1,5 @@
 import { getCLS, getFID, getFCP, getLCP, getTTFB, ReportHandler } from "web-vitals"
-import Logger from "@asmr/libs/common/logger"
+import Logger from "asmr/libs/common/logger"
 
 const logger = new Logger("WebVital")
 function reportWebVitals(reportHandler: ReportHandler = logger.info.bind(logger)) {

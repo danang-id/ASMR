@@ -1,12 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react"
-import Button from "@asmr/components/Button"
-import Form from "@asmr/components/Form"
-import Modal from "@asmr/components/Modal"
-import Bean from "@asmr/data/models/Bean"
-import Product from "@asmr/data/models/Product"
-import UpdateProductRequestModel from "@asmr/data/request/UpdateProductRequestModel"
-import { ProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import "@asmr/pages/Dashboard/ProductsManagementPage/ProductsManagementModal.scoped.css"
+import Button from "asmr/components/Button"
+import Form from "asmr/components/Form"
+import Modal from "asmr/components/Modal"
+import Bean from "asmr/core/entities/Bean"
+import Product from "asmr/core/entities/Product"
+import UpdateProductRequestModel from "asmr/core/request/UpdateProductRequestModel"
+import { ProgressInfo } from "asmr/libs/application/ProgressContextInfo"
+import "asmr/pages/Dashboard/ProductsManagementPage/ProductsManagementModal.scoped.css"
 
 interface ProductUpdateModalProps {
 	bean: Bean | null

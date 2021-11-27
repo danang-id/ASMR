@@ -1,12 +1,12 @@
 import { Fragment, useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Menu, Transition } from "@headlessui/react"
-import ApplicationLogo from "@asmr/components/ApplicationLogo"
-import Button from "@asmr/components/Button"
-import UserImage from "@asmr/components/UserImage"
-import config from "@asmr/libs/common/config"
-import useAuthentication from "@asmr/libs/hooks/authenticationHook"
-import "@asmr/components/styles/NavigationHeader.css"
+import ApplicationLogo from "asmr/components/ApplicationLogo"
+import Button from "asmr/components/Button"
+import UserImage from "asmr/components/UserImage"
+import config from "asmr/libs/common/config"
+import useAuthentication from "asmr/libs/hooks/authenticationHook"
+import "asmr/components/styles/NavigationHeader.css"
 
 function NavigationHeader(): JSX.Element {
 	const [userFullName, setUserFullName] = useState("")

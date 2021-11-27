@@ -7,6 +7,8 @@
 //
 // UnitService.cs
 //
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ASMR.Core.Entities;
@@ -14,160 +16,145 @@ using ASMR.Web.Data;
 using ASMR.Web.Services.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace ASMR.Web.Services
+namespace ASMR.Web.Services;
+
+public interface IBeanService : IServiceBase
 {
-    public interface IBeanService : IServiceBase
-    {
-        public IQueryable<Bean> GetAllBeans();
+	public IQueryable<Bean> GetAllBeans();
 
-        public Task<Bean> GetBeanById(string id);
-        public Task<Bean> GetBeanById(string id, bool includePrivateInformation);
+	public Task<Bean> GetBeanById(string id, bool includeSensitiveInformation = true);
 
-        public Task<Bean> CreateBean(Bean bean);
+	public Task<Bean> CreateBean(Bean bean);
 
-        public Task<Bean> ModifyBean(string id, Bean bean);
+	public Task<Bean> ModifyBean(string id, Bean bean);
 
-        public Task<Bean> RemoveBean(string id);
+	public Task<Bean> RemoveBean(string id);
 
-        public IQueryable<IncomingGreenBean> GetAllIncomingGreenBeans();
+	public IQueryable<IncomingGreenBean> GetAllIncomingGreenBeans();
 
-        public IQueryable<IncomingGreenBean> GetIncomingGreenBeansByUser(string userId);
-        
-        public Task<IncomingGreenBean> CreateIncomingGreenBean(IncomingGreenBean incomingGreenBean);
-    }
+	public IQueryable<IncomingGreenBean> GetIncomingGreenBeansByUser(string userId);
 
-    public class BeanService : ServiceBase, IBeanService
-    {
-        public BeanService(ApplicationDbContext dbContext) : base(dbContext)
-        {
-        }
+	public Task<IncomingGreenBean> CreateIncomingGreenBean(IncomingGreenBean incomingGreenBean);
+}
 
-        public IQueryable<Bean> GetAllBeans()
-        {
-            return DbContext.Beans
-                .Include(e => e.Inventory)
-                .Include(e => e.Products)
-                .Include(e => e.IncomingGreenBeans)
-                .Include(e => e.RoastedBeanProductions)
-                .AsQueryable();
-        }
+public class BeanService : ServiceBase, IBeanService
+{
+	public BeanService(ApplicationDbContext dbContext) : base(dbContext)
+	{
+	}
 
-        public Task<Bean> GetBeanById(string id)
-        {
-            return GetBeanById(id, false);
-        }
-        
-        public Task<Bean> GetBeanById(string id, bool includePrivateInformation)
-        {
-            var beans = DbContext.Beans
-                .Where(e => e.Id == id);
-            if (includePrivateInformation)
-            {
-                beans = beans
-                    .Include(e => e.Inventory)
-                    .Include(e => e.Products)
-                    .Include(e => e.IncomingGreenBeans)
-                    .Include(e => e.RoastedBeanProductions);
-            }
-            
-            return beans.FirstOrDefaultAsync();
-        }
+	public IQueryable<Bean> GetAllBeans()
+	{
+		return DbContext.Beans
+			.Include(e => e.Inventory)
+			.AsQueryable();
+	}
 
-        public async Task<Bean> CreateBean(Bean bean)
-        {
-            bean.Inventory = (
-                await DbContext.BeanInventories.AddAsync(new BeanInventory
-                {
-                    CurrentGreenBeanWeight = 0,
-                    CurrentRoastedBeanWeight = 0
-                })
-            ).Entity;
+	public Task<Bean> GetBeanById(string id, bool includeSensitiveInformation = true)
+	{
+		var beans = DbContext.Beans
+			.Where(e => e.Id == id);
 
-            var entityEntry = await DbContext.Beans.AddAsync(bean);
-            return entityEntry.Entity;
-        }
-        
-        public async Task<Bean> ModifyBean(string id, Bean bean)
-        {
-            var entity = await DbContext.Beans
-                .Where(e => e.Id == id)
-                .Include(e => e.Inventory)
-                .Include(e => e.Products)
-                .Include(e => e.IncomingGreenBeans)
-                .Include(e => e.RoastedBeanProductions)
-                .FirstOrDefaultAsync();
-            if (entity is null)
-            {
-                return null;
-            }
+		return includeSensitiveInformation
+			? beans.Include(e => e.Inventory)
+				.FirstOrDefaultAsync()
+			: beans.FirstOrDefaultAsync();
+	}
 
-            if (!string.IsNullOrEmpty(bean.Name))
-            {
-                entity.Name = bean.Name;
-            }
+	public async Task<Bean> CreateBean(Bean bean)
+	{
+		bean.Inventory = (
+			await DbContext.BeanInventories.AddAsync(new BeanInventory
+			{
+				CurrentGreenBeanWeight = 0,
+				CurrentRoastedBeanWeight = 0
+			})
+		).Entity;
 
-            if (!string.IsNullOrEmpty(bean.Description))
-            {
-                entity.Description = bean.Description;
-            }
+		var entityEntry = await DbContext.Beans.AddAsync(bean);
+		return entityEntry.Entity;
+	}
 
-            if (!string.IsNullOrEmpty(bean.Image))
-            {
-                entity.Image = bean.Image;
-            }
+	public async Task<Bean> ModifyBean(string id, Bean bean)
+	{
+		var entity = await DbContext.Beans
+			.Where(e => e.Id == id)
+			.Include(e => e.Inventory)
+			.Include(e => e.Products)
+			.Include(e => e.IncomingGreenBeans)
+			.Include(e => e.RoastingSessions)
+			.FirstOrDefaultAsync();
+		if (entity is null)
+		{
+			return null;
+		}
 
-            if (bean.Inventory is not null)
-            {
-                DbContext.BeanInventories.Update(bean.Inventory);
-            }
+		if (!string.IsNullOrEmpty(bean.Name))
+		{
+			entity.Name = bean.Name;
+		}
 
-            DbContext.Beans.Update(entity);
-            return entity;
-        }
+		if (!string.IsNullOrEmpty(bean.Description))
+		{
+			entity.Description = bean.Description;
+		}
 
-        public async Task<Bean> RemoveBean(string id)
-        {
-            var entity = await DbContext.Beans
-                .Where(e => e.Id == id)
-                .Include(e => e.Inventory)
-                .Include(e => e.Products)
-                .Include(e => e.IncomingGreenBeans)
-                .Include(e => e.RoastedBeanProductions)
-                .FirstOrDefaultAsync();
-            if (entity is null)
-            {
-                return null;
-            }
+		if (!string.IsNullOrEmpty(bean.Image))
+		{
+			entity.Image = bean.Image;
+		}
 
-            DbContext.BeanInventories.Remove(entity.Inventory);
-            DbContext.Beans.Remove(entity);
-            return entity;
-        }
-        
-        public async Task<IncomingGreenBean> CreateIncomingGreenBean(IncomingGreenBean incomingGreenBean)
-        {
-            var entityEntry = await DbContext.IncomingGreenBeans
-                .AddAsync(incomingGreenBean);
-            return entityEntry.Entity;
-        }
-        
-        public IQueryable<IncomingGreenBean> GetAllIncomingGreenBeans()
-        {
-            return DbContext.IncomingGreenBeans
-                .Include(e => e.User)
-                .Include(e => e.Bean)
-                    .ThenInclude(e => e.Inventory)
-                .AsQueryable();
-        }
+		if (bean.Inventory is not null)
+		{
+			DbContext.BeanInventories.Update(bean.Inventory);
+		}
 
-        public IQueryable<IncomingGreenBean> GetIncomingGreenBeansByUser(string userId)
-        {
-            return DbContext.IncomingGreenBeans
-                .Where(e => e.UserId == userId)
-                .Include(e => e.User)
-                .Include(e => e.Bean)
-                    .ThenInclude(e => e.Inventory)
-                .AsQueryable();
-        }
-    }
+		DbContext.Beans.Update(entity);
+		return entity;
+	}
+
+	public async Task<Bean> RemoveBean(string id)
+	{
+		var entity = await DbContext.Beans
+			.Where(e => e.Id == id)
+			.Include(e => e.Inventory)
+			.Include(e => e.Products)
+			.Include(e => e.IncomingGreenBeans)
+			.Include(e => e.RoastingSessions)
+			.FirstOrDefaultAsync();
+		if (entity is null)
+		{
+			return null;
+		}
+
+		DbContext.BeanInventories.Remove(entity.Inventory);
+		DbContext.Beans.Remove(entity);
+		return entity;
+	}
+
+	public async Task<IncomingGreenBean> CreateIncomingGreenBean(IncomingGreenBean incomingGreenBean)
+	{
+		var entityEntry = await DbContext.IncomingGreenBeans
+			.AddAsync(incomingGreenBean);
+		return entityEntry.Entity;
+	}
+
+	public IQueryable<IncomingGreenBean> GetAllIncomingGreenBeans()
+	{
+		return DbContext.IncomingGreenBeans
+			.Include(e => e.User)
+			.Include(e => e.Bean)
+			.ThenInclude(e => e.Inventory)
+			.AsQueryable();
+	}
+
+	public IQueryable<IncomingGreenBean> GetIncomingGreenBeansByUser(string userId)
+	{
+		return DbContext.IncomingGreenBeans
+			.Where(e => e.UserId == userId)
+			.Include(e => e.User)
+			.Include(e => e.Bean)
+			.ThenInclude(e => e.Inventory)
+			.AsQueryable();
+	}
 }

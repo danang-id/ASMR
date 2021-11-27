@@ -7,19 +7,19 @@
 //
 // DefaultAbstractController.cs
 //
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace ASMR.Web.Controllers.Generic
-{
-    [AutoValidateAntiforgeryToken]
-    public abstract class DefaultAbstractController : Controller
-    {
-        protected readonly ILogger Logger;
+namespace ASMR.Web.Controllers.Generic;
 
-        public DefaultAbstractController(ILogger logger)
-        {
-            Logger = logger;
-        }
-    }
+[AutoValidateAntiforgeryToken]
+public abstract class DefaultAbstractController : Controller
+{
+	protected readonly ILogger Logger;
+
+	public DefaultAbstractController(ILogger logger)
+	{
+		Logger = logger;
+	}
 }

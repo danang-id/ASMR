@@ -7,22 +7,21 @@
 		<ReleasesRoot>Releases\</ReleasesRoot>
 		<SpaRoot>ClientApp\</SpaRoot>
 		<DefaultItemExcludes>$(DefaultItemExcludes);$(ReleasesRoot)\**;$(SpaRoot)node_modules\**</DefaultItemExcludes>
-		<ReleaseVersion>1.0.1</ReleaseVersion>
-		<StartupObject>ASMR.Web.Program</StartupObject>
 		<ApplicationIcon>ASMR.Web.ico</ApplicationIcon>
 		<AssemblyName>asmr</AssemblyName>
 		<Authors>Danang Galuh Tegar Prasetyo</Authors>
-		<PackageId>ASMR</PackageId>
+		<PackageId>asmr</PackageId>
 		<Company>Pandora Karya Digital</Company>
 		<Product>ASMR Web Server</Product>
-		<AssemblyVersion>1.0.1</AssemblyVersion>
-		<FileVersion>1.0.1</FileVersion>
+		<ReleaseVersion>1.0.0</ReleaseVersion>
+		<AssemblyVersion>1.1.0</AssemblyVersion>
+		<FileVersion>1.1.0</FileVersion>
+		<PackageVersion>1.1.0</PackageVersion>
 		<NeutralLanguage>en</NeutralLanguage>
 		<Platforms>AnyCPU</Platforms>
 		<UserSecretsId>143ab751-b354-4226-b63e-fc5e30c39def</UserSecretsId>
 	</PropertyGroup>
 
-	<PropertyGroup Condition=" '$(RunConfiguration)' == 'Production' " />
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
 		<WarningLevel>4</WarningLevel>
 		<LangVersion>10.0</LangVersion>
@@ -30,6 +29,7 @@
 	<PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
 	  <LangVersion>10.0</LangVersion>
 	</PropertyGroup>
+	<PropertyGroup Condition=" '$(RunConfiguration)' == 'Kestrel' " />
 	<ItemGroup>
 		<PackageReference Include="Flurl" Version="3.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.0" />
@@ -106,7 +106,7 @@
 		<!-- Include the newly-built files in the publish output -->
 		<ItemGroup>
 			<DistFiles Include="$(SpaRoot)build\**" />
-			<ResolvedFileToPublish Include="@(DistFiles-&gt;'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
 				<RelativePath>%(DistFiles.Identity)</RelativePath>
 				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
 				<ExcludeFromSingleFile>true</ExcludeFromSingleFile>

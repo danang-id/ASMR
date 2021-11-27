@@ -1,9 +1,9 @@
-import Image from "@asmr/components/Image"
-import User from "@asmr/data/models/User"
-import "@asmr/components/styles/UserImage.css"
+import Image from "asmr/components/Image"
+import User from "asmr/core/entities/User"
+import "asmr/components/styles/UserImage.css"
 
-import AsmrLogoImage from "@asmr/assets/asmr-logo.webp"
-import { combineClassNames } from "@asmr/libs/common/styles"
+import AsmrLogoImage from "asmr/assets/asmr-logo.webp"
+import { combineClassNames } from "asmr/libs/common/styles"
 
 interface UserImageProps {
 	circular?: boolean

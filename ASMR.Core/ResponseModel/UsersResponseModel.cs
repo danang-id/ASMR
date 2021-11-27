@@ -7,28 +7,28 @@
 //
 // UsersResponseModel.cs
 //
+
 using System.Collections.Generic;
 using ASMR.Core.Entities;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.ResponseModel
+namespace ASMR.Core.ResponseModel;
+
+public class UsersResponseModel : DefaultResponseModel<IEnumerable<SanitizedUser>>
 {
-    public class UsersResponseModel : DefaultResponseModel<IEnumerable<NormalizedUser>>
-    {
-        public UsersResponseModel() 
-        {
-        }
+	public UsersResponseModel()
+	{
+	}
 
-        public UsersResponseModel(IEnumerable<NormalizedUser> users) : base(users)
-        {
-        }
+	public UsersResponseModel(IEnumerable<SanitizedUser> users) : base(users)
+	{
+	}
 
-        public UsersResponseModel(ResponseError error) : base(error)
-        {
-        }
+	public UsersResponseModel(ResponseError error) : base(error)
+	{
+	}
 
-        public UsersResponseModel(IEnumerable<ResponseError> errors) : base(errors)
-        {
-        }
-    }
+	public UsersResponseModel(IEnumerable<ResponseError> errors) : base(errors)
+	{
+	}
 }

@@ -1,6 +1,6 @@
 import QRCode from "react-qr-code"
-// import useTheme from "@asmr/libs/hooks/themeHook"
-import "@asmr/components/styles/QRCode.css"
+// import useTheme from "asmr/libs/hooks/themeHook"
+import "asmr/components/styles/QRCode.css"
 
 interface QuickResponseCodeProps {
 	level?: "L" | "M" | "Q" | "H"

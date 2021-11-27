@@ -7,6 +7,8 @@
 //
 // ProductionController.cs
 //
+
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using ASMR.Core.Constants;
@@ -21,270 +23,258 @@ using ASMR.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace ASMR.Web.Controllers.API
+namespace ASMR.Web.Controllers.API;
+
+public class ProductionController : DefaultAbstractApiController<ProductionController>
 {
-	public class ProductionController : DefaultAbstractApiController<ProductionController>
+	private readonly IBeanService _beanService;
+	private readonly IRoastingSessionService _roastingSessionService;
+	private readonly IUserService _userService;
+
+	public ProductionController(
+		ILogger<ProductionController> logger,
+		IBeanService beanService,
+		IRoastingSessionService roastingSessionService,
+		IUserService userService
+	) : base(logger)
 	{
-		private readonly IBeanService _beanService;
-		private readonly IRoastedBeanProductionService _roastedBeanProductionService;
-		private readonly IUserService _userService;
-		
-		public ProductionController(
-			ILogger<ProductionController> logger, 
-			IBeanService beanService,
-			IRoastedBeanProductionService roastedBeanProductionService,
-			IUserService userService
-			) : base(logger)
-		{
-			_beanService = beanService;
-			_roastedBeanProductionService = roastedBeanProductionService;
-			_userService = userService;
-		}
-		
-		[AllowAccess(Role.Administrator, Role.Roaster, Role.Server)]
-		[HttpGet]
-		public async Task<IActionResult> GetAll(
-			[FromQuery] bool showMine,
-			[FromQuery] bool showCancelled)
-		{
-			var authenticatedUser = await _userService.GetAuthenticatedUser(User);
-			var roastedBeanProductions = showMine 
-				? _roastedBeanProductionService
-					.GetRoastedBeanProductionByUser(authenticatedUser.Id)
-				: _roastedBeanProductionService
-					.GetAllRoastedBeanProductions();
-			// If cancelled production is shown, skip this filter
-			if (!showCancelled)
-            {
-				roastedBeanProductions = roastedBeanProductions
-					.Where(production => production.IsCancelled == false);
-            }
-			
-			return Ok(new ProductionsResponseModel(roastedBeanProductions));
-		}
-		
-		[AllowAccess(Role.Administrator, Role.Roaster, Role.Server)]
-		[HttpGet("{id}")]
-		public async Task<IActionResult> GetById(string id)
-		{
-			if (string.IsNullOrEmpty(id))
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.RequiredParameterNotProvided,
-					"Please select a production session.");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-			
-			var roastedBeanProduction = await _roastedBeanProductionService
-				.GetRoastedBeanProductionById(id);
-			if (roastedBeanProduction is null)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
-					"The production session is not found.");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-			
-			return Ok(new ProductionResponseModel(roastedBeanProduction));
-		}
-		
-		[AllowAccess(Role.Roaster)]
-		[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
-		[HttpPost("start")]
-		public async Task<IActionResult> Start([FromBody] StartProductionRequestModel model)
-		{
-			var validationActionResult = GetValidationActionResult();
-			if (validationActionResult is not null)
-			{
-				return validationActionResult;
-			}
+		_beanService = beanService;
+		_roastingSessionService = roastingSessionService;
+		_userService = userService;
+	}
 
-			if (model.GreenBeanWeight <= 0)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
-					"The green bean weight to be roasted must be more than 0 gram(s).");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-			
-			var bean = await _beanService.GetBeanById(model.BeanId, IsAuthenticated());
-			if (bean is null)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
-					"The bean you are trying to roast does not exist.");
-				return BadRequest(new BeanResponseModel(errorModel));
-			}
+	[AllowAccess(Role.Administrator, Role.Roaster, Role.Server)]
+	[HttpGet]
+	public async Task<IActionResult> GetAll([FromQuery] bool showMine, [FromQuery] bool showCancelled)
+	{
+		var authenticatedUser = await _userService.GetAuthenticatedUser(User);
+		var roastingSessions = showMine
+			? _roastingSessionService.GetRoastingSessionsByUser(authenticatedUser.Id)
+			: _roastingSessionService.GetAllRoastingSessions();
+		// If cancelled production is shown, skip this filter
+		if (!showCancelled)
+		{
+			roastingSessions = roastingSessions.Where(roasting => roasting.CancelledAt == null);
+		}
 
-			if (bean.Inventory.CurrentGreenBeanWeight < model.GreenBeanWeight)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
-					"There is not enough green bean in inventory. " +
-					$"You are trying to roast {model.GreenBeanWeight} gram(s) of {bean.Name} bean, " +
-					$"where there's only {bean.Inventory.CurrentGreenBeanWeight} gram(s) available.");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
+		return Ok(new ProductionsResponseModel(roastingSessions));
+	}
 
-			var beanInventory = bean.Inventory;
-			beanInventory.CurrentGreenBeanWeight -= model.GreenBeanWeight;
-			bean = await _beanService.ModifyBean(bean.Id, new Bean
+	[AllowAccess(Role.Administrator, Role.Roaster, Role.Server)]
+	[HttpGet("{id}")]
+	public async Task<IActionResult> GetById(string id)
+	{
+		if (string.IsNullOrEmpty(id))
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.RequiredParameterNotProvided,
+				"Please select a roasting session.");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		var roastedBeanProduction = await _roastingSessionService.GetRoastingSessionById(id);
+		if (roastedBeanProduction is null)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
+				"The roasting session is not found.");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		return Ok(new ProductionResponseModel(roastedBeanProduction));
+	}
+
+	[AllowAccess(Role.Roaster)]
+	[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
+	[HttpPost("start")]
+	public async Task<IActionResult> Start([FromBody] StartProductionRequestModel model)
+	{
+		var validationActionResult = GetValidationActionResult();
+		if (validationActionResult is not null)
+		{
+			return validationActionResult;
+		}
+
+		if (model.GreenBeanWeight <= 0)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+				"The green bean weight to be roasted must be more than 0 gram(s).");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		var bean = await _beanService.GetBeanById(model.BeanId, IsAuthenticated());
+		if (bean is null)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
+				"The bean you are trying to roast does not exist.");
+			return BadRequest(new BeanResponseModel(errorModel));
+		}
+
+		if (bean.Inventory.CurrentGreenBeanWeight < model.GreenBeanWeight)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+				"There is not enough green bean in inventory. " +
+				$"You are trying to roast {model.GreenBeanWeight} gram(s) of {bean.Name} bean, " +
+				$"where there's only {bean.Inventory.CurrentGreenBeanWeight} gram(s) available.");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		var beanInventory = bean.Inventory;
+		beanInventory.CurrentGreenBeanWeight -= model.GreenBeanWeight;
+		bean = await _beanService.ModifyBean(bean.Id, new Bean
+		{
+			Inventory = beanInventory
+		});
+
+		var authenticatedUser = await _userService.GetAuthenticatedUser(User);
+		var roastingSession = await _roastingSessionService.CreateRoastingSession(new RoastingSession
+		{
+			BeanId = bean.Id,
+			UserId = authenticatedUser.Id,
+			GreenBeanWeight = model.GreenBeanWeight,
+			RoastedBeanWeight = 0
+		});
+
+		await _roastingSessionService.CommitAsync();
+		return Created(Request.Path, new ProductionResponseModel(roastingSession)
+		{
+			Message = $"Successfully started roasting session for '{bean.Name}' bean."
+		});
+	}
+
+	[AllowAccess(Role.Roaster)]
+	[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
+	[HttpPost("finish/{id}")]
+	public async Task<IActionResult> Finish(string id, [FromBody] FinishProductionRequestModel model)
+	{
+		var validationActionResult = GetValidationActionResult();
+		if (validationActionResult is not null)
+		{
+			return validationActionResult;
+		}
+
+		if (model.RoastedBeanWeight <= 0)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+				"The roasted bean weight must be more than 0 gram(s).");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		if (string.IsNullOrEmpty(id))
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.RequiredParameterNotProvided,
+				"Please select a roasting session.");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		var authenticatedUser = await _userService.GetAuthenticatedUser(User);
+		var roastingSession = await _roastingSessionService.GetRoastingSessionById(id);
+		if (roastingSession is null)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
+				"The roasting session is not found.");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		if (roastingSession.CancelledAt is not null || roastingSession.FinishedAt is not null)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+				"Failed to finish roasting because the roasting session has been completed.");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		if (roastingSession.UserId != authenticatedUser.Id)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+				"You are not authorized to manage this roasting session. " +
+				"Only the user who starts the roasting can manage the session.");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		if (model.RoastedBeanWeight > roastingSession.GreenBeanWeight)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+				$"The roasted bean weight ({model.RoastedBeanWeight} gram(s)) should not be heavier " +
+				$"than the green bean weight ({roastingSession.GreenBeanWeight} gram(s)).");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		var beanInventory = roastingSession.Bean.Inventory;
+		beanInventory.CurrentRoastedBeanWeight += model.RoastedBeanWeight;
+		await _beanService.ModifyBean(roastingSession.BeanId, new Bean
+		{
+			Inventory = beanInventory
+		});
+
+		roastingSession = await _roastingSessionService
+			.ModifyRoastingSession(roastingSession.Id, new RoastingSession
+			{
+				RoastedBeanWeight = model.RoastedBeanWeight,
+				FinishedAt = DateTimeOffset.Now
+			});
+
+		await _roastingSessionService.CommitAsync();
+		return Ok(new ProductionResponseModel(roastingSession)
+		{
+			Message = $"Successfully finished the roasting for '{roastingSession.Bean.Name}' bean."
+		});
+	}
+
+	[AllowAccess(Role.Roaster)]
+	[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
+	[HttpDelete("cancel/{id}")]
+	public async Task<IActionResult> Cancel(string id, [FromQuery] bool isBeanBurnt)
+	{
+		if (string.IsNullOrEmpty(id))
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.RequiredParameterNotProvided,
+				"Please select a roasting session.");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		var authenticatedUser = await _userService.GetAuthenticatedUser(User);
+		var roastingSession = await _roastingSessionService
+			.GetRoastingSessionById(id);
+		if (roastingSession is null)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
+				"The roasting session is not found.");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		if (roastingSession.CancelledAt is not null || roastingSession.FinishedAt is not null)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+				"Failed to cancel roasting because the roasting session has been completed.");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		if (roastingSession.UserId != authenticatedUser.Id)
+		{
+			var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+				"You are not authorized to manage this roasting session. " +
+				"Only the user who starts the roasting can manage the session.");
+			return BadRequest(new ProductionResponseModel(errorModel));
+		}
+
+		if (!isBeanBurnt)
+		{
+			var beanInventory = roastingSession.Bean.Inventory;
+			beanInventory.CurrentGreenBeanWeight += roastingSession.GreenBeanWeight;
+			await _beanService.ModifyBean(roastingSession.BeanId, new Bean
 			{
 				Inventory = beanInventory
 			});
-
-
-			var authenticatedUser = await _userService.GetAuthenticatedUser(User);
-			var roastedBeanProduction = await _roastedBeanProductionService
-				.CreateRoastedBeanProduction(new RoastedBeanProduction
-				{
-					BeanId = bean.Id,
-					UserId = authenticatedUser.Id,
-					GreenBeanWeight = model.GreenBeanWeight,
-					RoastedBeanWeight = 0, 
-					IsCancelled = false,
-					IsFinalized = false
-				});
-
-			await _roastedBeanProductionService.CommitAsync();
-			return Created(Request.Path, new ProductionResponseModel(roastedBeanProduction)
-			{
-				Message = $"Successfully started production session for bean '{bean.Name}'."
-			});
 		}
 
-		[AllowAccess(Role.Roaster)]
-		[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
-		[HttpPost("finalize/{id}")]
-		public async Task<IActionResult> Finalize(string id, [FromBody] FinalizeProductionRequestModel model)
+		roastingSession = await _roastingSessionService
+			.ModifyRoastingSession(roastingSession.Id, new RoastingSession
+			{
+				CancelledAt = DateTimeOffset.Now
+			});
+
+		await _roastingSessionService.CommitAsync();
+		return Ok(new ProductionResponseModel(roastingSession)
 		{
-			var validationActionResult = GetValidationActionResult();
-			if (validationActionResult is not null)
-			{
-				return validationActionResult;
-			}
-
-			if (model.RoastedBeanWeight <= 0)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
-					"The roasted bean weight must be more than 0 gram(s).");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-			
-			if (string.IsNullOrEmpty(id))
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.RequiredParameterNotProvided,
-					"Please select a production session.");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-
-			var authenticatedUser = await _userService.GetAuthenticatedUser(User);
-			var roastedBeanProduction = await _roastedBeanProductionService
-				.GetRoastedBeanProductionById(id);
-			if (roastedBeanProduction is null)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
-					"The production session is not found.");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-
-			if (roastedBeanProduction.IsFinalized || roastedBeanProduction.IsCancelled)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
-					"Failed to cancel production because the production session has been completed.");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-
-			if (roastedBeanProduction.UserId != authenticatedUser.Id)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
-					"You are not authorized to manage this production session. " +
-					"Only the user who starts the production can manage the session.");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-
-			if (model.RoastedBeanWeight > roastedBeanProduction.GreenBeanWeight)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
-					$"The roasted bean weight ({model.RoastedBeanWeight} gram(s)) should not be heavier " +
-					$"than the green bean weight ({roastedBeanProduction.GreenBeanWeight} gram(s)).");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-			
-			var beanInventory = roastedBeanProduction.Bean.Inventory;
-			beanInventory.CurrentRoastedBeanWeight += model.RoastedBeanWeight;
-			await _beanService.ModifyBean(roastedBeanProduction.BeanId, new Bean
-			{
-				Inventory = beanInventory
-			});
-
-			roastedBeanProduction = await _roastedBeanProductionService
-				.ModifyRoastedBeanProduction(roastedBeanProduction.Id, new RoastedBeanProduction
-				{
-					RoastedBeanWeight = model.RoastedBeanWeight,
-					IsFinalized = true
-				});
-			
-			await _roastedBeanProductionService.CommitAsync();
-			return Ok(new ProductionResponseModel(roastedBeanProduction)
-			{
-				Message = $"Successfully finalize production session for bean '{roastedBeanProduction.Bean.Name}'."
-			});
-		}
-		
-		[AllowAccess(Role.Roaster)]
-		[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
-		[HttpDelete("cancel/{id}")]
-		public async Task<IActionResult> Cancel(string id, [FromQuery] bool isBeanBurnt)
-		{
-			if (string.IsNullOrEmpty(id))
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.RequiredParameterNotProvided,
-					"Please select a production session.");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-
-			var authenticatedUser = await _userService.GetAuthenticatedUser(User);
-			var roastedBeanProduction = await _roastedBeanProductionService
-				.GetRoastedBeanProductionById(id);
-			if (roastedBeanProduction is null)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
-					"The production session is not found.");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-
-			if (roastedBeanProduction.IsFinalized || roastedBeanProduction.IsCancelled)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
-					"Failed to cancel production because the production session has been completed.");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-
-			if (roastedBeanProduction.UserId != authenticatedUser.Id)
-			{
-				var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
-					"You are not authorized to manage this production session. " +
-					"Only the user who starts the production can manage the session.");
-				return BadRequest(new ProductionResponseModel(errorModel));
-			}
-
-			if (!isBeanBurnt)
-            {
-				var beanInventory = roastedBeanProduction.Bean.Inventory;
-				beanInventory.CurrentGreenBeanWeight += roastedBeanProduction.GreenBeanWeight;
-				await _beanService.ModifyBean(roastedBeanProduction.BeanId, new Bean
-				{
-					Inventory = beanInventory
-				});
-			}
-
-			roastedBeanProduction = await _roastedBeanProductionService
-				.ModifyRoastedBeanProduction(roastedBeanProduction.Id, new RoastedBeanProduction
-				{
-					IsCancelled = true
-				});
-			
-			await _roastedBeanProductionService.CommitAsync();
-			return Ok(new ProductionResponseModel(roastedBeanProduction)
-			{
-				Message = $"Successfully cancelled production session for bean '{roastedBeanProduction.Bean.Name}'."
-			});
-		}
+			Message = $"Successfully cancelled the roasting for '{roastingSession.Bean.Name}' bean."
+		});
 	}
 }

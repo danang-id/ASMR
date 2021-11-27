@@ -1,5 +1,5 @@
 import { createContext } from "react"
-import NetworkContextInfo from "@asmr/libs/application/NetworkContextInfo"
+import NetworkContextInfo from "asmr/libs/application/NetworkContextInfo"
 
 const NetworkContext = createContext<NetworkContextInfo>({
 	onLine: true,

@@ -1,8 +1,8 @@
-import Button from "@asmr/components/Button"
-import Modal from "@asmr/components/Modal"
-import Bean from "@asmr/data/models/Bean"
-import { ProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import "@asmr/pages/Dashboard/BeanManagementPage/BeansManagementModal.scoped.css"
+import Button from "asmr/components/Button"
+import Modal from "asmr/components/Modal"
+import Bean from "asmr/core/entities/Bean"
+import { ProgressInfo } from "asmr/libs/application/ProgressContextInfo"
+import "asmr/pages/Dashboard/BeanManagementPage/BeansManagementModal.scoped.css"
 
 interface BeanRemoveModalProps {
 	bean: Bean | null

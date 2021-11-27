@@ -7,28 +7,28 @@
 //
 // AuthenticationResponseModel.cs
 //
+
 using System.Collections.Generic;
 using ASMR.Core.Entities;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.ResponseModel
+namespace ASMR.Core.ResponseModel;
+
+public class AuthenticationResponseModel : DefaultResponseModel<SanitizedUserWithToken>
 {
-    public class AuthenticationResponseModel : DefaultResponseModel<NormalizedUserWithToken>
-    {
-        public AuthenticationResponseModel()
-        {
-        }
+	public AuthenticationResponseModel()
+	{
+	}
 
-        public AuthenticationResponseModel(NormalizedUserWithToken user) : base(user)
-        {
-        }
+	public AuthenticationResponseModel(SanitizedUserWithToken user) : base(user)
+	{
+	}
 
-        public AuthenticationResponseModel(ResponseError error) : base(error)
-        {
-        }
+	public AuthenticationResponseModel(ResponseError error) : base(error)
+	{
+	}
 
-        public AuthenticationResponseModel(IEnumerable<ResponseError> errors) : base(errors)
-        {
-        }
-    }
+	public AuthenticationResponseModel(IEnumerable<ResponseError> errors) : base(errors)
+	{
+	}
 }

@@ -1,4 +1,4 @@
-import config from "@asmr/libs/common/config"
+import config from "asmr/libs/common/config"
 
 const environment = {
 	isDevelopment: config.nodeEnv === "development",

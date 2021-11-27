@@ -7,12 +7,12 @@
 //
 // TransactionStatus.cs
 //
-namespace ASMR.Core.Enumerations
+
+namespace ASMR.Core.Enumerations;
+
+public enum TransactionStatus
 {
-	public enum TransactionStatus
-	{
-		InProcess,
-		Done,
-		Cancelled
-	}
+	InProcess,
+	Done,
+	Cancelled
 }

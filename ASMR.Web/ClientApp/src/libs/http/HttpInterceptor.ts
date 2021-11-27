@@ -1,7 +1,7 @@
-import HttpResponse from "@asmr/libs/http/HttpResponse"
-import HttpRequestInterceptor from "@asmr/libs/http/HttpRequestInterceptor"
-import HttpResponseInterceptor from "@asmr/libs/http/HttpResponseInterceptor"
-import HttpErrorInterceptor from "@asmr/libs/http/HttpErrorInterceptor"
+import HttpResponse from "asmr/libs/http/HttpResponse"
+import HttpRequestInterceptor from "asmr/libs/http/HttpRequestInterceptor"
+import HttpResponseInterceptor from "asmr/libs/http/HttpResponseInterceptor"
+import HttpErrorInterceptor from "asmr/libs/http/HttpErrorInterceptor"
 
 type HttpInterceptor = {
 	request: HttpRequestInterceptor

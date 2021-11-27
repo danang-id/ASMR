@@ -1,7 +1,7 @@
 import ReactGA from "react-ga"
 import { getCLS, getFCP, getFID, getLCP, getTTFB, Metric, ReportHandler } from "web-vitals"
-import config from "@asmr/libs/common/config"
-import Logger from "@asmr/libs/common/logger"
+import config from "asmr/libs/common/config"
+import Logger from "asmr/libs/common/logger"
 
 // Learn more: https://bit.ly/CRA-vitals
 class Monitoring {

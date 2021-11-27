@@ -1,17 +1,13 @@
-
 // ReSharper disable InconsistentNaming
 
 using System.Text.Json.Serialization;
 using ASMR.Web.ReleaseInformation.Common;
 
-namespace ASMR.Web.ReleaseInformation
+namespace ASMR.Web.ReleaseInformation;
+
+public class ASMRWebReleaseInformation
 {
-	public class ASMRWebReleaseInformation
-	{
-		[JsonPropertyName("BackEnd")]
-		public WebReleaseInformation BackEnd { get; set; }
-		
-		[JsonPropertyName("FrontEnd")]
-		public WebReleaseInformation FrontEnd { get; set; }
-	}
+	[JsonPropertyName("BackEnd")] public WebReleaseInformation BackEnd { get; set; }
+
+	[JsonPropertyName("FrontEnd")] public WebReleaseInformation FrontEnd { get; set; }
 }

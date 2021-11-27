@@ -1,7 +1,7 @@
 import { Fragment, ReactNode } from "react"
 import { Listbox, Transition } from "@headlessui/react"
 import { IoCaretDownOutline, IoCheckmark } from "react-icons/io5"
-import "@asmr/components/styles/ListSelector.css"
+import "asmr/components/styles/ListSelector.css"
 
 export interface ListSelectorProps<T = unknown> {
 	children: ReactNode

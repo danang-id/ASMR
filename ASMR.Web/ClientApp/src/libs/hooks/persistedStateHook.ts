@@ -1,7 +1,7 @@
 import localforage from "localforage"
 import { useState } from "react"
-import useInit from "@asmr/libs/hooks/initHook"
-import useLogger from "@asmr/libs/hooks/loggerHook"
+import useInit from "asmr/libs/hooks/initHook"
+import useLogger from "asmr/libs/hooks/loggerHook"
 
 const dataInstance = localforage.createInstance({
 	name: "asmr",

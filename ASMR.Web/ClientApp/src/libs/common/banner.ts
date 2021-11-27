@@ -1,6 +1,6 @@
-import config from "@asmr/libs/common/config"
-import environment from "@asmr/libs/common/environment"
-import { base64ToHex, hexToASCII } from "@asmr/libs/common/encoding"
+import config from "asmr/libs/common/config"
+import environment from "asmr/libs/common/environment"
+import { base64ToHex, hexToASCII } from "asmr/libs/common/encoding"
 
 const figlet = hexToASCII(
 	base64ToHex(

@@ -1,13 +1,13 @@
-import Image from "@asmr/components/Image"
-import config from "@asmr/libs/common/config"
-import { combineClassNames } from "@asmr/libs/common/styles"
-import useTheme from "@asmr/libs/hooks/themeHook"
-import "@asmr/components/styles/ApplicationLogo.css"
+import Image from "asmr/components/Image"
+import config from "asmr/libs/common/config"
+import { combineClassNames } from "asmr/libs/common/styles"
+import useTheme from "asmr/libs/hooks/themeHook"
+import "asmr/components/styles/ApplicationLogo.css"
 
-import AsmrLogoImage from "@asmr/assets/asmr-logo.webp"
-import AsmrLogoFallbackImage from "@asmr/assets/asmr-logo.png"
-import AsmrLogoInvertedImage from "@asmr/assets/asmr-logo-inverted.webp"
-import AsmrLogoInvertedFallbackImage from "@asmr/assets/asmr-logo-inverted.png"
+import AsmrLogoImage from "asmr/assets/asmr-logo.webp"
+import AsmrLogoFallbackImage from "asmr/assets/asmr-logo.png"
+import AsmrLogoInvertedImage from "asmr/assets/asmr-logo-inverted.webp"
+import AsmrLogoInvertedFallbackImage from "asmr/assets/asmr-logo-inverted.png"
 
 interface ApplicationLogoProps {
 	className?: string

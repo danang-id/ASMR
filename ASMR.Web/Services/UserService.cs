@@ -7,6 +7,7 @@
 //
 // UserServices.cs
 //
+
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -19,281 +20,280 @@ using ASMR.Web.Services.Generic;
 using Flurl;
 using Microsoft.AspNetCore.Identity;
 
-namespace ASMR.Web.Services
+namespace ASMR.Web.Services;
+
+public interface IUserService : IServiceBase
 {
-    public interface IUserService : IServiceBase
-    {
-        public IEnumerable<User> GetAllUsers();
+	public IEnumerable<User> GetAllUsers();
 
-        public Task<User> GetUserById(string id);
+	public Task<User> GetUserById(string id);
 
-        public Task<User> GetUserByEmailAddress(string emailAddress);
-        
-        public Task<User> GetUserByName(string userName);
+	public Task<User> GetUserByEmailAddress(string emailAddress);
 
-        public Task<IdentityResult> CreateUser(User user, string password);
+	public Task<User> GetUserByName(string userName);
 
-        public Task<IdentityResult> ModifyUser(string id, User user);
+	public Task<IdentityResult> CreateUser(User user, string password);
 
-        public Task<IdentityResult> ModifyUserPassword(string id, string currentPassword, string newPassword);
-        
-        public Task<IdentityResult> ResetUserPassword(string id, string newPassword, string resetPasswordToken = null);
+	public Task<IdentityResult> ModifyUser(string id, User user);
 
-        public Task<IdentityResult> RemoveUser(string id);
+	public Task<IdentityResult> ModifyUserPassword(string id, string currentPassword, string newPassword);
 
-        public Task<IEnumerable<UserRole>> GetUserRoles(User user);
-        
-        public Task<bool> HasRole(User user, Role role); 
+	public Task<IdentityResult> ResetUserPassword(string id, string newPassword, string resetPasswordToken = null);
 
-        public Task<IdentityResult> AssignRolesToUser(string id, IEnumerable<Role> roles);
+	public Task<IdentityResult> RemoveUser(string id);
 
-        public Task<User> GetAuthenticatedUser(ClaimsPrincipal principal);
-        
-        public Task<IdentityResult> ApproveUser(string id);
-        
-        public Task<IdentityResult> DisapproveUser(string id);
-        
-        public Task<IdentityResult> AddUserToWaitingList(string id);
+	public Task<IEnumerable<UserRole>> GetUserRoles(User user);
 
-        public Task<Url> GenerateEmailAddressConfirmationUrl(User user, Url baseUrl);
+	public Task<bool> HasRole(User user, Role role);
 
-        public Task<Url> GeneratePasswordResetUrl(User user, Url baseUrl);
-        
-        public Task<IdentityResult> ConfirmEmailAddress(User user, string emailAddressConfirmationToken);
-    }
+	public Task<IdentityResult> AssignRolesToUser(string id, IEnumerable<Role> roles);
 
-    public class UserService : ServiceBase, IUserService
-    {
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<UserRole> _roleManager;
+	public Task<User> GetAuthenticatedUser(ClaimsPrincipal principal);
 
-        public UserService(ApplicationDbContext dbContext,
-            UserManager<User> userManager,
-            RoleManager<UserRole> roleManager) : base(dbContext)
-        {
-            _userManager = userManager;
-            _roleManager = roleManager;
-        }
+	public Task<IdentityResult> ApproveUser(string id);
 
-        public IEnumerable<User> GetAllUsers()
-        {
-            return _userManager.Users;
-        }
+	public Task<IdentityResult> DisapproveUser(string id);
 
-        public Task<User> GetUserById(string id)
-        {
-            return _userManager.FindByIdAsync(id);
-        }
+	public Task<IdentityResult> AddUserToWaitingList(string id);
 
-        public Task<User> GetUserByEmailAddress(string emailAddress)
-        {
-            return _userManager.FindByEmailAsync(emailAddress);
-        }
-        
-        public Task<User> GetUserByName(string userName)
-        {
-            return _userManager.FindByNameAsync(userName);
-        }
+	public Task<Url> GenerateEmailAddressConfirmationUrl(User user, Url baseUrl);
 
-        public Task<IdentityResult> CreateUser(User user, string password)
-        {
-            return _userManager.CreateAsync(user, password);
-        }
+	public Task<Url> GeneratePasswordResetUrl(User user, Url baseUrl);
 
-        public async Task<IdentityResult> ModifyUser(string id, User user)
-        {
-            var entity = await _userManager.FindByIdAsync(id);
-            if (entity is null)
-            {
-                return null;
-            }
+	public Task<IdentityResult> ConfirmEmailAddress(User user, string emailAddressConfirmationToken);
+}
 
-            if (!string.IsNullOrEmpty(user.FirstName))
-            {
-                entity.FirstName = user.FirstName;
-            }
+public class UserService : ServiceBase, IUserService
+{
+	private readonly UserManager<User> _userManager;
+	private readonly RoleManager<UserRole> _roleManager;
 
-            if (!string.IsNullOrEmpty(user.LastName))
-            {
-                entity.LastName = user.LastName;
-            }
-            
-            if (!string.IsNullOrEmpty(user.Email))
-            {
-                entity.Email = user.Email;
-                entity.EmailConfirmed = entity.Email == user.Email && entity.EmailConfirmed;
-            }
+	public UserService(ApplicationDbContext dbContext,
+		UserManager<User> userManager,
+		RoleManager<UserRole> roleManager) : base(dbContext)
+	{
+		_userManager = userManager;
+		_roleManager = roleManager;
+	}
 
-            if (!string.IsNullOrEmpty(user.UserName))
-            {
-                entity.UserName = user.UserName;
-            }
+	public IEnumerable<User> GetAllUsers()
+	{
+		return _userManager.Users;
+	}
 
-            if (!string.IsNullOrEmpty(user.Image))
-            {
-                entity.Image = user.Image;
-            }
+	public Task<User> GetUserById(string id)
+	{
+		return _userManager.FindByIdAsync(id);
+	}
 
-            return await _userManager.UpdateAsync(entity);
-        }
-        
-        public async Task<IdentityResult> ModifyUserPassword(string id, string currentPassword, string newPassword)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user is null)
-            {
-                return null;
-            }
+	public Task<User> GetUserByEmailAddress(string emailAddress)
+	{
+		return _userManager.FindByEmailAsync(emailAddress);
+	}
 
-            return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
-        }
+	public Task<User> GetUserByName(string userName)
+	{
+		return _userManager.FindByNameAsync(userName);
+	}
 
-        public async Task<IdentityResult> ResetUserPassword(string id, string newPassword, string passwordResetToken = null)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user is null)
-            {
-                return null;
-            }
+	public Task<IdentityResult> CreateUser(User user, string password)
+	{
+		return _userManager.CreateAsync(user, password);
+	}
 
-            if (string.IsNullOrEmpty(passwordResetToken))
-            {
-                passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            }
-            
-            return await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
-        }
+	public async Task<IdentityResult> ModifyUser(string id, User user)
+	{
+		var entity = await _userManager.FindByIdAsync(id);
+		if (entity is null)
+		{
+			return null;
+		}
 
-        public async Task<IdentityResult> RemoveUser(string id)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user is null)
-            {
-                return null;
-            }
+		if (!string.IsNullOrEmpty(user.FirstName))
+		{
+			entity.FirstName = user.FirstName;
+		}
 
-            return await _userManager.DeleteAsync(user);
-        }
+		if (!string.IsNullOrEmpty(user.LastName))
+		{
+			entity.LastName = user.LastName;
+		}
 
-        public async Task<IEnumerable<UserRole>> GetUserRoles(User user)
-        {
-            var userRoles = new Collection<UserRole>();
-            if (user is null)
-            {
-                return userRoles;
-            }
-            
-            foreach (var role in await _userManager.GetRolesAsync(user))
-            {
-                var userRole = await _roleManager.FindByNameAsync(role);
-                userRoles.Add(userRole);
-            }
-            
-            return userRoles;
-        }
+		if (!string.IsNullOrEmpty(user.Email))
+		{
+			entity.Email = user.Email;
+			entity.EmailConfirmed = entity.Email == user.Email && entity.EmailConfirmed;
+		}
 
-        public async Task<bool> HasRole(User user, Role role)
-        {
-            if (user is null)
-            {
-                return false;
-            }
+		if (!string.IsNullOrEmpty(user.UserName))
+		{
+			entity.UserName = user.UserName;
+		}
 
-            return await _userManager.IsInRoleAsync(user, role.ToString());
-        }
+		if (!string.IsNullOrEmpty(user.Image))
+		{
+			entity.Image = user.Image;
+		}
 
-        public async Task<IdentityResult> AssignRolesToUser(string id, IEnumerable<Role> roles)
-        {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user is null)
-            {
-                return null;
-            }
+		return await _userManager.UpdateAsync(entity);
+	}
 
-            var userRoles = await _userManager.GetRolesAsync(user);
-            var removeResult = await _userManager.RemoveFromRolesAsync(user, userRoles);
-            if (!removeResult.Succeeded || removeResult.Errors.Any())
-            {
-                return removeResult;
-            }
+	public async Task<IdentityResult> ModifyUserPassword(string id, string currentPassword, string newPassword)
+	{
+		var user = await _userManager.FindByIdAsync(id);
+		if (user is null)
+		{
+			return null;
+		}
 
-            return await _userManager.AddToRolesAsync(user, roles.Select(role => role.ToString()));
-        }
+		return await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+	}
 
-        public Task<User> GetAuthenticatedUser(ClaimsPrincipal principal)
-        {
-            return principal is null ? null : _userManager.GetUserAsync(principal);
-        }
+	public async Task<IdentityResult> ResetUserPassword(string id, string newPassword, string passwordResetToken = null)
+	{
+		var user = await _userManager.FindByIdAsync(id);
+		if (user is null)
+		{
+			return null;
+		}
 
-        public async Task<IdentityResult> ApproveUser(string id)
-        {
-            var entity = await _userManager.FindByIdAsync(id);
-            if (entity is null)
-            {
-                return null;
-            }
+		if (string.IsNullOrEmpty(passwordResetToken))
+		{
+			passwordResetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+		}
 
-            entity.IsApproved = true;
-            entity.IsWaitingForApproval = false;
-            
-            return await _userManager.UpdateAsync(entity);
-        }
+		return await _userManager.ResetPasswordAsync(user, passwordResetToken, newPassword);
+	}
 
-        public async Task<IdentityResult> DisapproveUser(string id)
-        {
-            var entity = await _userManager.FindByIdAsync(id);
-            if (entity is null)
-            {
-                return null;
-            }
+	public async Task<IdentityResult> RemoveUser(string id)
+	{
+		var user = await _userManager.FindByIdAsync(id);
+		if (user is null)
+		{
+			return null;
+		}
 
-            entity.IsApproved = false;
-            entity.IsWaitingForApproval = false;
-            
-            return await _userManager.UpdateAsync(entity);
-        }
+		return await _userManager.DeleteAsync(user);
+	}
 
-        public async Task<IdentityResult> AddUserToWaitingList(string id)
-        {
-            var entity = await _userManager.FindByIdAsync(id);
-            if (entity is null)
-            {
-                return null;
-            }
+	public async Task<IEnumerable<UserRole>> GetUserRoles(User user)
+	{
+		var userRoles = new Collection<UserRole>();
+		if (user is null)
+		{
+			return userRoles;
+		}
 
-            entity.IsApproved = false;
-            entity.IsWaitingForApproval = true;
-            
-            return await _userManager.UpdateAsync(entity);
-        }
+		foreach (var role in await _userManager.GetRolesAsync(user))
+		{
+			var userRole = await _roleManager.FindByNameAsync(role);
+			userRoles.Add(userRole);
+		}
 
-        public async Task<Url> GenerateEmailAddressConfirmationUrl(User user, Url baseUrl)
-        {
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            return baseUrl.AppendPathSegments("authentication", "email-address", "confirm")
-                .SetQueryParams(new
-                {
-                    id = user.Id,
-                    emailAddress = user.Email,
-                    token
-                });
-        }
+		return userRoles;
+	}
 
-        public async Task<Url> GeneratePasswordResetUrl(User user, Url baseUrl)
-        {
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            return baseUrl.AppendPathSegments("authentication", "password", "reset")
-                .SetQueryParams(new
-                {
-                    id = user.Id,
-                    emailAddress = user.Email,
-                    token
-                });
-        }
+	public async Task<bool> HasRole(User user, Role role)
+	{
+		if (user is null)
+		{
+			return false;
+		}
 
-        public Task<IdentityResult> ConfirmEmailAddress(User user, string emailAddressConfirmationToken)
-        {
-            return _userManager.ConfirmEmailAsync(user, emailAddressConfirmationToken);
-        }
-    }
+		return await _userManager.IsInRoleAsync(user, role.ToString());
+	}
+
+	public async Task<IdentityResult> AssignRolesToUser(string id, IEnumerable<Role> roles)
+	{
+		var user = await _userManager.FindByIdAsync(id);
+		if (user is null)
+		{
+			return null;
+		}
+
+		var userRoles = await _userManager.GetRolesAsync(user);
+		var removeResult = await _userManager.RemoveFromRolesAsync(user, userRoles);
+		if (!removeResult.Succeeded || removeResult.Errors.Any())
+		{
+			return removeResult;
+		}
+
+		return await _userManager.AddToRolesAsync(user, roles.Select(role => role.ToString()));
+	}
+
+	public Task<User> GetAuthenticatedUser(ClaimsPrincipal principal)
+	{
+		return principal is null ? null : _userManager.GetUserAsync(principal);
+	}
+
+	public async Task<IdentityResult> ApproveUser(string id)
+	{
+		var entity = await _userManager.FindByIdAsync(id);
+		if (entity is null)
+		{
+			return null;
+		}
+
+		entity.IsApproved = true;
+		entity.IsWaitingForApproval = false;
+
+		return await _userManager.UpdateAsync(entity);
+	}
+
+	public async Task<IdentityResult> DisapproveUser(string id)
+	{
+		var entity = await _userManager.FindByIdAsync(id);
+		if (entity is null)
+		{
+			return null;
+		}
+
+		entity.IsApproved = false;
+		entity.IsWaitingForApproval = false;
+
+		return await _userManager.UpdateAsync(entity);
+	}
+
+	public async Task<IdentityResult> AddUserToWaitingList(string id)
+	{
+		var entity = await _userManager.FindByIdAsync(id);
+		if (entity is null)
+		{
+			return null;
+		}
+
+		entity.IsApproved = false;
+		entity.IsWaitingForApproval = true;
+
+		return await _userManager.UpdateAsync(entity);
+	}
+
+	public async Task<Url> GenerateEmailAddressConfirmationUrl(User user, Url baseUrl)
+	{
+		var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+		return baseUrl.AppendPathSegments("authentication", "email-address", "confirm")
+			.SetQueryParams(new
+			{
+				id = user.Id,
+				emailAddress = user.Email,
+				token
+			});
+	}
+
+	public async Task<Url> GeneratePasswordResetUrl(User user, Url baseUrl)
+	{
+		var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+		return baseUrl.AppendPathSegments("authentication", "password", "reset")
+			.SetQueryParams(new
+			{
+				id = user.Id,
+				emailAddress = user.Email,
+				token
+			});
+	}
+
+	public Task<IdentityResult> ConfirmEmailAddress(User user, string emailAddressConfirmationToken)
+	{
+		return _userManager.ConfirmEmailAsync(user, emailAddressConfirmationToken);
+	}
 }

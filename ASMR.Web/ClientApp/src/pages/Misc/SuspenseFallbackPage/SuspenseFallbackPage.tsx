@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react"
-import CoffeeLoading from "@asmr/components/CoffeeLoading"
-import BaseLayout from "@asmr/layouts/BaseLayout"
-import useLogger from "@asmr/libs/hooks/loggerHook"
-import useProgress from "@asmr/libs/hooks/progressHook"
-import "@asmr/pages/Misc/SuspenseFallbackPage/SuspenseFallbackPage.scoped.css"
+import CoffeeLoading from "asmr/components/CoffeeLoading"
+import BaseLayout from "asmr/layouts/BaseLayout"
+import useLogger from "asmr/libs/hooks/loggerHook"
+import useProgress from "asmr/libs/hooks/progressHook"
+import "asmr/pages/Misc/SuspenseFallbackPage/SuspenseFallbackPage.scoped.css"
 
 const loadingTexts = [
 	"Your coffee is on the way",

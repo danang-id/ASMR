@@ -1,10 +1,10 @@
-import Button from "@asmr/components/Button"
-import Modal from "@asmr/components/Modal"
-import Bean from "@asmr/data/models/Bean"
-import Product from "@asmr/data/models/Product"
-import { ProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import "@asmr/pages/Dashboard/ProductsManagementPage/ProductsManagementModal.scoped.css"
-import { toLocalCurrency, toLocaleUnit } from "@asmr/libs/common/locale"
+import Button from "asmr/components/Button"
+import Modal from "asmr/components/Modal"
+import Bean from "asmr/core/entities/Bean"
+import Product from "asmr/core/entities/Product"
+import { ProgressInfo } from "asmr/libs/application/ProgressContextInfo"
+import "asmr/pages/Dashboard/ProductsManagementPage/ProductsManagementModal.scoped.css"
+import { toLocalCurrency, toLocaleUnit } from "asmr/libs/common/locale"
 
 interface ProductRemoveModalProps {
 	bean: Bean | null

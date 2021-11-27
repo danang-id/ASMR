@@ -10,10 +10,9 @@
 
 using System.Collections.Generic;
 
-namespace ASMR.Core.Generic
+namespace ASMR.Core.Generic;
+
+public interface IErrorResponseModel
 {
-    public interface IErrorResponseModel
-    {
-        public IEnumerable<ResponseError> Errors { get; set; }
-    }
+	public IEnumerable<ResponseError> Errors { get; set; }
 }

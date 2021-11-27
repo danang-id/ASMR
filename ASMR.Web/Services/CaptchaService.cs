@@ -10,78 +10,73 @@ using Flurl;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace ASMR.Web.Services
+namespace ASMR.Web.Services;
+
+internal class CaptchaVerificationResult
 {
-	internal class CaptchaVerificationResult
+	[JsonPropertyName("success")] public bool Success { get; set; }
+
+	[JsonPropertyName("challenge_ts")] public DateTimeOffset ChallengeTimestamp { get; set; }
+
+	[JsonPropertyName("hostname")] public string HostName { get; set; }
+
+	[JsonPropertyName("error-codes")] public IEnumerable<string> ErrorCodes { get; set; }
+}
+
+public interface ICaptchaService
+{
+	public Task<bool> VerifyCaptcha(string captchaResponseToken);
+}
+
+public class CaptchaService : ICaptchaService
+{
+	private const string BaseUrl = "https://www.google.com/";
+	private static readonly HttpClient HttpClient = new();
+
+	private readonly ILogger<CaptchaService> _logger;
+	private readonly CaptchaOptions _options;
+
+	public CaptchaService(ILogger<CaptchaService> logger, IOptions<CaptchaOptions> options)
 	{
-		[JsonPropertyName("success")]
-		public bool Success { get; set; }
-		
-		[JsonPropertyName("challenge_ts")]
-		public DateTimeOffset ChallengeTimestamp { get; set; }
-		
-		[JsonPropertyName("hostname")]
-		public string HostName { get; set; }
-		
-		[JsonPropertyName("error-codes")]
-		public IEnumerable<string> ErrorCodes { get; set; }
+		_logger = logger;
+		_options = options.Value;
 	}
-	
-	public interface ICaptchaService
+
+	public async Task<bool> VerifyCaptcha(string captchaResponseToken)
 	{
-		public Task<bool> VerifyCaptcha(string captchaResponseToken);
-	}
-	
-	public class CaptchaService : ICaptchaService
-	{
-		private const string BaseUrl = "https://www.google.com/";
-		private static readonly HttpClient HttpClient = new();
-
-		private readonly ILogger<CaptchaService> _logger;
-		private readonly CaptchaOptions _options;
-
-		public CaptchaService(ILogger<CaptchaService> logger, IOptions<CaptchaOptions> options)
+		try
 		{
-			_logger = logger;
-			_options = options.Value;
-		}
-		
-		public async Task<bool> VerifyCaptcha(string captchaResponseToken)
-		{
-			try
-			{
-				var url = new Url(BaseUrl)
-					.AppendPathSegments("recaptcha", "api", "siteverify")
-					.SetQueryParams(new
-					{
-						secret = _options.SecretKey,
-						response = captchaResponseToken
-					});
-				var response = await HttpClient.PatchAsync(url, null!);
-				var responseContent = await response.Content.ReadAsByteArrayAsync();
-
-				var verificationResult = JsonSerializer.Deserialize<CaptchaVerificationResult>(responseContent);
-				if (verificationResult is null)
+			var url = new Url(BaseUrl)
+				.AppendPathSegments("recaptcha", "api", "siteverify")
+				.SetQueryParams(new
 				{
-					return false;
-				}
+					secret = _options.SecretKey,
+					response = captchaResponseToken
+				});
+			var response = await HttpClient.PatchAsync(url, null!);
+			var responseContent = await response.Content.ReadAsByteArrayAsync();
 
-				if (verificationResult.ErrorCodes is not null &&
-				    verificationResult.ErrorCodes.Any())
-				{
-					foreach (var errorCode in verificationResult.ErrorCodes)
-					{
-						_logger.LogError("CAPTCHA verification failed: {ErrorCode}", errorCode);
-					}
-				}
-
-				return verificationResult.Success;
-			}
-			catch (Exception exception)
+			var verificationResult = JsonSerializer.Deserialize<CaptchaVerificationResult>(responseContent);
+			if (verificationResult is null)
 			{
-				_logger.LogError(exception, "Failed to validate captcha");
 				return false;
 			}
+
+			if (verificationResult.ErrorCodes is not null &&
+			    verificationResult.ErrorCodes.Any())
+			{
+				foreach (var errorCode in verificationResult.ErrorCodes)
+				{
+					_logger.LogError("CAPTCHA verification failed: {ErrorCode}", errorCode);
+				}
+			}
+
+			return verificationResult.Success;
+		}
+		catch (Exception exception)
+		{
+			_logger.LogError(exception, "Failed to validate captcha");
+			return false;
 		}
 	}
 }

@@ -1,13 +1,13 @@
 import { ChangeEvent, useEffect, useState } from "react"
-import Button from "@asmr/components/Button"
-import Form from "@asmr/components/Form"
-import ImageCropper from "@asmr/components/ImageCropper"
-import Modal from "@asmr/components/Modal"
-import User from "@asmr/data/models/User"
-import UpdateUserRequestModel from "@asmr/data/request/UpdateUserRequestModel"
-import { ProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import { getFileFromCanvas } from "@asmr/libs/common/canvas"
-import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.css"
+import Button from "asmr/components/Button"
+import Form from "asmr/components/Form"
+import ImageCropper from "asmr/components/ImageCropper"
+import Modal from "asmr/components/Modal"
+import User from "asmr/core/entities/User"
+import UpdateUserRequestModel from "asmr/core/request/UpdateUserRequestModel"
+import { ProgressInfo } from "asmr/libs/application/ProgressContextInfo"
+import { getFileFromCanvas } from "asmr/libs/common/canvas"
+import "asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.css"
 
 interface UserUpdateImageModalProps {
 	onClose: () => void

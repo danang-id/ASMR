@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react"
-import ThemeContext from "@asmr/libs/application/ThemeContext"
-import { Theme } from "@asmr/libs/application/ThemeContextInfo"
-import useLogger from "@asmr/libs/hooks/loggerHook"
+import ThemeContext from "asmr/libs/application/ThemeContext"
+import { Theme } from "asmr/libs/application/ThemeContextInfo"
+import useLogger from "asmr/libs/hooks/loggerHook"
 
 interface ThemeProviderProps {
 	children: ReactNode

@@ -7,28 +7,28 @@
 //
 // ProductionsResponseModel.cs
 //
+
 using System.Collections.Generic;
 using ASMR.Core.Entities;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.ResponseModel
+namespace ASMR.Core.ResponseModel;
+
+public class ProductionsResponseModel : DefaultResponseModel<IEnumerable<RoastingSession>>
 {
-	public class ProductionsResponseModel : DefaultResponseModel<IEnumerable<RoastedBeanProduction>>
+	public ProductionsResponseModel()
 	{
-		public ProductionsResponseModel()
-		{
-		}
+	}
 
-		public ProductionsResponseModel(IEnumerable<RoastedBeanProduction> productions) : base(productions)
-		{
-		}
+	public ProductionsResponseModel(IEnumerable<RoastingSession> productions) : base(productions)
+	{
+	}
 
-		public ProductionsResponseModel(ResponseError error) : base(error)
-		{
-		}
+	public ProductionsResponseModel(ResponseError error) : base(error)
+	{
+	}
 
-		public ProductionsResponseModel(IEnumerable<ResponseError> errors) : base(errors)
-		{
-		}
+	public ProductionsResponseModel(IEnumerable<ResponseError> errors) : base(errors)
+	{
 	}
 }

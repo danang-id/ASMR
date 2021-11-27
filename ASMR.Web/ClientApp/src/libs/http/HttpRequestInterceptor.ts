@@ -1,5 +1,5 @@
-import HttpRequestOptions from "@asmr/libs/http/HttpRequestOptions"
-import HttpRequestBody from "@asmr/libs/http/HttpRequestBody"
+import HttpRequestOptions from "asmr/libs/http/HttpRequestOptions"
+import HttpRequestBody from "asmr/libs/http/HttpRequestBody"
 
 type HttpRequestInterceptorResult = [HttpRequestOptions, HttpRequestBody | undefined]
 

@@ -1,5 +1,5 @@
 import { createContext } from "react"
-import BreakpointContextInfo from "@asmr/libs/application/BreakpointContextInfo"
+import BreakpointContextInfo from "asmr/libs/application/BreakpointContextInfo"
 
 const BreakpointContext = createContext<BreakpointContextInfo>({
 	activeList: [],

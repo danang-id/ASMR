@@ -14,13 +14,13 @@ import {
 } from "react-icons/io5"
 import { Action, Fab } from "react-tiny-fab"
 import copy from "copy-to-clipboard"
-import { base64ToHex, hexToASCII } from "@asmr/libs/common/encoding"
-import environment from "@asmr/libs/common/environment"
-import useAuthentication from "@asmr/libs/hooks/authenticationHook"
-import useLogger from "@asmr/libs/hooks/loggerHook"
-import useNotification from "@asmr/libs/hooks/notificationHook"
-import useTheme from "@asmr/libs/hooks/themeHook"
-import useProgress from "@asmr/libs/hooks/progressHook"
+import { base64ToHex, hexToASCII } from "asmr/libs/common/encoding"
+import environment from "asmr/libs/common/environment"
+import useAuthentication from "asmr/libs/hooks/authenticationHook"
+import useLogger from "asmr/libs/hooks/loggerHook"
+import useNotification from "asmr/libs/hooks/notificationHook"
+import useTheme from "asmr/libs/hooks/themeHook"
+import useProgress from "asmr/libs/hooks/progressHook"
 
 function DeveloperMenu(): JSX.Element {
 	const authentication = useAuthentication()

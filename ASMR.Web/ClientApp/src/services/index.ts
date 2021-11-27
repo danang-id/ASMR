@@ -1,20 +1,20 @@
 import axios from "axios"
-import ErrorCode from "@asmr/data/enumerations/ErrorCode"
-import ResponseError from "@asmr/data/generic/ResponseError"
-import { SetProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import { ILogger } from "@asmr/libs/common/logger"
-import { INotificationHandler } from "@asmr/libs/common/notificationHandler"
-import BeanService from "@asmr/services/BeanService"
-import GateService from "@asmr/services/GateService"
-import ProductService from "@asmr/services/ProductService"
-import ReleaseService from "@asmr/services/ReleaseService"
-import StatusService from "@asmr/services/StatusService"
-import UserService from "@asmr/services/UserService"
+import ErrorCode from "asmr/core/enums/ErrorCode"
+import ErrorInformation from "asmr/core/common/ErrorInformation"
+import { SetProgressInfo } from "asmr/libs/application/ProgressContextInfo"
+import { ILogger } from "asmr/libs/common/logger"
+import { INotificationHandler } from "asmr/libs/common/notificationHandler"
+import BeanService from "asmr/services/BeanService"
+import GateService from "asmr/services/GateService"
+import ProductService from "asmr/services/ProductService"
+import ReleaseService from "asmr/services/ReleaseService"
+import StatusService from "asmr/services/StatusService"
+import UserService from "asmr/services/UserService"
 
 export type Services = {
 	abort: (message?: string) => void
 	handleError: (error?: Error, notification?: INotificationHandler, logger?: ILogger) => void
-	handleErrors: (errors?: ResponseError[], notification?: INotificationHandler, logger?: ILogger) => void
+	handleErrors: (errors?: ErrorInformation[], notification?: INotificationHandler, logger?: ILogger) => void
 	bean: BeanService
 	gate: GateService
 	product: ProductService
@@ -47,7 +47,7 @@ export function createServices(setProgress?: SetProgressInfo): Services {
 		}
 	}
 
-	function handleErrors(errors?: ResponseError[], notification?: INotificationHandler, logger?: ILogger) {
+	function handleErrors(errors?: ErrorInformation[], notification?: INotificationHandler, logger?: ILogger) {
 		function printError(message: string) {
 			if (logger) {
 				logger.error("Request returns error, reason:", message)

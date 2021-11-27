@@ -1,7 +1,7 @@
-import Button from "@asmr/components/Button"
-import Modal from "@asmr/components/Modal"
-import config from "@asmr/libs/common/config"
-import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.css"
+import Button from "asmr/components/Button"
+import Modal from "asmr/components/Modal"
+import config from "asmr/libs/common/config"
+import "asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.css"
 
 interface AboutModalProps {
 	onClose: () => void

@@ -1,6 +1,6 @@
-import BackButton from "@asmr/components/BackButton"
-import DashboardLayout from "@asmr/layouts/DashboardLayout"
-import "@asmr/pages/Dashboard/ProductTransactionsPage/ProductTransactionsPage.scoped.css"
+import BackButton from "asmr/components/BackButton"
+import DashboardLayout from "asmr/layouts/DashboardLayout"
+import "asmr/pages/Dashboard/ProductTransactionsPage/ProductTransactionsPage.scoped.css"
 
 function ProductTransactionsPage(): JSX.Element {
 	return (

@@ -1,12 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react"
-import Button from "@asmr/components/Button"
-import Form from "@asmr/components/Form"
-import Modal from "@asmr/components/Modal"
-import User from "@asmr/data/models/User"
-import { ProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import Role from "@asmr/data/enumerations/Role"
-import ApproveRegistrationRequestModel from "@asmr/data/request/ApproveRegistrationRequestModel"
-import "@asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.css"
+import Button from "asmr/components/Button"
+import Form from "asmr/components/Form"
+import Modal from "asmr/components/Modal"
+import User from "asmr/core/entities/User"
+import { ProgressInfo } from "asmr/libs/application/ProgressContextInfo"
+import Role from "asmr/core/enums/Role"
+import ApproveRegistrationRequestModel from "asmr/core/request/ApproveRegistrationRequestModel"
+import "asmr/pages/Dashboard/UsersManagementPage/UsersManagementModal.scoped.css"
 
 interface RegistrationApproveModalProps {
 	onClose: () => void

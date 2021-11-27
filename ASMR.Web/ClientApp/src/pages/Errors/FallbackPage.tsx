@@ -2,10 +2,10 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { FallbackProps } from "react-error-boundary"
 import { IoArrowBack, IoHome } from "react-icons/io5"
-import Button from "@asmr/components/Button"
-import environment from "@asmr/libs/common/environment"
-import useLogger from "@asmr/libs/hooks/loggerHook"
-import ErrorPage from "@asmr/pages/Errors/ErrorPage"
+import Button from "asmr/components/Button"
+import environment from "asmr/libs/common/environment"
+import useLogger from "asmr/libs/hooks/loggerHook"
+import ErrorPage from "asmr/pages/Errors/ErrorPage"
 
 interface FallbackPageProps extends FallbackProps {
 	error: Error & { supportId?: string }

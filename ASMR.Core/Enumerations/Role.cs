@@ -8,12 +8,11 @@
 // UserRole.cs
 //
 
-namespace ASMR.Core.Enumerations
+namespace ASMR.Core.Enumerations;
+
+public enum Role
 {
-    public enum Role
-    {
-        Administrator,
-        Server,
-        Roaster
-    }
+	Administrator,
+	Server,
+	Roaster
 }

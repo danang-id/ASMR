@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import config from "@asmr/libs/common/config"
+import config from "asmr/libs/common/config"
 
 function useDocumentTitle(title?: string) {
 	useEffect(() => {

@@ -2,34 +2,34 @@ using System;
 using System.Net;
 using System.Net.Http;
 
-namespace ASMR.Common.Net.Http
+namespace ASMR.Common.Net.Http;
+
+public class NativeHttpClient : HttpClient
 {
-	public class NativeHttpClient : HttpClient
+	public static CookieContainer CookieContainer { get; } = new();
+
+	private static object _defaultClientHandler;
+
+	public static object DefaultClientHandler
 	{
-		public static CookieContainer CookieContainer { get; } = new();
-		
-		private static object _defaultClientHandler;
-		public static object DefaultClientHandler
+		get => _defaultClientHandler;
+		set
 		{
-			get => _defaultClientHandler;
-			set 
+			if (_defaultClientHandler is not null)
 			{
-				if (_defaultClientHandler is not null)
-				{
-					return;
-				}
-
-				if (value is not HttpMessageHandler)
-				{
-					throw new Exception($"Incorrect type of {nameof(DefaultClientHandler)}");
-				}
-
-				_defaultClientHandler = value;
+				return;
 			}
+
+			if (value is not HttpMessageHandler)
+			{
+				throw new Exception($"Incorrect type of {nameof(DefaultClientHandler)}");
+			}
+
+			_defaultClientHandler = value;
 		}
-		
-		public NativeHttpClient() : base((HttpMessageHandler)DefaultClientHandler)
-		{
-		}
+	}
+
+	public NativeHttpClient() : base((HttpMessageHandler)DefaultClientHandler)
+	{
 	}
 }

@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react"
-import NetworkContext from "@asmr/libs/application/NetworkContext"
-import useLogger from "@asmr/libs/hooks/loggerHook"
+import NetworkContext from "asmr/libs/application/NetworkContext"
+import useLogger from "asmr/libs/hooks/loggerHook"
 
 interface NetworkProviderProps {
 	children: ReactNode

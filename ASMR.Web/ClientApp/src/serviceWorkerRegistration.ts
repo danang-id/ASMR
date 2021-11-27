@@ -16,7 +16,7 @@ declare global {
 	}
 }
 
-import Logger from "@asmr/libs/common/logger"
+import Logger from "asmr/libs/common/logger"
 
 const isLocalhost = Boolean(
 	window.location.hostname === "localhost" ||

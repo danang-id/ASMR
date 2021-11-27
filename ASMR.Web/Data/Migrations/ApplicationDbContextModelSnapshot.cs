@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
+#nullable disable
+
 namespace ASMR.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
@@ -13,8 +15,7 @@ namespace ASMR.Web.Data.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.9");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
 
             modelBuilder.Entity("ASMR.Core.Entities.Bean", b =>
                 {
@@ -176,7 +177,7 @@ namespace ASMR.Web.Data.Migrations
                     b.Property<DateTimeOffset?>("LastUpdatedAt")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("RoasterId")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -184,7 +185,7 @@ namespace ASMR.Web.Data.Migrations
 
                     b.HasIndex("BeanId");
 
-                    b.HasIndex("RoasterId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Packagings");
                 });
@@ -276,7 +277,7 @@ namespace ASMR.Web.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("ASMR.Core.Entities.RoastedBeanProduction", b =>
+            modelBuilder.Entity("ASMR.Core.Entities.RoastingSession", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -285,17 +286,20 @@ namespace ASMR.Web.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("CancellationReason")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset?>("CancelledAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("FinishedAt")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("GreenBeanWeight")
                         .HasColumnType("decimal(8,3)");
-
-                    b.Property<bool>("IsCancelled")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsFinalized")
-                        .HasColumnType("INTEGER");
 
                     b.Property<DateTimeOffset?>("LastUpdatedAt")
                         .HasColumnType("TEXT");
@@ -313,7 +317,7 @@ namespace ASMR.Web.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RoastedBeanProductions");
+                    b.ToTable("RoastingSessions");
                 });
 
             modelBuilder.Entity("ASMR.Core.Entities.Transaction", b =>
@@ -331,18 +335,18 @@ namespace ASMR.Web.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ServerId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.HasIndex("PaymentId");
 
-                    b.HasIndex("ServerId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Transactions");
                 });
@@ -467,7 +471,7 @@ namespace ASMR.Web.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("ASMR.Core.Entities.UserRole", b =>
@@ -499,7 +503,7 @@ namespace ASMR.Web.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.DataProtection.EntityFrameworkCore.DataProtectionKey", b =>
@@ -539,7 +543,7 @@ namespace ASMR.Web.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -562,7 +566,7 @@ namespace ASMR.Web.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -584,7 +588,7 @@ namespace ASMR.Web.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -599,7 +603,7 @@ namespace ASMR.Web.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -618,7 +622,7 @@ namespace ASMR.Web.Data.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("ASMR.Core.Entities.Bean", b =>
@@ -670,15 +674,15 @@ namespace ASMR.Web.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASMR.Core.Entities.User", "Roaster")
+                    b.HasOne("ASMR.Core.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("RoasterId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Bean");
 
-                    b.Navigation("Roaster");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ASMR.Core.Entities.PackagingResult", b =>
@@ -711,10 +715,10 @@ namespace ASMR.Web.Data.Migrations
                     b.Navigation("Bean");
                 });
 
-            modelBuilder.Entity("ASMR.Core.Entities.RoastedBeanProduction", b =>
+            modelBuilder.Entity("ASMR.Core.Entities.RoastingSession", b =>
                 {
                     b.HasOne("ASMR.Core.Entities.Bean", "Bean")
-                        .WithMany("RoastedBeanProductions")
+                        .WithMany("RoastingSessions")
                         .HasForeignKey("BeanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -738,15 +742,15 @@ namespace ASMR.Web.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ASMR.Core.Entities.User", "Server")
+                    b.HasOne("ASMR.Core.Entities.User", "User")
                         .WithMany()
-                        .HasForeignKey("ServerId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Payment");
 
-                    b.Navigation("Server");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ASMR.Core.Entities.TransactionItem", b =>
@@ -825,7 +829,7 @@ namespace ASMR.Web.Data.Migrations
 
                     b.Navigation("Products");
 
-                    b.Navigation("RoastedBeanProductions");
+                    b.Navigation("RoastingSessions");
                 });
 
             modelBuilder.Entity("ASMR.Core.Entities.BeanInventory", b =>

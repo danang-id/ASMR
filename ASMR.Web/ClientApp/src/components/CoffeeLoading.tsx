@@ -1,7 +1,7 @@
-import useTheme from "@asmr/libs/hooks/themeHook"
+import useTheme from "asmr/libs/hooks/themeHook"
 
-import CoffeeLoadingAnimation from "@asmr/assets/coffee-loading.gif"
-import CoffeeLoadingInvertedAnimation from "@asmr/assets/coffee-loading-inverted.gif"
+import CoffeeLoadingAnimation from "asmr/assets/coffee-loading.gif"
+import CoffeeLoadingInvertedAnimation from "asmr/assets/coffee-loading-inverted.gif"
 
 function CoffeeLoading(): JSX.Element {
 	const [theme] = useTheme()

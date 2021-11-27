@@ -8,18 +8,17 @@
 // IResponseModel.cs
 //
 
-namespace ASMR.Core.Generic
+namespace ASMR.Core.Generic;
+
+public interface IResponseModel : IResponseModel<object>
 {
-    public interface IResponseModel : IResponseModel<object>
-    {
-    }
+}
 
-    public interface IResponseModel<T> where T : class
-    {
-        public bool IsSuccess { get; set; }
+public interface IResponseModel<T> where T : class
+{
+	public bool IsSuccess { get; set; }
 
-        public string Message { get; set; }
+	public string Message { get; set; }
 
-        public T Data { get; set; }
-    }
+	public T Data { get; set; }
 }

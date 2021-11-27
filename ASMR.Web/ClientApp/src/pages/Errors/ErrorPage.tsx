@@ -1,8 +1,8 @@
 import { ReactNode } from "react"
-import BaseLayout from "@asmr/layouts/BaseLayout"
-import useDocumentTitle from "@asmr/libs/hooks/documentTitleHook"
-import ApplicationLogo from "@asmr/components/ApplicationLogo"
-import "@asmr/pages/Errors/ErrorPage.scoped.css"
+import BaseLayout from "asmr/layouts/BaseLayout"
+import useDocumentTitle from "asmr/libs/hooks/documentTitleHook"
+import ApplicationLogo from "asmr/components/ApplicationLogo"
+import "asmr/pages/Errors/ErrorPage.scoped.css"
 
 export interface ErrorPageProps {
 	documentTitle?: string

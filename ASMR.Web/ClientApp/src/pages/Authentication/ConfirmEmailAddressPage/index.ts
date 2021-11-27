@@ -1,3 +1,3 @@
-import ConfirmEmailAddressPage from "@asmr/pages/Authentication/ConfirmEmailAddressPage/ConfirmEmailAddressPage"
+import ConfirmEmailAddressPage from "asmr/pages/Authentication/ConfirmEmailAddressPage/ConfirmEmailAddressPage"
 
 export default ConfirmEmailAddressPage

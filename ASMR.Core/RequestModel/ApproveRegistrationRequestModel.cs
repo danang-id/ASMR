@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ASMR.Core.Enumerations;
 
-namespace ASMR.Core.RequestModel
+namespace ASMR.Core.RequestModel;
+
+public class ApproveRegistrationRequestModel
 {
-	public class ApproveRegistrationRequestModel
-	{
-		[Required(ErrorMessage = "Please assign minimal a role.")]
-		public IEnumerable<Role> Roles { get; set; }
-	}
+	[Required(ErrorMessage = "Please assign minimal a role.")]
+	public IEnumerable<Role> Roles { get; set; }
 }

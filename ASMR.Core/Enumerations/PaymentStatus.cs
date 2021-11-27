@@ -7,12 +7,12 @@
 //
 // PaymentStatus.cs
 //
-namespace ASMR.Core.Enumerations
+
+namespace ASMR.Core.Enumerations;
+
+public enum PaymentStatus
 {
-	public enum PaymentStatus
-	{
-		Invoice,
-		WaitingVerification,
-		Payed
-	}
+	Invoice,
+	WaitingVerification,
+	Payed
 }

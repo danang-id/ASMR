@@ -7,15 +7,15 @@
 //
 // TransactionController.cs
 //
+
 using ASMR.Web.Controllers.Generic;
 using Microsoft.Extensions.Logging;
 
-namespace ASMR.Web.Controllers.API
+namespace ASMR.Web.Controllers.API;
+
+public class TransactionController : DefaultAbstractApiController<TransactionController>
 {
-    public class TransactionController : DefaultAbstractApiController<TransactionController>
-    {
-        public TransactionController(ILogger<TransactionController> logger) : base(logger)
-        {
-        }
-    }
+	public TransactionController(ILogger<TransactionController> logger) : base(logger)
+	{
+	}
 }

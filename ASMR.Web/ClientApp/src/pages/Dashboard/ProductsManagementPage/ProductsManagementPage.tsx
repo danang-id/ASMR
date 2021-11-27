@@ -1,31 +1,31 @@
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 import { IoAddCircleOutline, IoCreateOutline, IoInformation, IoQrCodeOutline, IoTrashOutline } from "react-icons/io5"
-import BackButton from "@asmr/components/BackButton"
-import BreakpointRenderer from "@asmr/components/BreakpointRenderer"
-import Button from "@asmr/components/Button"
-import ListSelector, { ListOption } from "@asmr/components/ListSelector"
-import Table from "@asmr/components/Table"
-import Bean from "@asmr/data/models/Bean"
-import Product from "@asmr/data/models/Product"
-import CreateProductRequestModel from "@asmr/data/request/CreateProductRequestModel"
-import UpdateProductRequestModel from "@asmr/data/request/UpdateProductRequestModel"
-import DashboardLayout from "@asmr/layouts/DashboardLayout"
-import lazy from "@asmr/libs/common/lazy"
-import { toLocalCurrency, toLocaleUnit } from "@asmr/libs/common/locale"
-import { singleSwitchToggle } from "@asmr/libs/common/toggle"
-import useBreakpoint from "@asmr/libs/hooks/breakpointHook"
-import useDocumentTitle from "@asmr/libs/hooks/documentTitleHook"
-import useInit from "@asmr/libs/hooks/initHook"
-import useLogger from "@asmr/libs/hooks/loggerHook"
-import useNotification from "@asmr/libs/hooks/notificationHook"
-import useProgress from "@asmr/libs/hooks/progressHook"
-import useServices from "@asmr/libs/hooks/servicesHook"
-import "@asmr/pages/Dashboard/ProductsManagementPage/ProductsManagementPage.scoped.css"
+import BackButton from "asmr/components/BackButton"
+import BreakpointRenderer from "asmr/components/BreakpointRenderer"
+import Button from "asmr/components/Button"
+import ListSelector, { ListOption } from "asmr/components/ListSelector"
+import Table from "asmr/components/Table"
+import Bean from "asmr/core/entities/Bean"
+import Product from "asmr/core/entities/Product"
+import CreateProductRequestModel from "asmr/core/request/CreateProductRequestModel"
+import UpdateProductRequestModel from "asmr/core/request/UpdateProductRequestModel"
+import DashboardLayout from "asmr/layouts/DashboardLayout"
+import lazy from "asmr/libs/common/lazy"
+import { toLocalCurrency, toLocaleUnit } from "asmr/libs/common/locale"
+import { singleSwitchToggle } from "asmr/libs/common/toggle"
+import useBreakpoint from "asmr/libs/hooks/breakpointHook"
+import useDocumentTitle from "asmr/libs/hooks/documentTitleHook"
+import useInit from "asmr/libs/hooks/initHook"
+import useLogger from "asmr/libs/hooks/loggerHook"
+import useNotification from "asmr/libs/hooks/notificationHook"
+import useProgress from "asmr/libs/hooks/progressHook"
+import useServices from "asmr/libs/hooks/servicesHook"
+import "asmr/pages/Dashboard/ProductsManagementPage/ProductsManagementPage.scoped.css"
 
-const ProductCreateModal = lazy(() => import("@asmr/pages/Dashboard/ProductsManagementPage/ProductCreateModal"))
-const ProductUpdateModal = lazy(() => import("@asmr/pages/Dashboard/ProductsManagementPage/ProductUpdateModal"))
-const ProductRemoveModal = lazy(() => import("@asmr/pages/Dashboard/ProductsManagementPage/ProductRemoveModal"))
+const ProductCreateModal = lazy(() => import("asmr/pages/Dashboard/ProductsManagementPage/ProductCreateModal"))
+const ProductUpdateModal = lazy(() => import("asmr/pages/Dashboard/ProductsManagementPage/ProductUpdateModal"))
+const ProductRemoveModal = lazy(() => import("asmr/pages/Dashboard/ProductsManagementPage/ProductRemoveModal"))
 
 function ProductsManagementPage(): JSX.Element {
 	useDocumentTitle("Manage Products")
@@ -322,7 +322,7 @@ function ProductsManagementPage(): JSX.Element {
 									<Table.DataCell colSpan={breakpoint.includes("sm") ? 4 : 1}>
 										<span className="table-data-information">
 											{progress.loading
-												? "Retrieving data from server..."
+												? "Retrieving core from server..."
 												: beans.length <= 0
 												? "There are no beans at the moment. You may add bean from Bean Management Panel."
 												: bean

@@ -7,28 +7,28 @@
 //
 // BeanResponseModel.cs
 //
+
 using System.Collections.Generic;
 using ASMR.Core.Entities;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.ResponseModel
+namespace ASMR.Core.ResponseModel;
+
+public class BeanResponseModel : DefaultResponseModel<Bean>
 {
-    public class BeanResponseModel : DefaultResponseModel<Bean>
-    {
-        public BeanResponseModel() 
-        {
-        }
+	public BeanResponseModel()
+	{
+	}
 
-        public BeanResponseModel(Bean bean) : base(bean)
-        {
-        }
+	public BeanResponseModel(Bean bean) : base(bean)
+	{
+	}
 
-        public BeanResponseModel(ResponseError error) : base(error)
-        {
-        }
+	public BeanResponseModel(ResponseError error) : base(error)
+	{
+	}
 
-        public BeanResponseModel(IEnumerable<ResponseError> errors) : base(errors)
-        {
-        }
-    }
+	public BeanResponseModel(IEnumerable<ResponseError> errors) : base(errors)
+	{
+	}
 }

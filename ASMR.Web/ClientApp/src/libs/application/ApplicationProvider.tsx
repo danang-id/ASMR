@@ -1,9 +1,9 @@
 import { ReactNode } from "react"
-import AuthenticationProvider from "@asmr/libs/security/AuthenticationProvider"
-import ThemeProvider from "@asmr/libs/application/ThemeProvider"
-import BreakpointProvider from "@asmr/libs/application/BreakpointProvider"
-import NetworkProvider from "@asmr/libs/application/NetworkProvider"
-import ProgressProvider from "@asmr/libs/application/ProgressProvider"
+import AuthenticationProvider from "asmr/libs/security/AuthenticationProvider"
+import ThemeProvider from "asmr/libs/application/ThemeProvider"
+import BreakpointProvider from "asmr/libs/application/BreakpointProvider"
+import NetworkProvider from "asmr/libs/application/NetworkProvider"
+import ProgressProvider from "asmr/libs/application/ProgressProvider"
 
 interface ApplicationProviderProps {
 	children: ReactNode

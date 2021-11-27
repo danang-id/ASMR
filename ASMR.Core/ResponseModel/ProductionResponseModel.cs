@@ -7,28 +7,28 @@
 //
 // ProductionResponseModel.cs
 //
+
 using System.Collections.Generic;
 using ASMR.Core.Entities;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.ResponseModel
+namespace ASMR.Core.ResponseModel;
+
+public class ProductionResponseModel : DefaultResponseModel<RoastingSession>
 {
-    public class ProductionResponseModel : DefaultResponseModel<RoastedBeanProduction>
-    {
-        public ProductionResponseModel()
-        {
-        }
+	public ProductionResponseModel()
+	{
+	}
 
-        public ProductionResponseModel(RoastedBeanProduction production) : base(production)
-        {
-        }
+	public ProductionResponseModel(RoastingSession production) : base(production)
+	{
+	}
 
-        public ProductionResponseModel(ResponseError error) : base(error)
-        {
-        }
+	public ProductionResponseModel(ResponseError error) : base(error)
+	{
+	}
 
-        public ProductionResponseModel(IEnumerable<ResponseError> errors) : base(errors)
-        {
-        }
-    }
+	public ProductionResponseModel(IEnumerable<ResponseError> errors) : base(errors)
+	{
+	}
 }

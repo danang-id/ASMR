@@ -1,7 +1,6 @@
-namespace ASMR.Web.Configurations
+namespace ASMR.Web.Configurations;
+
+public class CaptchaOptions
 {
-	public class CaptchaOptions
-	{
-		public string SecretKey { get; set; }
-	}
+	public string SecretKey { get; set; }
 }

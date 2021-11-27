@@ -7,35 +7,37 @@
 //
 // StatusResponseModel.cs
 //
+
 using System;
 using System.Collections.Generic;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.ResponseModel
+namespace ASMR.Core.ResponseModel;
+
+public class StatusResponseModel : DefaultResponseModel
 {
-    public class StatusResponseModel : DefaultResponseModel
-    {
-        public StatusResponseModel()
-        {
-        }
+	public StatusResponseModel()
+	{
+	}
 
-        public StatusResponseModel(bool ok, Version application, Version runtime)
-            : base(new {
-                Status = ok ? "OK" : "Not OK",
-                Version = new {
-                    Application = application,
-                    Runtime = runtime
-                }
-            })
-        {
-        }
+	public StatusResponseModel(bool ok, Version application, Version runtime)
+		: base(new
+		{
+			Status = ok ? "OK" : "Not OK",
+			Version = new
+			{
+				Application = application,
+				Runtime = runtime
+			}
+		})
+	{
+	}
 
-        public StatusResponseModel(ResponseError error) : base(error)
-        {
-        }
+	public StatusResponseModel(ResponseError error) : base(error)
+	{
+	}
 
-        public StatusResponseModel(IEnumerable<ResponseError> errors) : base(errors)
-        {
-        }
-    }
+	public StatusResponseModel(IEnumerable<ResponseError> errors) : base(errors)
+	{
+	}
 }

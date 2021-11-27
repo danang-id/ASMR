@@ -1,8 +1,8 @@
 import { CSSProperties, ReactNode } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
-import config from "@asmr/libs/common/config"
-import { combineClassNames } from "@asmr/libs/common/styles"
-import "@asmr/layouts/BaseLayout/BaseLayout.css"
+import config from "asmr/libs/common/config"
+import { combineClassNames } from "asmr/libs/common/styles"
+import "asmr/layouts/BaseLayout/BaseLayout.css"
 
 export interface BaseLayoutProps {
 	children?: ReactNode

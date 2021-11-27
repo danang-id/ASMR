@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState } from "react"
-import ProgressContext from "@asmr/libs/application/ProgressContext"
-import { ProgressInfo } from "@asmr/libs/application/ProgressContextInfo"
-import useLogger from "@asmr/libs/hooks/loggerHook"
+import ProgressContext from "asmr/libs/application/ProgressContext"
+import { ProgressInfo } from "asmr/libs/application/ProgressContextInfo"
+import useLogger from "asmr/libs/hooks/loggerHook"
 
 interface ProgressProviderProps {
 	children: ReactNode

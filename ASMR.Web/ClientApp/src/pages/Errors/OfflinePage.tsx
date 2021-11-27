@@ -1,6 +1,6 @@
 import { useEffect } from "react"
-import useLogger from "@asmr/libs/hooks/loggerHook"
-import ErrorPage from "@asmr/pages/Errors/ErrorPage"
+import useLogger from "asmr/libs/hooks/loggerHook"
+import ErrorPage from "asmr/pages/Errors/ErrorPage"
 
 function OfflinePage(): JSX.Element {
 	const logger = useLogger(OfflinePage)

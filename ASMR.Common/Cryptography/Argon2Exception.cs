@@ -7,14 +7,18 @@
 //
 // Argon2Exception.cs
 //
+
 using System;
 
-namespace ASMR.Common.Cryptography
-{
-	public class Argon2Exception : Exception
-	{
-		public Argon2Exception() { }
+namespace ASMR.Common.Cryptography;
 
-		public Argon2Exception(string message) : base(message) { }
+public class Argon2Exception : Exception
+{
+	public Argon2Exception()
+	{
+	}
+
+	public Argon2Exception(string message) : base(message)
+	{
 	}
 }

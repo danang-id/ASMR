@@ -1,4 +1,4 @@
-import HttpRequestOptions from "@asmr/libs/http/HttpRequestOptions"
+import HttpRequestOptions from "asmr/libs/http/HttpRequestOptions"
 
 interface HttpClientOptions extends HttpRequestOptions {
 	baseUrl?: string

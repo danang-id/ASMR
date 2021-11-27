@@ -1,13 +1,13 @@
 import { ReactNode, useEffect, useState } from "react"
 import ReactGA from "react-ga"
-import Role from "@asmr/data/enumerations/Role"
-import User from "@asmr/data/models/User"
-import config from "@asmr/libs/common/config"
-import useInit from "@asmr/libs/hooks/initHook"
-import useServices from "@asmr/libs/hooks/servicesHook"
-import usePersistedState from "@asmr/libs/hooks/persistedStateHook"
-import AuthenticationContext from "@asmr/libs/security/AuthenticationContext"
-import ErrorCode from "@asmr/data/enumerations/ErrorCode"
+import Role from "asmr/core/enums/Role"
+import User from "asmr/core/entities/User"
+import config from "asmr/libs/common/config"
+import useInit from "asmr/libs/hooks/initHook"
+import useServices from "asmr/libs/hooks/servicesHook"
+import usePersistedState from "asmr/libs/hooks/persistedStateHook"
+import AuthenticationContext from "asmr/libs/security/AuthenticationContext"
+import ErrorCode from "asmr/core/enums/ErrorCode"
 
 interface AuthenticationProviderProps {
 	children: ReactNode

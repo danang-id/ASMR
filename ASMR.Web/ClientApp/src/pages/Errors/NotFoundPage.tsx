@@ -1,9 +1,9 @@
 import { useEffect } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 import { IoArrowBack, IoHome } from "react-icons/io5"
-import Button from "@asmr/components/Button"
-import useLogger from "@asmr/libs/hooks/loggerHook"
-import ErrorPage from "@asmr/pages/Errors/ErrorPage"
+import Button from "asmr/components/Button"
+import useLogger from "asmr/libs/hooks/loggerHook"
+import ErrorPage from "asmr/pages/Errors/ErrorPage"
 
 function NotFoundPage(): JSX.Element {
 	const location = useLocation()

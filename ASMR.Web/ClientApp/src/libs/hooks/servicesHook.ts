@@ -1,5 +1,5 @@
-import useProgress from "@asmr/libs/hooks/progressHook"
-import { createServices } from "@asmr/services"
+import useProgress from "asmr/libs/hooks/progressHook"
+import { createServices } from "asmr/services"
 import { useEffect } from "react"
 
 function useServices() {

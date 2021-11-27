@@ -7,28 +7,28 @@
 //
 // ProductsResponseModel.cs
 //
+
 using System.Collections.Generic;
 using ASMR.Core.Entities;
 using ASMR.Core.Generic;
 
-namespace ASMR.Core.ResponseModel
+namespace ASMR.Core.ResponseModel;
+
+public class ProductsResponseModel : DefaultResponseModel<IEnumerable<Product>>
 {
-    public class ProductsResponseModel : DefaultResponseModel<IEnumerable<Product>>
-    {
-        public ProductsResponseModel() 
-        {
-        }
+	public ProductsResponseModel()
+	{
+	}
 
-        public ProductsResponseModel(IEnumerable<Product> products) : base(products)
-        {
-        }
+	public ProductsResponseModel(IEnumerable<Product> products) : base(products)
+	{
+	}
 
-        public ProductsResponseModel(ResponseError error) : base(error)
-        {
-        }
+	public ProductsResponseModel(ResponseError error) : base(error)
+	{
+	}
 
-        public ProductsResponseModel(IEnumerable<ResponseError> errors) : base(errors)
-        {
-        }
-    }
+	public ProductsResponseModel(IEnumerable<ResponseError> errors) : base(errors)
+	{
+	}
 }

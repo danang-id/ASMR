@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import useProgress from "@asmr/libs/hooks/progressHook"
-import "@asmr/components/styles/LoadingBar.css"
+import useProgress from "asmr/libs/hooks/progressHook"
+import "asmr/components/styles/LoadingBar.css"
 
 interface LoadingBarProps {
 	showSpinner?: boolean

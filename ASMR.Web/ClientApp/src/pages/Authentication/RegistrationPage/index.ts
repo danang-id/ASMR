@@ -1,3 +1,3 @@
-import RegistrationPage from "@asmr/pages/Authentication/RegistrationPage/RegistrationPage"
+import RegistrationPage from "asmr/pages/Authentication/RegistrationPage/RegistrationPage"
 
 export default RegistrationPage

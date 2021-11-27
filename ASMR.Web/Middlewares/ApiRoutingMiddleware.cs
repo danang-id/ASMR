@@ -7,30 +7,30 @@
 //
 // ApiRoutingMiddleware.cs
 //
+
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace ASMR.Web.Middlewares
+namespace ASMR.Web.Middlewares;
+
+public class ApiRoutingMiddleware
 {
-    public class ApiRoutingMiddleware
-    {
-        private readonly RequestDelegate _next;
+	private readonly RequestDelegate _next;
 
-        public ApiRoutingMiddleware(RequestDelegate next)
-        {
-            _next = next;
-        }
+	public ApiRoutingMiddleware(RequestDelegate next)
+	{
+		_next = next;
+	}
 
-        public async Task InvokeAsync(HttpContext context)
-        {
-            if (context.Request.Path.StartsWithSegments("/api"))
-            {
-                context.Response.StatusCode = (int)HttpStatusCode.NotFound;
-                return;
-            }
+	public async Task InvokeAsync(HttpContext context)
+	{
+		if (context.Request.Path.StartsWithSegments("/api"))
+		{
+			context.Response.StatusCode = (int)HttpStatusCode.NotFound;
+			return;
+		}
 
-            await _next(context);
-        }
-    }
+		await _next(context);
+	}
 }
