@@ -6,16 +6,18 @@ import CreateBeanRequestModel from "asmr/core/request/CreateBeanRequestModel"
 import UpdateBeanRequestModel from "asmr/core/request/UpdateBeanRequestModel"
 
 class BeanService extends ServiceBase {
+	private readonly path = "/api/Bean";
+
 	public getAll() {
 		return this.httpClient
-			.get<BeansResponseModel>("/api/bean")
+			.get<BeansResponseModel>(this.path)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public getById(id: string) {
 		return this.httpClient
-			.get<BeanResponseModel>(`/api/bean/${id}`)
+			.get<BeanResponseModel>(`${this.path}/${id}`)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
@@ -26,7 +28,7 @@ class BeanService extends ServiceBase {
 			formData.append("image", imageFile, imageFile.name)
 		}
 		return this.httpClient
-			.post<BeanResponseModel>("/api/bean", formData)
+			.post<BeanResponseModel>(this.path, formData)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
@@ -37,14 +39,14 @@ class BeanService extends ServiceBase {
 			formData.append("image", imageFile, imageFile.name)
 		}
 		return this.httpClient
-			.patch<BeanResponseModel>(`/api/bean/${id}`, formData)
+			.patch<BeanResponseModel>(`${this.path}/${id}`, formData)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public remove(id: string) {
 		return this.httpClient
-			.delete(`/api/bean/${id}`)
+			.delete(`${this.path}/${id}`)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}

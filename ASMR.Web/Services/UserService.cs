@@ -96,9 +96,15 @@ public class UserService : ServiceBase, IUserService
 		return _userManager.FindByNameAsync(userName);
 	}
 
-	public Task<IdentityResult> CreateUser(User user, string password)
+	public async Task<IdentityResult> CreateUser(User user, string password)
 	{
-		return _userManager.CreateAsync(user, password);
+		var result = await _userManager.CreateAsync(user, password);
+		if (result.Succeeded)
+		{
+			await PopulateAnalytics(user);
+		}
+
+		return result;
 	}
 
 	public async Task<IdentityResult> ModifyUser(string id, User user)
@@ -173,7 +179,13 @@ public class UserService : ServiceBase, IUserService
 			return null;
 		}
 
-		return await _userManager.DeleteAsync(user);
+		var result = await _userManager.DeleteAsync(user);
+		if (result.Succeeded)
+		{
+			RemoveAnalytics(user);
+		}
+
+		return result;
 	}
 
 	public async Task<IEnumerable<UserRole>> GetUserRoles(User user)

@@ -68,9 +68,11 @@ public class Startup
 		services.AddScoped<IPasswordHasher<User>, Argon2PasswordHashingService>();
 		services.AddScoped<ICaptchaService, CaptchaService>();
 		services.AddScoped<IEmailService, EmailService>();
+		services.AddScoped<IBusinessAnalyticService, BusinessAnalyticService>();
 		services.AddScoped<IBeanService, BeanService>();
 		services.AddScoped<IMediaFileService, MediaFileService>();
-		services.AddScoped<IRoastingSessionService, RoastingSessionService>();
+		services.AddScoped<IRoastingService, RoastingService>();
+		services.AddScoped<IPackagingService, PackagingService>();
 		services.AddScoped<IProductService, ProductService>();
 		services.AddScoped<ITokenService, TokenService>();
 		services.AddScoped<IUserService, UserService>();

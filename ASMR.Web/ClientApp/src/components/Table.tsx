@@ -71,9 +71,9 @@ export interface TableDataCellProps {
 }
 
 Table.DataCell = function ({ children, className, head = false, ...props }: TableDataCellProps): JSX.Element {
-	let addedClassName = combineClassNames("table-core-cell")
+	let addedClassName = combineClassNames("table-data-cell")
 	if (head) {
-		addedClassName = combineClassNames(addedClassName, "table-core-cell-head")
+		addedClassName = combineClassNames(addedClassName, "table-data-cell-head")
 	}
 	className = combineClassNames(addedClassName, className)
 

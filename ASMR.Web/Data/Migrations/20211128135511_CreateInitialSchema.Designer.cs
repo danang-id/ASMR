@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASMR.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211126155435_CreateInitialSchema")]
+    [Migration("20211128135511_CreateInitialSchema")]
     partial class CreateInitialSchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,6 +74,49 @@ namespace ASMR.Web.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BeanInventories");
+                });
+
+            modelBuilder.Entity("ASMR.Core.Entities.BusinessAnalytic", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("AlternateReference")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("AlternateReferenceValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset?>("DateTimeOffsetValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("DecimalValue")
+                        .HasColumnType("decimal(20,4)");
+
+                    b.Property<int>("IntValue")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("Key")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTimeOffset?>("LastUpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("Reference")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ReferenceValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("StringValue")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BusinessAnalytics");
                 });
 
             modelBuilder.Entity("ASMR.Core.Entities.Configuration", b =>
@@ -279,7 +322,7 @@ namespace ASMR.Web.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("ASMR.Core.Entities.RoastingSession", b =>
+            modelBuilder.Entity("ASMR.Core.Entities.Roasting", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("TEXT");
@@ -319,7 +362,7 @@ namespace ASMR.Web.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RoastingSessions");
+                    b.ToTable("Roastings");
                 });
 
             modelBuilder.Entity("ASMR.Core.Entities.Transaction", b =>
@@ -717,7 +760,7 @@ namespace ASMR.Web.Data.Migrations
                     b.Navigation("Bean");
                 });
 
-            modelBuilder.Entity("ASMR.Core.Entities.RoastingSession", b =>
+            modelBuilder.Entity("ASMR.Core.Entities.Roasting", b =>
                 {
                     b.HasOne("ASMR.Core.Entities.Bean", "Bean")
                         .WithMany("RoastingSessions")

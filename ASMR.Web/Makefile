@@ -16,7 +16,7 @@ ifeq ($(OS),Windows_NT)
 else
     UNAME_S := $(shell uname -s)
     UNAME_P := $(shell uname -p)
-    
+
     ifeq ($(UNAME_S),Linux)
     	BUILD_TARGET := linux
 		ifeq ($(UNAME_P),x86_64)
@@ -108,6 +108,11 @@ win-x64:
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=true \
 		--runtime win-x64 \
 		--self-contained true
+		
+release:
+	@make linux-x64-noopt
+	@make osx-x64
+	@make win-x64
 
 migrations:
 	@dotnet ef database drop; \

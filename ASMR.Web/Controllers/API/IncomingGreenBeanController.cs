@@ -33,7 +33,7 @@ public class IncomingGreenBeanController : DefaultAbstractApiController<Incoming
 	{
 		var authenticatedUser = await _userService.GetAuthenticatedUser(User);
 		var incomingGreenBeans = showMine
-			? _beanService.GetIncomingGreenBeansByUser(authenticatedUser.Id)
+			? _beanService.GetIncomingGreenBeansByUserId(authenticatedUser.Id)
 			: _beanService.GetAllIncomingGreenBeans();
 
 		return Ok(new IncomingGreenBeansResponseModel(incomingGreenBeans));

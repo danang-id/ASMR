@@ -1,5 +1,4 @@
-// @ts-ignore
-module.exports =  {
+const CracoConfig =  {
 	plugins: [
 		{
 			plugin: require("craco-alias"),
@@ -47,3 +46,5 @@ module.exports =  {
 		},
 	},
 }
+
+module.exports = CracoConfig

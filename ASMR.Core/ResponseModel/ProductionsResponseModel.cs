@@ -14,13 +14,13 @@ using ASMR.Core.Generic;
 
 namespace ASMR.Core.ResponseModel;
 
-public class ProductionsResponseModel : DefaultResponseModel<IEnumerable<RoastingSession>>
+public class ProductionsResponseModel : DefaultResponseModel<IEnumerable<Roasting>>
 {
 	public ProductionsResponseModel()
 	{
 	}
 
-	public ProductionsResponseModel(IEnumerable<RoastingSession> productions) : base(productions)
+	public ProductionsResponseModel(IEnumerable<Roasting> productions) : base(productions)
 	{
 	}
 

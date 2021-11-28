@@ -8,16 +8,18 @@ import UsersResponseModel from "asmr/core/response/UsersResponseModel"
 import ServiceBase from "asmr/services/ServiceBase"
 
 class UserService extends ServiceBase {
+	private readonly path = "/api/User"
+
 	public getAll() {
 		return this.httpClient
-			.get<UsersResponseModel>("/api/user")
+			.get<UsersResponseModel>(this.path)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public getById(id: string) {
 		return this.httpClient
-			.get<UserResponseModel>(`/api/user/${id}`)
+			.get<UserResponseModel>(`${this.path}/${id}`)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
@@ -28,7 +30,7 @@ class UserService extends ServiceBase {
 			formData.append("image", imageFile, imageFile.name)
 		}
 		return this.httpClient
-			.post<UserResponseModel>("/api/user", formData)
+			.post<UserResponseModel>(this.path, formData)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
@@ -39,35 +41,35 @@ class UserService extends ServiceBase {
 			formData.append("image", imageFile, imageFile.name)
 		}
 		return this.httpClient
-			.patch<UserResponseModel>(`/api/user/${id}`, formData)
+			.patch<UserResponseModel>(`${this.path}/${id}`, formData)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public resetPassword(id: string) {
 		return this.httpClient
-			.post<ResponseModelBase>(`/api/user/${id}/password-reset`)
+			.post<ResponseModelBase>(`${this.path}/${id}/password-reset`)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public remove(id: string) {
 		return this.httpClient
-			.delete<UserResponseModel>(`/api/user/${id}`)
+			.delete<UserResponseModel>(`${this.path}/${id}`)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public approve(id: string, body: ApproveRegistrationRequestModel) {
 		return this.httpClient
-			.post<UserResponseModel>(`/api/user/${id}/approve`, body)
+			.post<UserResponseModel>(`${this.path}/${id}/approve`, body)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public reject(id: string) {
 		return this.httpClient
-			.post<UserResponseModel>(`/api/user/${id}/reject`)
+			.post<UserResponseModel>(`${this.path}/${id}/reject`)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}

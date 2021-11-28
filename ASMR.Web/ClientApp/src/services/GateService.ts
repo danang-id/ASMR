@@ -10,13 +10,15 @@ import ServiceBase from "asmr/services/ServiceBase"
 import ResponseModelBase from "asmr/core/common/ResponseModelBase"
 
 class GateService extends ServiceBase {
+	private readonly path = "/api/Gate"
+
 	public register(body: RegistrationRequestModel, imageFile: File | null, captchaResponseToken: string | null) {
 		const formData = serialize(body)
 		if (imageFile) {
 			formData.append("image", imageFile, imageFile.name)
 		}
 		return this.httpClient
-			.post<ResponseModelBase>("/api/gate/register", formData, {
+			.post<ResponseModelBase>(`${this.path}/register`, formData, {
 				params: { captchaResponseToken },
 			})
 			.then(this.processResponse.bind(this))
@@ -25,35 +27,35 @@ class GateService extends ServiceBase {
 
 	public resendEmailAddressConfirmation(body: ResendEmailAddressConfirmationRequestModel) {
 		return this.httpClient
-			.post<ResponseModelBase>("/api/gate/email-address/resend-confirmation", body)
+			.post<ResponseModelBase>(`${this.path}/email-address/resend-confirmation`, body)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public confirmEmailAddress(body: ConfirmEmailAddressRequestModel) {
 		return this.httpClient
-			.post<ResponseModelBase>("/api/gate/email-address/confirm", body)
+			.post<ResponseModelBase>(`${this.path}/email-address/confirm`, body)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public authenticate(body: SignInRequestModel) {
 		return this.httpClient
-			.post<AuthenticationResponseModel>("/api/gate/authenticate", body)
+			.post<AuthenticationResponseModel>(`${this.path}/authenticate`, body)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public clearSession() {
 		return this.httpClient
-			.post<AuthenticationResponseModel>("/api/gate/exit")
+			.post<AuthenticationResponseModel>(`${this.path}/exit`)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public forgetPassword(body: ForgetPasswordRequestModel, captchaResponseToken: string | null) {
 		return this.httpClient
-			.post<ResponseModelBase>("/api/gate/password/forget", body, {
+			.post<ResponseModelBase>(`${this.path}/password/forget`, body, {
 				params: { captchaResponseToken },
 			})
 			.then(this.processResponse.bind(this))
@@ -62,14 +64,14 @@ class GateService extends ServiceBase {
 
 	public resetPassword(body: ResetPasswordRequestModel) {
 		return this.httpClient
-			.post<ResponseModelBase>("/api/gate/password/reset", body)
+			.post<ResponseModelBase>(`${this.path}/password/reset`, body)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}
 
 	public getUserPassport() {
 		return this.httpClient
-			.get<AuthenticationResponseModel>("/api/gate/passport")
+			.get<AuthenticationResponseModel>(`${this.path}/passport`)
 			.then(this.processResponse.bind(this))
 			.finally(this.finalize.bind(this))
 	}

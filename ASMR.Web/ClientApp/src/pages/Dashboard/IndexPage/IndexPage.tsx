@@ -62,6 +62,12 @@ function getFeaturePagesBasedOnRole(featurePages: FeaturePage[], role: Role): Fe
 			break
 		case Role.Server:
 			featurePages = addFeaturePage(featurePages, {
+				id: 0,
+				name: "My Profile",
+				icon: <IoPerson />,
+				pathname: "/dashboard/profile",
+			})
+			featurePages = addFeaturePage(featurePages, {
 				id: 2,
 				name: "Manage Beans",
 				icon: <GiCoffeeBeans />,

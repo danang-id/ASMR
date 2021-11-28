@@ -28,6 +28,7 @@ public class ApplicationDbContext : IdentityDbContext<User, UserRole, string>, I
 
 	public DbSet<Bean> Beans { get; set; }
 	public DbSet<BeanInventory> BeanInventories { get; set; }
+	public DbSet<BusinessAnalytic> BusinessAnalytics { get; set; }
 	public DbSet<Configuration> Configurations { get; set; }
 	public DbSet<DataProtectionKey> DataProtectionKeys { get; set; }
 	public DbSet<IncomingGreenBean> IncomingGreenBeans { get; set; }
@@ -36,7 +37,7 @@ public class ApplicationDbContext : IdentityDbContext<User, UserRole, string>, I
 	public DbSet<PackagingResult> PackagingResults { get; set; }
 	public DbSet<Payment> Payments { get; set; }
 	public DbSet<Product> Products { get; set; }
-	public DbSet<RoastingSession> RoastingSessions { get; set; }
+	public DbSet<Roasting> Roastings { get; set; }
 	public DbSet<Transaction> Transactions { get; set; }
 	public DbSet<TransactionItem> TransactionItems { get; set; }
 

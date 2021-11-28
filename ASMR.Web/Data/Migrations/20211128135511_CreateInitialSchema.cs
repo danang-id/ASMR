@@ -73,6 +73,28 @@ namespace ASMR.Web.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BusinessAnalytics",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Key = table.Column<int>(type: "INTEGER", nullable: false),
+                    Reference = table.Column<int>(type: "INTEGER", nullable: false),
+                    ReferenceValue = table.Column<string>(type: "TEXT", nullable: true),
+                    AlternateReference = table.Column<int>(type: "INTEGER", nullable: false),
+                    AlternateReferenceValue = table.Column<string>(type: "TEXT", nullable: true),
+                    DecimalValue = table.Column<decimal>(type: "decimal(20,4)", nullable: false),
+                    IntValue = table.Column<int>(type: "INTEGER", nullable: false),
+                    StringValue = table.Column<string>(type: "TEXT", nullable: true),
+                    DateTimeOffsetValue = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    CreatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
+                    LastUpdatedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BusinessAnalytics", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Configurations",
                 columns: table => new
                 {
@@ -376,7 +398,7 @@ namespace ASMR.Web.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoastingSessions",
+                name: "Roastings",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
@@ -392,15 +414,15 @@ namespace ASMR.Web.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoastingSessions", x => x.Id);
+                    table.PrimaryKey("PK_Roastings", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RoastingSessions_AspNetUsers_UserId",
+                        name: "FK_Roastings_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RoastingSessions_Beans_BeanId",
+                        name: "FK_Roastings_Beans_BeanId",
                         column: x => x.BeanId,
                         principalTable: "Beans",
                         principalColumn: "Id",
@@ -548,13 +570,13 @@ namespace ASMR.Web.Data.Migrations
                 column: "BeanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoastingSessions_BeanId",
-                table: "RoastingSessions",
+                name: "IX_Roastings_BeanId",
+                table: "Roastings",
                 column: "BeanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoastingSessions_UserId",
-                table: "RoastingSessions",
+                name: "IX_Roastings_UserId",
+                table: "Roastings",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -596,6 +618,9 @@ namespace ASMR.Web.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BusinessAnalytics");
+
+            migrationBuilder.DropTable(
                 name: "Configurations");
 
             migrationBuilder.DropTable(
@@ -611,7 +636,7 @@ namespace ASMR.Web.Data.Migrations
                 name: "PackagingResults");
 
             migrationBuilder.DropTable(
-                name: "RoastingSessions");
+                name: "Roastings");
 
             migrationBuilder.DropTable(
                 name: "TransactionItems");

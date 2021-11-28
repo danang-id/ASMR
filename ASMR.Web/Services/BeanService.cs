@@ -9,9 +9,11 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ASMR.Core.Entities;
+using ASMR.Core.Enumerations;
 using ASMR.Web.Data;
 using ASMR.Web.Services.Generic;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +34,7 @@ public interface IBeanService : IServiceBase
 
 	public IQueryable<IncomingGreenBean> GetAllIncomingGreenBeans();
 
-	public IQueryable<IncomingGreenBean> GetIncomingGreenBeansByUser(string userId);
+	public IQueryable<IncomingGreenBean> GetIncomingGreenBeansByUserId(string userId);
 
 	public Task<IncomingGreenBean> CreateIncomingGreenBean(IncomingGreenBean incomingGreenBean);
 }
@@ -63,6 +65,10 @@ public class BeanService : ServiceBase, IBeanService
 
 	public async Task<Bean> CreateBean(Bean bean)
 	{
+		if (string.IsNullOrEmpty(bean.Id) || bean.Id == Guid.Empty.ToString())
+		{
+			bean.Id = Guid.NewGuid().ToString();
+		}
 		bean.Inventory = (
 			await DbContext.BeanInventories.AddAsync(new BeanInventory
 			{
@@ -72,6 +78,7 @@ public class BeanService : ServiceBase, IBeanService
 		).Entity;
 
 		var entityEntry = await DbContext.Beans.AddAsync(bean);
+		await PopulateAnalytics(BusinessAnalyticReference.Bean, bean.Id);
 		return entityEntry.Entity;
 	}
 
@@ -127,16 +134,10 @@ public class BeanService : ServiceBase, IBeanService
 			return null;
 		}
 
+		RemoveAnalytics(entity);
 		DbContext.BeanInventories.Remove(entity.Inventory);
 		DbContext.Beans.Remove(entity);
 		return entity;
-	}
-
-	public async Task<IncomingGreenBean> CreateIncomingGreenBean(IncomingGreenBean incomingGreenBean)
-	{
-		var entityEntry = await DbContext.IncomingGreenBeans
-			.AddAsync(incomingGreenBean);
-		return entityEntry.Entity;
 	}
 
 	public IQueryable<IncomingGreenBean> GetAllIncomingGreenBeans()
@@ -148,7 +149,7 @@ public class BeanService : ServiceBase, IBeanService
 			.AsQueryable();
 	}
 
-	public IQueryable<IncomingGreenBean> GetIncomingGreenBeansByUser(string userId)
+	public IQueryable<IncomingGreenBean> GetIncomingGreenBeansByUserId(string userId)
 	{
 		return DbContext.IncomingGreenBeans
 			.Where(e => e.UserId == userId)
@@ -156,5 +157,55 @@ public class BeanService : ServiceBase, IBeanService
 			.Include(e => e.Bean)
 			.ThenInclude(e => e.Inventory)
 			.AsQueryable();
+	}
+
+	public async Task<IncomingGreenBean> CreateIncomingGreenBean(IncomingGreenBean incomingGreenBean)
+	{
+		var entityEntry = await DbContext.IncomingGreenBeans.AddAsync(incomingGreenBean);
+		var bean = await DbContext.Beans.Where(e => e.Id == entityEntry.Entity.BeanId)
+			.FirstOrDefaultAsync();
+		var user = await DbContext.Users.Where(e => e.Id == entityEntry.Entity.UserId)
+			.FirstOrDefaultAsync();
+
+		async Task ProgressAnalytics(IQueryable<BusinessAnalytic> analytics)
+		{
+			var total = await analytics
+				.Where(e => e.Key == BusinessAnalyticKey.IncomingGreenBeanTotal)
+				.FirstOrDefaultAsync();
+			var weightTotal = await analytics
+				.Where(e => e.Key == BusinessAnalyticKey.IncomingGreenBeanWeightTotal)
+				.FirstOrDefaultAsync();
+			var weightAverage = await analytics
+				.Where(e => e.Key == BusinessAnalyticKey.IncomingGreenBeanWeightAverage)
+				.FirstOrDefaultAsync();
+			var lastTime = await analytics
+				.Where(e => e.Key == BusinessAnalyticKey.IncomingGreenBeanLastTime)
+				.FirstOrDefaultAsync();
+
+			if (total is null || weightTotal is null || weightAverage is null || lastTime is null)
+			{
+				return;
+			}
+
+			total.IntValue++;
+			weightTotal.DecimalValue += incomingGreenBean.WeightAdded;
+			weightAverage.DecimalValue = weightTotal.DecimalValue / total.IntValue;
+			lastTime.DateTimeOffsetValue = DateTimeOffset.Now;
+
+			ModifyAnalytics(new List<BusinessAnalytic>
+			{
+				total, weightTotal, weightAverage, lastTime
+			});
+		}
+
+		var beanAnalytics = GetAnalytics(BusinessAnalyticReference.Bean, bean?.Id);
+		var userAnalytics = GetAnalytics(BusinessAnalyticReference.User, user?.Id);
+		await Task.WhenAll(new List<Task>
+		{
+			ProgressAnalytics(beanAnalytics),
+			ProgressAnalytics(userAnalytics)
+		});
+
+		return entityEntry.Entity;
 	}
 }

@@ -9,9 +9,11 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using ASMR.Common.DataStructure;
 using ASMR.Common.Threading;
 using ASMR.Core.Entities;
 using ASMR.Core.Enumerations;
@@ -32,7 +34,73 @@ public class SelfMigrator
 	private const string AdministratorEmailAddress = "asmr@hamzahjundi.me";
 	private const string AdministratorPassword = "@SMR-Adm1n";
 
-	private static async Task<bool> SeedDataAsync(IServiceProvider serviceProvider, ApplicationDbContext dbContext,
+	private static async Task PopulateAnalytics(ApplicationDbContext dbContext,
+		BusinessAnalyticReference reference, 
+		string referenceValue)
+	{
+		var isAllowedReference = reference is BusinessAnalyticReference.Bean or BusinessAnalyticReference.User;
+		if (!isAllowedReference || string.IsNullOrEmpty(referenceValue))
+		{
+			return;
+		}
+
+		var currentAnalytics = dbContext.BusinessAnalytics
+			.Where(e => e.Reference == reference && e.ReferenceValue == referenceValue)
+			.AsQueryable();
+		if (currentAnalytics.Any())
+		{
+			return;
+		}
+
+		var analyticKeys = EnumUtils.GetValues<BusinessAnalyticKey>()
+			.ToList();
+		// Add more because of inter-references
+		analyticKeys.AddRange(new List<BusinessAnalyticKey>
+		{
+			BusinessAnalyticKey.RoastingCancellationReasonTotal,
+			BusinessAnalyticKey.RoastingCancellationReasonTotal,
+			BusinessAnalyticKey.RoastingCancellationReasonRate,
+			BusinessAnalyticKey.RoastingCancellationReasonRate,
+		});
+
+		var currentCancellationReasonTotal = RoastingCancellationReason.WrongRoastingDataSubmitted;
+		var currentCancellationReasonRate = RoastingCancellationReason.WrongRoastingDataSubmitted;
+		var analytics = analyticKeys
+			.Select(analyticKey =>
+			{
+				var analytic = new BusinessAnalytic
+				{
+					Id = Guid.NewGuid().ToString(),
+					Key = analyticKey,
+					Reference = reference,
+					ReferenceValue = referenceValue,
+					AlternateReference = BusinessAnalyticReference.NoReference,
+					AlternateReferenceValue = string.Empty
+				};
+
+				switch (analyticKey)
+				{
+					case BusinessAnalyticKey.RoastingCancellationReasonTotal:
+						analytic.AlternateReference = BusinessAnalyticReference.RoastingCancellationReason;
+						analytic.AlternateReferenceValue = ((int)currentCancellationReasonTotal).ToString();
+						currentCancellationReasonTotal++;
+						break;
+					case BusinessAnalyticKey.RoastingCancellationReasonRate:
+						analytic.AlternateReference = BusinessAnalyticReference.RoastingCancellationReason;
+						analytic.AlternateReferenceValue = ((int)currentCancellationReasonRate).ToString();
+						currentCancellationReasonRate++;
+						break;
+				}
+
+				return analytic;
+			})
+			.ToList();
+
+		await dbContext.BusinessAnalytics.AddRangeAsync(analytics);
+	}
+	
+	private static async Task<bool> SeedDataAsync(IServiceProvider serviceProvider, 
+		ApplicationDbContext dbContext,
 		Configuration configuration)
 	{
 		var emailService = serviceProvider.GetRequiredService<IEmailService>();
@@ -65,7 +133,8 @@ public class SelfMigrator
 			{
 				foreach (var identityError in createRoleResult.Errors)
 				{
-					logger.LogError($"[Code: {identityError.Code}] {identityError.Description}");
+					logger.LogError("[Code: {Code}] {Description}", 
+						identityError.Code, identityError.Description);
 				}
 
 				return false;
@@ -81,7 +150,8 @@ public class SelfMigrator
 			{
 				foreach (var identityError in createRoleResult.Errors)
 				{
-					logger.LogError($"[Code: {identityError.Code}] {identityError.Description}");
+					logger.LogError("[Code: {Code}] {Description}", 
+						identityError.Code, identityError.Description);
 				}
 
 				return false;
@@ -117,7 +187,8 @@ public class SelfMigrator
 			{
 				foreach (var identityError in createUserResult.Errors)
 				{
-					logger.LogError($"[Code: {identityError.Code}] {identityError.Description}");
+					logger.LogError("[Code: {Code}] {Description}", 
+						identityError.Code, identityError.Description);
 				}
 
 				return false;
@@ -128,7 +199,8 @@ public class SelfMigrator
 			{
 				foreach (var identityError in addUserToRoleResult.Errors)
 				{
-					logger.LogError($"[Code: {identityError.Code}] {identityError.Description}");
+					logger.LogError("[Code: {Code}] {Description}", 
+						identityError.Code, identityError.Description);
 				}
 
 				return false;
@@ -167,6 +239,8 @@ public class SelfMigrator
 			configuration.Value = true.ToString();
 			dbContext.Configurations.Update(configuration);
 		}
+
+		await PopulateAnalytics(dbContext, BusinessAnalyticReference.User, AdministratorId);
 
 		dbContext.SaveChanges();
 		return true;

@@ -32,7 +32,7 @@ function BaseLayout({ children, className, ignoreTheme = false, ...props }: Base
 		<div className={className} {...props}>
 			{children}
 			<div onClick={onApplicationStatusClicked} className="application-status">
-				{config.application.name} {config.application.versionFull}
+				{config.application.name} v{config.application.versionFull}
 			</div>
 		</div>
 	)

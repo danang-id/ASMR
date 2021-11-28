@@ -5,6 +5,7 @@ import { SetProgressInfo } from "asmr/libs/application/ProgressContextInfo"
 import { ILogger } from "asmr/libs/common/logger"
 import { INotificationHandler } from "asmr/libs/common/notificationHandler"
 import BeanService from "asmr/services/BeanService"
+import BusinessAnalyticService from "asmr/services/BusinessAnalyticService"
 import GateService from "asmr/services/GateService"
 import ProductService from "asmr/services/ProductService"
 import ReleaseService from "asmr/services/ReleaseService"
@@ -16,6 +17,7 @@ export type Services = {
 	handleError: (error?: Error, notification?: INotificationHandler, logger?: ILogger) => void
 	handleErrors: (errors?: ErrorInformation[], notification?: INotificationHandler, logger?: ILogger) => void
 	bean: BeanService
+	businessAnalytic: BusinessAnalyticService
 	gate: GateService
 	product: ProductService
 	release: ReleaseService
@@ -78,6 +80,7 @@ export function createServices(setProgress?: SetProgressInfo): Services {
 		handleError,
 		handleErrors,
 		bean: new BeanService(cancelTokenSource, void 0, setProgress),
+		businessAnalytic: new BusinessAnalyticService(cancelTokenSource, void 0, setProgress),
 		gate: new GateService(cancelTokenSource, void 0, setProgress),
 		product: new ProductService(cancelTokenSource, void 0, setProgress),
 		release: new ReleaseService(cancelTokenSource, void 0, setProgress),

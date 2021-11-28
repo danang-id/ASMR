@@ -17,7 +17,7 @@ using ASMR.Core.Generic;
 
 namespace ASMR.Core.Entities;
 
-public class RoastingSession : DefaultAbstractEntity
+public class Roasting : DefaultAbstractEntity
 {
 	[Required] [JsonIgnore] public Bean Bean { get; set; }
 

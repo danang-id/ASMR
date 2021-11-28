@@ -28,18 +28,18 @@ namespace ASMR.Web.Controllers.API;
 public class ProductionController : DefaultAbstractApiController<ProductionController>
 {
 	private readonly IBeanService _beanService;
-	private readonly IRoastingSessionService _roastingSessionService;
+	private readonly IRoastingService _roastingService;
 	private readonly IUserService _userService;
 
 	public ProductionController(
 		ILogger<ProductionController> logger,
 		IBeanService beanService,
-		IRoastingSessionService roastingSessionService,
+		IRoastingService roastingService,
 		IUserService userService
 	) : base(logger)
 	{
 		_beanService = beanService;
-		_roastingSessionService = roastingSessionService;
+		_roastingService = roastingService;
 		_userService = userService;
 	}
 
@@ -49,8 +49,8 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 	{
 		var authenticatedUser = await _userService.GetAuthenticatedUser(User);
 		var roastingSessions = showMine
-			? _roastingSessionService.GetRoastingSessionsByUser(authenticatedUser.Id)
-			: _roastingSessionService.GetAllRoastingSessions();
+			? _roastingService.GetRoastingsByUserId(authenticatedUser.Id)
+			: _roastingService.GetAllRoastings();
 		// If cancelled production is shown, skip this filter
 		if (!showCancelled)
 		{
@@ -71,7 +71,7 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 			return BadRequest(new ProductionResponseModel(errorModel));
 		}
 
-		var roastedBeanProduction = await _roastingSessionService.GetRoastingSessionById(id);
+		var roastedBeanProduction = await _roastingService.GetRoastingById(id);
 		if (roastedBeanProduction is null)
 		{
 			var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
@@ -125,7 +125,7 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 		});
 
 		var authenticatedUser = await _userService.GetAuthenticatedUser(User);
-		var roastingSession = await _roastingSessionService.CreateRoastingSession(new RoastingSession
+		var roastingSession = await _roastingService.CreateRoasting(new Roasting
 		{
 			BeanId = bean.Id,
 			UserId = authenticatedUser.Id,
@@ -133,7 +133,7 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 			RoastedBeanWeight = 0
 		});
 
-		await _roastingSessionService.CommitAsync();
+		await _roastingService.CommitAsync();
 		return Created(Request.Path, new ProductionResponseModel(roastingSession)
 		{
 			Message = $"Successfully started roasting session for '{bean.Name}' bean."
@@ -166,7 +166,7 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 		}
 
 		var authenticatedUser = await _userService.GetAuthenticatedUser(User);
-		var roastingSession = await _roastingSessionService.GetRoastingSessionById(id);
+		var roastingSession = await _roastingService.GetRoastingById(id);
 		if (roastingSession is null)
 		{
 			var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
@@ -204,14 +204,14 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 			Inventory = beanInventory
 		});
 
-		roastingSession = await _roastingSessionService
-			.ModifyRoastingSession(roastingSession.Id, new RoastingSession
+		roastingSession = await _roastingService
+			.ModifyRoasting(roastingSession.Id, new Roasting
 			{
 				RoastedBeanWeight = model.RoastedBeanWeight,
 				FinishedAt = DateTimeOffset.Now
 			});
 
-		await _roastingSessionService.CommitAsync();
+		await _roastingService.CommitAsync();
 		return Ok(new ProductionResponseModel(roastingSession)
 		{
 			Message = $"Successfully finished the roasting for '{roastingSession.Bean.Name}' bean."
@@ -231,8 +231,8 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 		}
 
 		var authenticatedUser = await _userService.GetAuthenticatedUser(User);
-		var roastingSession = await _roastingSessionService
-			.GetRoastingSessionById(id);
+		var roastingSession = await _roastingService
+			.GetRoastingById(id);
 		if (roastingSession is null)
 		{
 			var errorModel = new ResponseError(ErrorCodeConstants.ResourceNotFound,
@@ -265,13 +265,13 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 			});
 		}
 
-		roastingSession = await _roastingSessionService
-			.ModifyRoastingSession(roastingSession.Id, new RoastingSession
+		roastingSession = await _roastingService
+			.ModifyRoasting(roastingSession.Id, new Roasting
 			{
 				CancelledAt = DateTimeOffset.Now
 			});
 
-		await _roastingSessionService.CommitAsync();
+		await _roastingService.CommitAsync();
 		return Ok(new ProductionResponseModel(roastingSession)
 		{
 			Message = $"Successfully cancelled the roasting for '{roastingSession.Bean.Name}' bean."

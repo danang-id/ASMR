@@ -29,7 +29,7 @@ public class Bean : DefaultAbstractEntity
 
 	public IEnumerable<IncomingGreenBean> IncomingGreenBeans { get; set; }
 
-	public IEnumerable<RoastingSession> RoastingSessions { get; set; }
+	public IEnumerable<Roasting> RoastingSessions { get; set; }
 
 	public IEnumerable<Product> Products { get; set; }
 }
