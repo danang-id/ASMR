@@ -1,4 +1,4 @@
-import ErrorInformation from "./ErrorInformation"
+import ErrorInformation from "asmr/core/common/ErrorInformation"
 
 interface ResponseModelBase<TData = any> {
 	isSuccess: boolean
