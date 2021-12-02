@@ -69,6 +69,7 @@ public class BeanService : ServiceBase, IBeanService
 		{
 			bean.Id = Guid.NewGuid().ToString();
 		}
+
 		bean.Inventory = (
 			await DbContext.BeanInventories.AddAsync(new BeanInventory
 			{
@@ -78,7 +79,7 @@ public class BeanService : ServiceBase, IBeanService
 		).Entity;
 
 		var entityEntry = await DbContext.Beans.AddAsync(bean);
-		await PopulateAnalytics(BusinessAnalyticReference.Bean, bean.Id);
+		await PopulateAnalytics(bean);
 		return entityEntry.Entity;
 	}
 

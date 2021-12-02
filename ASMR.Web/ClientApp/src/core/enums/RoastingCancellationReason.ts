@@ -1,7 +1,8 @@
 enum RoastingCancellationReason {
 	NotCancelled,
+	WrongRoastingDataSubmitted,
+	RoastingTimeout,
 	RoastingFailure,
-	WrongRoastingDataSubmitted
 }
 
 export default RoastingCancellationReason

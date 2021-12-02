@@ -14,9 +14,9 @@
 		<Company>Pandora Karya Digital</Company>
 		<Product>ASMR Web Server</Product>
 		<ReleaseVersion>1.0.0</ReleaseVersion>
-		<AssemblyVersion>1.1.0</AssemblyVersion>
-		<FileVersion>1.1.0</FileVersion>
-		<PackageVersion>1.1.0</PackageVersion>
+		<AssemblyVersion>1.1.1</AssemblyVersion>
+		<FileVersion>1.1.1</FileVersion>
+		<PackageVersion>1.1.1</PackageVersion>
 		<NeutralLanguage>en</NeutralLanguage>
 		<Platforms>AnyCPU</Platforms>
 		<UserSecretsId>143ab751-b354-4226-b63e-fc5e30c39def</UserSecretsId>
@@ -52,9 +52,10 @@
 		<PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
 		<PackageReference Include="System.Drawing.Common" Version="6.0.0" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.14.1" />
-		<PackageReference Include="SendGrid" Version="9.25.0" />
+		<PackageReference Include="SendGrid" Version="9.25.1" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -62,6 +63,14 @@
 		<Content Remove="$(ReleasesRoot)**" />
 		<Content Remove="$(SpaRoot)**" />
 		<None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+		<Content Remove="appsettings.Local.json" />
+		<None Include="appsettings.Local.json" />
+		<Content Remove="appsettings.Development.json" />
+		<None Include="appsettings.Development.json" />
+		<Content Remove="ReleaseInformation\ASMR.Mobile.json" />
+		<None Include="ReleaseInformation\ASMR.Mobile.json" />
+		<Content Remove="ReleaseInformation\ASMR.Web.json" />
+		<None Include="ReleaseInformation\ASMR.Web.json" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\ASMR.Core\ASMR.Core.csproj">

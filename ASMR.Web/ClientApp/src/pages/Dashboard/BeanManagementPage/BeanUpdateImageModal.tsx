@@ -1,12 +1,13 @@
 import { ChangeEvent, useEffect, useState } from "react"
 import Button from "asmr/components/Button"
 import Form from "asmr/components/Form"
-import Image from "asmr/components/Image"
 import Modal from "asmr/components/Modal"
 import Bean from "asmr/core/entities/Bean"
 import UpdateBeanRequestModel from "asmr/core/request/UpdateBeanRequestModel"
 import { ProgressInfo } from "asmr/libs/application/ProgressContextInfo"
 import "asmr/pages/Dashboard/BeanManagementPage/BeansManagementModal.scoped.css"
+import ImageCropper from "asmr/components/ImageCropper"
+import { getFileFromCanvas } from "asmr/libs/common/canvas"
 
 interface BeanUpdateImageModalProps {
 	bean: Bean | null
@@ -16,6 +17,7 @@ interface BeanUpdateImageModalProps {
 	show: boolean
 }
 function BeanUpdateImageModal({ bean, onClose, onUpdateBean, progress, show }: BeanUpdateImageModalProps): JSX.Element {
+	const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null)
 	const [imageBuffer, setImageBuffer] = useState<string | ArrayBuffer | null>(null)
 	const [imageFile, setImageFile] = useState<File | null>(null)
 
@@ -23,6 +25,11 @@ function BeanUpdateImageModal({ bean, onClose, onUpdateBean, progress, show }: B
 		if (event.target.name === "image" && event.target.files) {
 			setImageFile(event.target.files[0])
 		}
+	}
+
+	function onBeanImageCropped(cropper: Cropper) {
+		const canvas = cropper.getCroppedCanvas()
+		getFileFromCanvas(canvas, imageFile?.name ? imageFile.name : "", imageFile?.type).then(setCroppedImageFile)
 	}
 
 	useEffect(() => {
@@ -61,11 +68,7 @@ function BeanUpdateImageModal({ bean, onClose, onUpdateBean, progress, show }: B
 					</div>
 					{imageBuffer && (
 						<div className="form-row image-preview">
-							<Image
-								source={imageBuffer as string}
-								fallback={imageBuffer as string}
-								alt={`${bean?.name ?? ""} Image`}
-							/>
+							<ImageCropper alt={`${bean?.name ?? ""} Image`} aspectRatio={3/2} source={imageBuffer} onCropped={onBeanImageCropped} />
 						</div>
 					)}
 				</Form>
@@ -79,7 +82,7 @@ function BeanUpdateImageModal({ bean, onClose, onUpdateBean, progress, show }: B
 					<Button
 						disabled={progress.loading}
 						size="sm"
-						onClick={() => onUpdateBean({} as UpdateBeanRequestModel, imageFile)}
+						onClick={() => onUpdateBean({} as UpdateBeanRequestModel, croppedImageFile)}
 					>
 						Save
 					</Button>

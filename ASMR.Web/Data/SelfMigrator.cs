@@ -35,7 +35,7 @@ public class SelfMigrator
 	private const string AdministratorPassword = "@SMR-Adm1n";
 
 	private static async Task PopulateAnalytics(ApplicationDbContext dbContext,
-		BusinessAnalyticReference reference, 
+		BusinessAnalyticReference reference,
 		string referenceValue)
 	{
 		var isAllowedReference = reference is BusinessAnalyticReference.Bean or BusinessAnalyticReference.User;
@@ -98,8 +98,8 @@ public class SelfMigrator
 
 		await dbContext.BusinessAnalytics.AddRangeAsync(analytics);
 	}
-	
-	private static async Task<bool> SeedDataAsync(IServiceProvider serviceProvider, 
+
+	private static async Task<bool> SeedDataAsync(IServiceProvider serviceProvider,
 		ApplicationDbContext dbContext,
 		Configuration configuration)
 	{
@@ -133,7 +133,7 @@ public class SelfMigrator
 			{
 				foreach (var identityError in createRoleResult.Errors)
 				{
-					logger.LogError("[Code: {Code}] {Description}", 
+					logger.LogError("[Code: {Code}] {Description}",
 						identityError.Code, identityError.Description);
 				}
 
@@ -150,7 +150,7 @@ public class SelfMigrator
 			{
 				foreach (var identityError in createRoleResult.Errors)
 				{
-					logger.LogError("[Code: {Code}] {Description}", 
+					logger.LogError("[Code: {Code}] {Description}",
 						identityError.Code, identityError.Description);
 				}
 
@@ -187,7 +187,7 @@ public class SelfMigrator
 			{
 				foreach (var identityError in createUserResult.Errors)
 				{
-					logger.LogError("[Code: {Code}] {Description}", 
+					logger.LogError("[Code: {Code}] {Description}",
 						identityError.Code, identityError.Description);
 				}
 
@@ -199,7 +199,7 @@ public class SelfMigrator
 			{
 				foreach (var identityError in addUserToRoleResult.Errors)
 				{
-					logger.LogError("[Code: {Code}] {Description}", 
+					logger.LogError("[Code: {Code}] {Description}",
 						identityError.Code, identityError.Description);
 				}
 

@@ -4,13 +4,13 @@
 			"Available": true,
 			"Link": "https://asmr.hamzahjundi.me/api"
 		},
-		"Version": "1.1.0"
+		"Version": "1.1.1"
 	},
 	"FrontEnd": {
 		"Status": {
 			"Available": true,
 			"Link": "https://asmr.hamzahjundi.me"
 		},
-		"Version": "1.1.0-21KA22"
+		"Version": "1.1.1-21Lb21"
 	}
 }

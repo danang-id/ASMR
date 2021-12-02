@@ -130,7 +130,8 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 			BeanId = bean.Id,
 			UserId = authenticatedUser.Id,
 			GreenBeanWeight = model.GreenBeanWeight,
-			RoastedBeanWeight = 0
+			RoastedBeanWeight = 0,
+			CancellationReason = RoastingCancellationReason.NotCancelled,
 		});
 
 		await _roastingService.CommitAsync();
@@ -204,12 +205,12 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 			Inventory = beanInventory
 		});
 
-		roastingSession = await _roastingService
-			.ModifyRoasting(roastingSession.Id, new Roasting
-			{
-				RoastedBeanWeight = model.RoastedBeanWeight,
-				FinishedAt = DateTimeOffset.Now
-			});
+		roastingSession = await _roastingService.ModifyRoasting(roastingSession.Id, new Roasting
+		{
+			RoastedBeanWeight = model.RoastedBeanWeight,
+			FinishedAt = DateTimeOffset.Now
+		});
+
 
 		await _roastingService.CommitAsync();
 		return Ok(new ProductionResponseModel(roastingSession)
@@ -221,7 +222,7 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 	[AllowAccess(Role.Roaster)]
 	[ClientPlatform(ClientPlatform.Android, ClientPlatform.iOS)]
 	[HttpDelete("cancel/{id}")]
-	public async Task<IActionResult> Cancel(string id, [FromQuery] bool isBeanBurnt)
+	public async Task<IActionResult> Cancel(string id, [FromQuery] bool isBeanBurnt = false)
 	{
 		if (string.IsNullOrEmpty(id))
 		{
@@ -255,8 +256,15 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 			return BadRequest(new ProductionResponseModel(errorModel));
 		}
 
+		var cancelledRoasting = new Roasting
+		{
+			CancelledAt = DateTimeOffset.Now,
+			CancellationReason = RoastingCancellationReason.RoastingFailure
+		};
+
 		if (!isBeanBurnt)
 		{
+			cancelledRoasting.CancellationReason = RoastingCancellationReason.WrongRoastingDataSubmitted;
 			var beanInventory = roastingSession.Bean.Inventory;
 			beanInventory.CurrentGreenBeanWeight += roastingSession.GreenBeanWeight;
 			await _beanService.ModifyBean(roastingSession.BeanId, new Bean
@@ -265,11 +273,7 @@ public class ProductionController : DefaultAbstractApiController<ProductionContr
 			});
 		}
 
-		roastingSession = await _roastingService
-			.ModifyRoasting(roastingSession.Id, new Roasting
-			{
-				CancelledAt = DateTimeOffset.Now
-			});
+		roastingSession = await _roastingService.ModifyRoasting(roastingSession.Id, cancelledRoasting);
 
 		await _roastingService.CommitAsync();
 		return Ok(new ProductionResponseModel(roastingSession)

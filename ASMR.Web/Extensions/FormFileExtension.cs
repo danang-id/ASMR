@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ASMR.Core.Entities;
 using ASMR.Web.Constants;
 using Microsoft.Extensions.Logging;
+using SixLabors.ImageSharp;
 
 namespace ASMR.Web.Extensions;
 
@@ -86,7 +87,7 @@ public static class FormFileExtension
 
 		try
 		{
-			using var bitmap = new System.Drawing.Bitmap(formFile.OpenReadStream());
+			Image.Identify(formFile.OpenReadStream());
 		}
 		catch (Exception exception)
 		{

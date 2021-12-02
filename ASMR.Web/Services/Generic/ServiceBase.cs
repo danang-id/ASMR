@@ -34,14 +34,14 @@ public class ServiceBase : IServiceBase
 	{
 		DbContext = dbContext;
 	}
-	
+
 	protected IQueryable<BusinessAnalytic> GetAnalytics(BusinessAnalyticReference reference, string referenceValue)
 	{
 		return DbContext.BusinessAnalytics
 			.Where(e => e.Reference == reference && e.ReferenceValue == referenceValue)
 			.AsQueryable();
 	}
-	
+
 	protected IQueryable<BusinessAnalytic> GetAnalytics(BusinessAnalyticReference reference,
 		string referenceValue,
 		BusinessAnalyticKey analyticKey)
@@ -52,7 +52,7 @@ public class ServiceBase : IServiceBase
 			            e.Key == analyticKey)
 			.AsQueryable();
 	}
-	
+
 	protected async Task PopulateAnalytics(BusinessAnalyticReference reference, string referenceValue)
 	{
 		var isAllowedReference = reference is BusinessAnalyticReference.Bean or BusinessAnalyticReference.User;
@@ -73,13 +73,17 @@ public class ServiceBase : IServiceBase
 		analyticKeys.AddRange(new List<BusinessAnalyticKey>
 		{
 			BusinessAnalyticKey.RoastingCancellationReasonTotal,
+			BusinessAnalyticKey.RoastingCancellationReasonRate,
+
 			BusinessAnalyticKey.RoastingCancellationReasonTotal,
 			BusinessAnalyticKey.RoastingCancellationReasonRate,
+
+			BusinessAnalyticKey.RoastingCancellationReasonTotal,
 			BusinessAnalyticKey.RoastingCancellationReasonRate,
 		});
 
-		var currentCancellationReasonTotal = RoastingCancellationReason.WrongRoastingDataSubmitted;
-		var currentCancellationReasonRate = RoastingCancellationReason.WrongRoastingDataSubmitted;
+		var currentCancellationReasonTotal = RoastingCancellationReason.NotCancelled;
+		var currentCancellationReasonRate = RoastingCancellationReason.NotCancelled;
 		var analytics = analyticKeys
 			.Select(analyticKey =>
 			{
@@ -95,6 +99,40 @@ public class ServiceBase : IServiceBase
 
 				switch (analyticKey)
 				{
+					case BusinessAnalyticKey.IncomingGreenBeanTotal:
+						break;
+					case BusinessAnalyticKey.IncomingGreenBeanWeightTotal:
+						break;
+					case BusinessAnalyticKey.IncomingGreenBeanWeightAverage:
+						break;
+					case BusinessAnalyticKey.IncomingGreenBeanLastTime:
+						break;
+					case BusinessAnalyticKey.RoastingTotal:
+						break;
+					case BusinessAnalyticKey.RoastingGreenBeanWeightTotal:
+						break;
+					case BusinessAnalyticKey.RoastingGreenBeanWeightAverage:
+						break;
+					case BusinessAnalyticKey.RoastingRoastedBeanWeightTotal:
+						break;
+					case BusinessAnalyticKey.RoastingRoastedBeanWeightAverage:
+						break;
+					case BusinessAnalyticKey.RoastingDepreciationWeightTotal:
+						break;
+					case BusinessAnalyticKey.RoastingDepreciationWeightAverage:
+						break;
+					case BusinessAnalyticKey.RoastingDepreciationRate:
+						break;
+					case BusinessAnalyticKey.RoastingDepreciationAverageRate:
+						break;
+					case BusinessAnalyticKey.RoastingFinishedTotal:
+						break;
+					case BusinessAnalyticKey.RoastingFinishedTotalRate:
+						break;
+					case BusinessAnalyticKey.RoastingCancelledTotal:
+						break;
+					case BusinessAnalyticKey.RoastingCancelledTotalRate:
+						break;
 					case BusinessAnalyticKey.RoastingCancellationReasonTotal:
 						analytic.AlternateReference = BusinessAnalyticReference.RoastingCancellationReason;
 						analytic.AlternateReferenceValue = ((int)currentCancellationReasonTotal).ToString();
@@ -105,6 +143,18 @@ public class ServiceBase : IServiceBase
 						analytic.AlternateReferenceValue = ((int)currentCancellationReasonRate).ToString();
 						currentCancellationReasonRate++;
 						break;
+					case BusinessAnalyticKey.PackagingTotal:
+						break;
+					case BusinessAnalyticKey.PackagingRoastedBeanRemainderWeightAverage:
+						break;
+					case BusinessAnalyticKey.PackagingAbsorptionRate:
+						break;
+					case BusinessAnalyticKey.ProductPackagedTotal:
+						break;
+					case BusinessAnalyticKey.ProductPackagedAverage:
+						break;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(analyticKey), analyticKey, null);
 				}
 
 				return analytic;
@@ -113,7 +163,7 @@ public class ServiceBase : IServiceBase
 
 		await DbContext.BusinessAnalytics.AddRangeAsync(analytics);
 	}
-	
+
 	protected Task PopulateAnalytics(Bean bean)
 	{
 		var invalidReference = bean is null ||
@@ -133,12 +183,12 @@ public class ServiceBase : IServiceBase
 			? Task.CompletedTask
 			: PopulateAnalytics(BusinessAnalyticReference.User, user.Id);
 	}
-	
+
 	protected void ModifyAnalytics(IEnumerable<BusinessAnalytic> analytics)
 	{
 		DbContext.BusinessAnalytics.UpdateRange(analytics);
 	}
-	
+
 	protected void RemoveAnalytics(Bean bean)
 	{
 		var invalidReference = bean is null ||
@@ -152,7 +202,7 @@ public class ServiceBase : IServiceBase
 		var analytics = GetAnalytics(BusinessAnalyticReference.Bean, bean.Id);
 		DbContext.BusinessAnalytics.RemoveRange(analytics);
 	}
-	
+
 	protected void RemoveAnalytics(User user)
 	{
 		var invalidReference = user is null ||

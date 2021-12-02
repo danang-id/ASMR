@@ -127,20 +127,25 @@ public class RoastingService : ServiceBase, IRoastingService
 			return null;
 		}
 
-		if (roasting.RoastedBeanWeight > 0)
-		{
-			entity.RoastedBeanWeight = roasting.RoastedBeanWeight;
-		}
-
 		var cancelOrFinishAllowed = entity.CancelledAt is null && entity.FinishedAt is null;
-		if (cancelOrFinishAllowed && roasting.CancelledAt is not null)
+		var isCancelling = cancelOrFinishAllowed &&
+		                   roasting.CancelledAt is not null &&
+		                   roasting.CancellationReason is not RoastingCancellationReason.NotCancelled;
+		var isFinishing = cancelOrFinishAllowed &&
+		                  roasting.FinishedAt is not null &&
+		                  roasting.RoastedBeanWeight > 0 &&
+		                  roasting.RoastedBeanWeight <= entity.GreenBeanWeight;
+
+		if (isCancelling)
 		{
 			entity.CancelledAt = roasting.CancelledAt;
+			entity.CancellationReason = roasting.CancellationReason;
 		}
 
-		if (cancelOrFinishAllowed && roasting.FinishedAt is not null)
+		if (isFinishing)
 		{
 			entity.FinishedAt = roasting.FinishedAt;
+			entity.RoastedBeanWeight = roasting.RoastedBeanWeight;
 		}
 
 		var entityEntry = DbContext.Roastings.Update(entity);
@@ -148,20 +153,18 @@ public class RoastingService : ServiceBase, IRoastingService
 			.FirstOrDefaultAsync();
 		var user = await DbContext.Users.Where(e => e.Id == entityEntry.Entity.UserId)
 			.FirstOrDefaultAsync();
-		var deprecation = roasting.GreenBeanWeight - roasting.RoastedBeanWeight;
 
 		async Task ProgressAnalytics(IQueryable<BusinessAnalytic> analytics)
 		{
 			var total = await analytics
 				.Where(e => e.Key == BusinessAnalyticKey.RoastingTotal)
 				.FirstOrDefaultAsync();
-
 			if (total is null)
 			{
 				return;
 			}
 
-			if (cancelOrFinishAllowed && roasting.CancelledAt is not null)
+			if (isCancelling)
 			{
 				var cancelledTotal = await analytics
 					.Where(e => e.Key == BusinessAnalyticKey.RoastingCancelledTotal)
@@ -190,14 +193,18 @@ public class RoastingService : ServiceBase, IRoastingService
 					cancellationReasonTotal.IntValue++;
 					cancellationReasonTotal.DecimalValue =
 						(decimal)cancellationReasonTotal.IntValue / cancelledTotal.IntValue;
+
 					ModifyAnalytics(new List<BusinessAnalytic>
 					{
-						cancelledTotal, cancelledTotalRate, cancellationReasonTotal, cancellationReasonTotal
+						cancelledTotal,
+						cancelledTotalRate,
+						cancellationReasonTotal,
+						cancellationReasonTotal
 					});
 				}
 			}
 
-			if (cancelOrFinishAllowed && roasting.FinishedAt is not null)
+			if (isFinishing)
 			{
 				var finishedTotal = await analytics
 					.Where(e => e.Key == BusinessAnalyticKey.RoastingFinishedTotal)
@@ -205,71 +212,81 @@ public class RoastingService : ServiceBase, IRoastingService
 				var finishedTotalRate = await analytics
 					.Where(e => e.Key == BusinessAnalyticKey.RoastingFinishedTotalRate)
 					.FirstOrDefaultAsync();
+				var greenBeanWeightTotal = await analytics
+					.Where(e => e.Key == BusinessAnalyticKey.RoastingGreenBeanWeightTotal)
+					.FirstOrDefaultAsync();
+				var roastedBeanWeightTotal = await analytics
+					.Where(e => e.Key == BusinessAnalyticKey.RoastingRoastedBeanWeightTotal)
+					.FirstOrDefaultAsync();
+				var roastedBeanWeightAverage = await analytics
+					.Where(e => e.Key == BusinessAnalyticKey.RoastingRoastedBeanWeightAverage)
+					.FirstOrDefaultAsync();
+				var depreciationWeightTotal = await analytics
+					.Where(e => e.Key == BusinessAnalyticKey.RoastingDepreciationWeightTotal)
+					.FirstOrDefaultAsync();
+				var depreciationWeightAverage = await analytics
+					.Where(e => e.Key == BusinessAnalyticKey.RoastingDepreciationWeightAverage)
+					.FirstOrDefaultAsync();
+				var depreciationRate = await analytics
+					.Where(e => e.Key == BusinessAnalyticKey.RoastingDepreciationRate)
+					.FirstOrDefaultAsync();
+				var depreciationAverageRate = await analytics
+					.Where(e => e.Key == BusinessAnalyticKey.RoastingDepreciationAverageRate)
+					.FirstOrDefaultAsync();
 
-				if (finishedTotal is not null && finishedTotalRate is not null)
+				if (finishedTotal is not null &&
+				    finishedTotalRate is not null)
 				{
 					finishedTotal.IntValue++;
 					finishedTotalRate.DecimalValue = (decimal)total.IntValue / finishedTotal.IntValue;
+
 					ModifyAnalytics(new List<BusinessAnalytic>
 					{
-						finishedTotal, finishedTotalRate
+						finishedTotal,
+						finishedTotalRate
+					});
+				}
+
+				if (finishedTotal is not null &&
+				    roastedBeanWeightTotal is not null &&
+				    roastedBeanWeightAverage is not null)
+				{
+					roastedBeanWeightTotal.DecimalValue += roasting.RoastedBeanWeight;
+					roastedBeanWeightAverage.DecimalValue =
+						roastedBeanWeightTotal.DecimalValue / finishedTotal.IntValue;
+
+					ModifyAnalytics(new List<BusinessAnalytic>
+					{
+						roastedBeanWeightTotal,
+						roastedBeanWeightAverage,
+					});
+				}
+
+				if (finishedTotal is not null &&
+				    greenBeanWeightTotal is not null &&
+				    roastedBeanWeightTotal is not null &&
+				    depreciationWeightTotal is not null &&
+				    depreciationWeightAverage is not null &&
+				    depreciationRate is not null &&
+				    depreciationAverageRate is not null)
+				{
+					var deprecation = entity.GreenBeanWeight - entity.RoastedBeanWeight;
+					depreciationWeightTotal.DecimalValue += deprecation;
+					depreciationWeightAverage.DecimalValue =
+						depreciationWeightTotal.DecimalValue / finishedTotal.IntValue;
+					depreciationRate.DecimalValue =
+						depreciationWeightTotal.DecimalValue / greenBeanWeightTotal.DecimalValue;
+					depreciationAverageRate.DecimalValue = depreciationRate.DecimalValue / finishedTotal.IntValue;
+
+					ModifyAnalytics(new List<BusinessAnalytic>
+					{
+						depreciationWeightTotal,
+						depreciationWeightAverage,
+						depreciationRate,
+						depreciationAverageRate
 					});
 				}
 			}
-
-			var greenBeanWeightTotal = await analytics
-				.Where(e => e.Key == BusinessAnalyticKey.RoastingGreenBeanWeightTotal)
-				.FirstOrDefaultAsync();
-			var greenBeanWeightAverage = await analytics
-				.Where(e => e.Key == BusinessAnalyticKey.RoastingGreenBeanWeightAverage)
-				.FirstOrDefaultAsync();
-			var roastedBeanWeightTotal = await analytics
-				.Where(e => e.Key == BusinessAnalyticKey.RoastingRoastedBeanWeightTotal)
-				.FirstOrDefaultAsync();
-			var roastedBeanWeightAverage = await analytics
-				.Where(e => e.Key == BusinessAnalyticKey.RoastingRoastedBeanWeightAverage)
-				.FirstOrDefaultAsync();
-			var depreciationWeightTotal = await analytics
-				.Where(e => e.Key == BusinessAnalyticKey.RoastingDepreciationWeightTotal)
-				.FirstOrDefaultAsync();
-			var depreciationWeightAverage = await analytics
-				.Where(e => e.Key == BusinessAnalyticKey.RoastingDepreciationWeightAverage)
-				.FirstOrDefaultAsync();
-			var depreciationTotalRate = await analytics
-				.Where(e => e.Key == BusinessAnalyticKey.RoastingDepreciationRate)
-				.FirstOrDefaultAsync();
-			var depreciationAverageRate = await analytics
-				.Where(e => e.Key == BusinessAnalyticKey.RoastingDepreciationAverageRate)
-				.FirstOrDefaultAsync();
-
-			if (greenBeanWeightTotal is null ||
-			    greenBeanWeightAverage is null ||
-			    roastedBeanWeightTotal is null ||
-			    roastedBeanWeightAverage is null ||
-			    depreciationWeightTotal is null ||
-			    depreciationWeightAverage is null ||
-			    depreciationTotalRate is null ||
-			    depreciationAverageRate is null)
-			{
-				return;
-			}
-
-			roastedBeanWeightTotal.DecimalValue += roasting.RoastedBeanWeight;
-			roastedBeanWeightAverage.DecimalValue = roastedBeanWeightTotal.DecimalValue / total.IntValue;
-			depreciationWeightTotal.DecimalValue += deprecation;
-			depreciationWeightAverage.DecimalValue = depreciationWeightTotal.DecimalValue / total.IntValue;
-			depreciationTotalRate.DecimalValue = deprecation / greenBeanWeightTotal.DecimalValue;
-			depreciationAverageRate.DecimalValue = depreciationTotalRate.DecimalValue / total.IntValue;
-
-			ModifyAnalytics(new List<BusinessAnalytic>
-			{
-				roastedBeanWeightTotal,
-				roastedBeanWeightAverage,
-				depreciationWeightTotal,
-				depreciationWeightAverage,
-				depreciationTotalRate,
-				depreciationAverageRate
-			});
 		}
 
 		var beanAnalytics = GetAnalytics(BusinessAnalyticReference.Bean, bean?.Id);

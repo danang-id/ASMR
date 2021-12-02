@@ -9,7 +9,6 @@ namespace ASMR.Web.Services;
 
 public interface IBusinessAnalyticService : IServiceBase
 {
-
 	public IQueryable<BusinessAnalytic> GetAnalytics(Bean bean);
 
 	public IQueryable<BusinessAnalytic> GetAnalytics(User user);
@@ -20,7 +19,7 @@ public class BusinessAnalyticService : ServiceBase, IBusinessAnalyticService
 	public BusinessAnalyticService(ApplicationDbContext dbContext) : base(dbContext)
 	{
 	}
-	
+
 	public IQueryable<BusinessAnalytic> GetAnalytics(Bean bean)
 	{
 		var invalidReference = bean is null ||

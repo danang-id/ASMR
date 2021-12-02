@@ -45,10 +45,14 @@ public class Startup
 
 	private IConfiguration Configuration { get; }
 
+	//
 	// This method gets called by the runtime. Use this method to add services to the container.
+	//
 	public void ConfigureServices(IServiceCollection services, IWebHostEnvironment environment)
 	{
+		//
 		// Add options
+		//
 		services.AddOptions<CaptchaOptions>().BindConfiguration("Google:reCAPTCHA");
 		services.AddOptions<JsonWebTokenOptions>().BindConfiguration("JsonWebToken");
 		services.AddOptions<MailOptions>().BindConfiguration("SendGrid");
@@ -76,6 +80,12 @@ public class Startup
 		services.AddScoped<IProductService, ProductService>();
 		services.AddScoped<ITokenService, TokenService>();
 		services.AddScoped<IUserService, UserService>();
+
+
+		//
+		// Hosted service
+		//
+		services.AddHostedService<AutomaticRoastingCancellationService>();
 
 		services.AddAntiforgery(options =>
 		{
@@ -142,7 +152,6 @@ public class Startup
 				options.User.AllowedUserNameCharacters =
 					"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._";
 
-				// Identity : Default password settings
 				options.Password.RequireDigit = true;
 				options.Password.RequireLowercase = true;
 				options.Password.RequireNonAlphanumeric = true;
@@ -170,7 +179,9 @@ public class Startup
 			options.LowercaseQueryStrings = true;
 		});
 
+		//
 		// In production, the React files will be served from this directory
+		//
 		services.AddSpaStaticFiles(configuration => { configuration.RootPath = ClientAppConstants.BuildPath; });
 
 		services.Configure<FormOptions>(options =>
@@ -193,15 +204,20 @@ public class Startup
 		});
 	}
 
+	//
 	// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+	//
 	public void Configure(IApplicationBuilder app, IWebHostEnvironment environment)
 	{
 		if (!environment.IsDevelopment())
 		{
 			app.UseExceptionHandler("/error");
 			app.UseSecurityHeaders(SecurityHeadersConstants.DefaultHeaderPolicyCollection);
+
+			//
 			// The default HSTS value is 30 days. You may want to change this for production
 			// scenarios, see https://aka.ms/aspnetcore-hsts.
+			//
 			app.UseHsts();
 		}
 		else

@@ -36,9 +36,9 @@ Global
 		SolutionGuid = {EC977E58-67FF-4149-BCD1-406EB0490520}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		version = 1.0.0
+		version = 1.1.1
 		Policies = $0
 		$0.StandardHeader = $1
-		$1.Text = @//\n// ASMR: Coffee Beans Management Solution\n// © 2021 Pandora Karya Digital. All right reserved.\n//\n// Written by ${AuthorName} [${AuthorEmail}]\n// at ${Date} ${Time}\n//\n// ${FileName\n//
+		$1.Text = @//\n// asmr: Coffee Beans Management Solution\n// © 2021 Pandora Karya Digital. All right reserved.\n//\n// Written by ${AuthorName} [${AuthorEmail}]\n// at ${Date} ${Time}\n//\n// ${FileName}\n//
 	EndGlobalSection
 EndGlobal
