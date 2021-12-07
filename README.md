@@ -8,7 +8,7 @@
 <br />
 <div align="center">
   <a href="https://asmr.hamzahjundi.me/">
-    <img src="Docs/asmr-title.svg" alt="asmr" width="290" height="100">
+    <img src="Docs/asmr-title.jpg" alt="asmr" width="290" height="100">
   </a>
 
 <h3 align="center">asmr</h3>
@@ -84,8 +84,6 @@ Please make sure have you following installed.
 
 ### Installation
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
 1. Clone this repo
    ```sh
    git clone https://github.com/danang-id/asmr.git
@@ -143,8 +141,7 @@ _Below is an example of how you can instruct your audience on installing and set
 
 
 
-<!-- USAGE EXAMPLES -->
-## Usage
+## Run and Build
 
 To run this application for development, follow these steps.
 1. Open Terminal / Command Prompt at `ASMR.Web/ClientApp` folder, and type:
@@ -173,7 +170,6 @@ The binary output should be in the `ASMR.Web/Releases` folder.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
-<!-- LICENSE -->
 ## License
 
 This project is licensed under the BSD 3-Clause License. See [`LICENSE.md`](LICENSE.md) for more information.
@@ -182,7 +178,6 @@ This project is licensed under the BSD 3-Clause License. See [`LICENSE.md`](LICE
 
 
 
-<!-- CONTACT -->
 ## Contact
 
 Danang Galuh Tegar Prasetyo - [@dananggaluht](https://twitter.com/dananggaluht) - connect@danang.id
@@ -193,7 +188,6 @@ Project Link: [https://github.com/danang-id/asmr](https://github.com/danang-id/a
 
 
 
-<!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/danang-id/asmr.svg?style=for-the-badge
 [contributors-url]: https://github.com/danang-id/asmr/graphs/contributors
