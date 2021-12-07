@@ -261,18 +261,20 @@ public class UserController : DefaultAbstractApiController<UserController>
 			modelHasRoles && model.Roles.Where(role => role == Role.Administrator).Any();
 		var userIsAdministrator = await _userService.HasRole(user, Role.Administrator);
 
-		if (!modelHasRoles)
-		{
-			var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
-				"Please assign minimal a role.");
-			return BadRequest(new UserResponseModel(errorModel));
-		}
+		if (model.Roles is not null) {
+			if (!modelHasRoles)
+			{
+				var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+					"Please assign minimal a role.");
+				return BadRequest(new UserResponseModel(errorModel));
+			}
 
-		if (modelRoleIncludesAdministrator && !userIsAdministrator)
-		{
-			var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
-				"Assigning Administrator role is not allowed.");
-			return BadRequest(new UserResponseModel(errorModel));
+			if (modelRoleIncludesAdministrator && !userIsAdministrator)
+			{
+				var errorModel = new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+					"Assigning Administrator role is not allowed.");
+				return BadRequest(new UserResponseModel(errorModel));
+			}
 		}
 
 		MediaFile mediaFile = null;
@@ -328,13 +330,16 @@ public class UserController : DefaultAbstractApiController<UserController>
 			return BadRequest(new UserResponseModel(errorModels));
 		}
 
-		var assignRolesResult = await _userService.AssignRolesToUser(id, model.Roles);
-		if (!assignRolesResult.Succeeded && assignRolesResult.Errors.Any())
+		if (modelHasRoles)
 		{
-			var errorModels = assignRolesResult.Errors
-				.Select(error => new ResponseError(ErrorCodeConstants.ModelValidationFailed,
-					error.Description));
-			return BadRequest(new UserResponseModel(errorModels));
+			var assignRolesResult = await _userService.AssignRolesToUser(id, model.Roles);
+			if (!assignRolesResult.Succeeded && assignRolesResult.Errors.Any())
+			{
+				var errorModels = assignRolesResult.Errors
+					.Select(error => new ResponseError(ErrorCodeConstants.ModelValidationFailed,
+						error.Description));
+				return BadRequest(new UserResponseModel(errorModels));
+			}
 		}
 
 		if (emailAddressModified)

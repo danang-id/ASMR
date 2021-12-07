@@ -44,74 +44,103 @@ client:
 	@cd ClientApp; yarn; yarn build
 
 cross-platform:
-	$(eval @_RELEASE_PATH := "Releases/asmr-cross-platform")
+	$(eval @_RELEASE_NAME := "asmr-cross-platform")
+	$(eval @_RELEASE_PATH := "Releases/$(@_RELEASE_NAME)")
 	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
-		--output $(@_RELEASE_PATH)
+		--output $(@_RELEASE_PATH); \
+  	cd Releases; \
+    zip -vr -X $(@_RELEASE_NAME).zip . -i $(@_RELEASE_NAME)\*; \
+    cd ..; \
+	
 
 linux-x86:
-	$(eval @_RELEASE_PATH := "Releases/asmr-linux-x86")
+	$(eval @_RELEASE_NAME := "asmr-cross-platform")
+	$(eval @_RELEASE_PATH := "Releases/$(@_RELEASE_NAME)")
 	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
 		--output $(@_RELEASE_PATH) \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
 		--runtime linux-x86 \
-		--self-contained false
+		--self-contained false; \
+  	cd Releases; \
+    zip -vr -X $(@_RELEASE_NAME).zip . -i $(@_RELEASE_NAME)\*; \
+    cd ..; \
 
 linux-x64:
-	$(eval @_RELEASE_PATH := "Releases/asmr-linux-x64")
+	$(eval @_RELEASE_NAME := "asmr-linux-x64")
+	$(eval @_RELEASE_PATH := "Releases/$(@_RELEASE_NAME)")
 	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
 		--output $(@_RELEASE_PATH) \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
 		--runtime linux-x64 \
-		--self-contained false
+		--self-contained false; \
+  	cd Releases; \
+    zip -vr -X $(@_RELEASE_NAME).zip . -i $(@_RELEASE_NAME)\*; \
+    cd ..; \
 		
 linux-x64-noopt:
-	$(eval @_RELEASE_PATH := "Releases/asmr-linux-x64-noopt")
+	$(eval @_RELEASE_NAME := "asmr-linux-x64-noopt")
+	$(eval @_RELEASE_PATH := "Releases/$(@_RELEASE_NAME)")
 	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
 		--output $(@_RELEASE_PATH) \
 		--runtime linux-x64 \
-		--self-contained false
+		--self-contained false; \
+  	cd Releases; \
+    zip -vr -X $(@_RELEASE_NAME).zip . -i $(@_RELEASE_NAME)\*; \
+    cd ..; \
 
-osx-x64:
-	$(eval @_RELEASE_PATH := "Releases/asmr-macos-x64")
+macos-x64:
+	$(eval @_RELEASE_NAME := "asmr-macos-x64")
+	$(eval @_RELEASE_PATH := "Releases/$(@_RELEASE_NAME)")
 	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
 		--output $(@_RELEASE_PATH) \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
 		--runtime osx-x64 \
-		--self-contained false
+		--self-contained false; \
+  	cd Releases; \
+    zip -vr -X $(@_RELEASE_NAME).zip . -i $(@_RELEASE_NAME)\*; \
+    cd ..; \
 
 win-x86:
-	$(eval @_RELEASE_PATH := "Releases/asmr-win-x86")
+	$(eval @_RELEASE_NAME := "asmr-win-x86")
+	$(eval @_RELEASE_PATH := "Releases/$(@_RELEASE_NAME)")
 	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
 		--output $(@_RELEASE_PATH) \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
 		--runtime win-x86 \
-		--self-contained false
+		--self-contained false; \
+  	cd Releases; \
+    zip -vr -X $(@_RELEASE_NAME).zip . -i $(@_RELEASE_NAME)\*; \
+    cd ..; \
 
 win-x64:
-	$(eval @_RELEASE_PATH := "Releases/asmr-win-x64")
+	$(eval @_RELEASE_NAME := "asmr-win-x64")
+	$(eval @_RELEASE_PATH := "Releases/$(@_RELEASE_NAME)")
 	@npx rimraf $(@_RELEASE_PATH); \
 	dotnet publish --configuration $(BUILD_CONFIGURATION) \
 		--framework $(BUILD_FRAMEWORK) \
 		--output $(@_RELEASE_PATH) \
 		-p:PublishReadyToRun=true -p:PublishReadyToRunShowWarnings=true -p:PublishSingleFile=false -p:PublishTrimmed=false \
 		--runtime win-x64 \
-		--self-contained false
-		
-releases:
+		--self-contained false; \
+  	cd Releases; \
+    zip -vr -X $(@_RELEASE_NAME).zip . -i $(@_RELEASE_NAME)\*; \
+    cd ..; \
+
+release:
 	@make linux-x64
-	@make osx-x64
+	@make macos-x64
 	@make win-x64
 
 migrations:
