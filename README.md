@@ -102,7 +102,7 @@ Please make sure have you following installed.
    `appsettings.Local.json` as described below.
 5. Prepare Google reCAPTCHA Secret Key. You can obtain it on the
    [Google reCAPTCHA Admin Panel](https://www.google.com/recaptcha/admin).
-6. Prepare SendGrid API Key, ContactListId, and templates' Id. You can obtain them on the
+6. Prepare SendGrid API Key, Contact List Id, and Mail Templates Id. You can obtain them on the
    [SendGrid Dashboard](https://app.sendgrid.com).
 7. Save those secrets by creating `appsettings.Local.json` file (if not exists) in the `ASMR.Web`
    folder. Use the following template for `appsettings.Local.json`.
