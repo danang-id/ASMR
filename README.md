@@ -14,9 +14,9 @@
 <h3 align="center">asmr</h3>
 
   <p align="center">
-    A simple Coffee Beans management solution
+    A simple Coffee Beans management solution.
     <br />
-    <a href="https://asmr.hamzahjundi.me">Visit Web Dashboard</a>
+    <a href="https://asmr.hamzahjundi.me">Try Web Dashboard</a>
   </p>
 </div>
 
