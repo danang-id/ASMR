@@ -1,9 +1,17 @@
-// ReSharper disable InconsistentNaming
+//
+// asmr: Coffee Beans Management Solution
+// © 2021 Pandora Karya Digital. All right reserved.
+//
+// Written by Danang Galuh Tegar Prasetyo [connect@danang.id]
+//
+// ReleaseInformationManager.cs
+//
 
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 
+// ReSharper disable InconsistentNaming
 namespace ASMR.Web.ReleaseInformation;
 
 public static class ReleaseInformationManager

@@ -1,4 +1,12 @@
-﻿using ASMR.Core.Generic;
+﻿//
+// asmr: Coffee Beans Management Solution
+// © 2021 Pandora Karya Digital. All right reserved.
+//
+// Written by Danang Galuh Tegar Prasetyo [connect@danang.id]
+//
+// IncomingGreenBean.cs
+//
+using ASMR.Core.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;

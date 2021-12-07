@@ -1,3 +1,12 @@
+//
+// asmr: Coffee Beans Management Solution
+// © 2021 Pandora Karya Digital. All right reserved.
+//
+// Written by Danang Galuh Tegar Prasetyo [connect@danang.id]
+//
+// TimedHostedService.cs
+//
+
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,7 +52,7 @@ public abstract class TimedHostedService : IHostedService, IDisposable
 	{
 		Logger.LogInformation("{Name} is starting", Name);
 
-		_timer = new Timer(ExecuteTask, null, _timeSpan, TimeSpan.FromMilliseconds(-1));
+		_timer = new Timer(ExecuteTask, null, _timeSpan, TimeSpan.FromMilliseconds(1));
 
 		return Task.CompletedTask;
 	}
@@ -58,7 +67,7 @@ public abstract class TimedHostedService : IHostedService, IDisposable
 	{
 		Logger.LogInformation("{Name} is executing scheduled task", Name);
 		await RunJobAsync(cancellationToken);
-		_timer.Change(_timeSpan, TimeSpan.FromMilliseconds(-1));
+		_timer.Change(_timeSpan, TimeSpan.FromMilliseconds(1));
 	}
 
 	/// <summary>

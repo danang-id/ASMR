@@ -1,4 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿//
+// asmr: Coffee Beans Management Solution
+// © 2021 Pandora Karya Digital. All right reserved.
+//
+// Written by Danang Galuh Tegar Prasetyo [connect@danang.id]
+//
+// ClientPlatformMiddleware.cs
+//
+
+using System.Threading.Tasks;
 using ASMR.Common.Constants;
 using ASMR.Core.Constants;
 using ASMR.Core.Generic;

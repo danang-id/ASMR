@@ -1,3 +1,12 @@
+//
+// asmr: Coffee Beans Management Solution
+// © 2021 Pandora Karya Digital. All right reserved.
+//
+// Written by Danang Galuh Tegar Prasetyo [connect@danang.id]
+//
+// ASMRMobileReleaseInformation.cs
+//
+
 using System.Text.Json.Serialization;
 using ASMR.Web.ReleaseInformation.Common;
 

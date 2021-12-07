@@ -9,11 +9,11 @@
     <Authors>Danang Galuh Tegar Prasetyo</Authors>
     <Company>Pandora Karya Digital</Company>
     <Product>ASMR Common Library</Product>
-    <AssemblyVersion>1.1.1</AssemblyVersion>
-    <FileVersion>1.1.1</FileVersion>
+    <AssemblyVersion>1.1.2</AssemblyVersion>
+    <FileVersion>1.1.2</FileVersion>
     <NeutralLanguage>en</NeutralLanguage>
     <Platforms>AnyCPU</Platforms>
-    <PackageVersion>1.1.1</PackageVersion>
+    <PackageVersion>1.1.2</PackageVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

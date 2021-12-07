@@ -1,9 +1,8 @@
 ﻿//
-// ASMR: Coffee Beans Management Solution
+// asmr: Coffee Beans Management Solution
 // © 2021 Pandora Karya Digital. All right reserved.
 //
 // Written by Danang Galuh Tegar Prasetyo [connect@danang.id]
-// at 6/27/2021 8:46 PM
 //
 // MediaFileService.cs
 //

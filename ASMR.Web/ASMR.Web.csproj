@@ -14,9 +14,9 @@
 		<Company>Pandora Karya Digital</Company>
 		<Product>ASMR Web Server</Product>
 		<ReleaseVersion>1.0.0</ReleaseVersion>
-		<AssemblyVersion>1.1.1</AssemblyVersion>
-		<FileVersion>1.1.1</FileVersion>
-		<PackageVersion>1.1.1</PackageVersion>
+		<AssemblyVersion>1.1.2</AssemblyVersion>
+		<FileVersion>1.1.2</FileVersion>
+		<PackageVersion>1.1.2</PackageVersion>
 		<NeutralLanguage>en</NeutralLanguage>
 		<Platforms>AnyCPU</Platforms>
 		<UserSecretsId>143ab751-b354-4226-b63e-fc5e30c39def</UserSecretsId>

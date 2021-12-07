@@ -1,3 +1,12 @@
+//
+// asmr: Coffee Beans Management Solution
+// © 2021 Pandora Karya Digital. All right reserved.
+//
+// Written by Danang Galuh Tegar Prasetyo [connect@danang.id]
+// 
+// ConfirmEmailAddressRequestModel.cs
+// 
+
 using System.ComponentModel.DataAnnotations;
 
 namespace ASMR.Core.RequestModel;

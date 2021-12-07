@@ -1,3 +1,12 @@
+//
+// asmr: Coffee Beans Management Solution
+// © 2021 Pandora Karya Digital. All right reserved.
+//
+// Written by Danang Galuh Tegar Prasetyo [connect@danang.id]
+//
+// TokenService.cs
+//
+
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;

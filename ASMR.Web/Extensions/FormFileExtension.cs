@@ -1,4 +1,13 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿//
+// asmr: Coffee Beans Management Solution
+// © 2021 Pandora Karya Digital. All right reserved.
+//
+// Written by Danang Galuh Tegar Prasetyo [connect@danang.id]
+//
+// FormFileExtension.cs
+//
+
+using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -106,14 +115,14 @@ public static class FormFileExtension
 	{
 		try
 		{
-			if (!Directory.Exists(ResourceContants.DirectoryPath))
+			if (!Directory.Exists(ResourceConstants.DirectoryPath))
 			{
-				Directory.CreateDirectory(ResourceContants.DirectoryPath);
+				Directory.CreateDirectory(ResourceConstants.DirectoryPath);
 			}
 
 			var timeStamp = DateTimeOffset.Now.ToUnixTimeMilliseconds();
 			var fileName = $"{timeStamp}_{Path.GetRandomFileName()}.resource";
-			var filePath = Path.Combine(ResourceContants.DirectoryPath, fileName);
+			var filePath = Path.Combine(ResourceConstants.DirectoryPath, fileName);
 			var absoluteFilePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
 			await using (var fileStream = File.Create(absoluteFilePath))
 			{
