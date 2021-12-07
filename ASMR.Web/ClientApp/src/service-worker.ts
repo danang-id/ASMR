@@ -40,6 +40,8 @@ registerRoute(
 		if (
 			url.pathname.startsWith("/_") ||
 			url.pathname.startsWith("/api") ||
+			url.pathname.startsWith("/engine") ||
+			url.pathname.startsWith("/database") ||
 			url.pathname.startsWith("/site.webmanifest") ||
 			url.pathname.startsWith("/robots.txt") ||
 			url.pathname.startsWith("/browserconfig.xml")
