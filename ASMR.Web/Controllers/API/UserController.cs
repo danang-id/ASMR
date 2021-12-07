@@ -234,7 +234,7 @@ public class UserController : DefaultAbstractApiController<UserController>
 			return BadRequest(new UserResponseModel(errorModel));
 		}
 
-		if (user.UserName != model.Username)
+		if (!string.IsNullOrEmpty(model.Username) && user.UserName != model.Username)
 		{
 			var existingUser = await _userService.GetUserByName(model.Username);
 			if (existingUser is not null)
@@ -245,7 +245,7 @@ public class UserController : DefaultAbstractApiController<UserController>
 			}
 		}
 
-		if (user.Email != model.EmailAddress)
+		if (!string.IsNullOrEmpty(model.EmailAddress) && user.Email != model.EmailAddress)
 		{
 			var existingUser = await _userService.GetUserByEmailAddress(model.EmailAddress);
 			if (existingUser is not null)
