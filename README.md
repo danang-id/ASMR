@@ -5,27 +5,10 @@
 [![BSD 3-Clause License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
-<style>
-light-logo {
-  display: block;
-}
-dark-logo {
-  display: none;
-}
-@media (prefers-color-scheme: dark) {
-   light-logo {
-     display: none;
-   }
-   dark-logo {
-     display: block;
-   }
-}
-</style>
 <br />
 <div align="center">
   <a href="https://asmr.hamzahjundi.me/">
-    <img class="light-logo" src="Docs/asmr-title.png" alt="asmr" width="290" height="100">
-    <img class="dark-logo" src="Docs/asmr-title-inverted.png" alt="asmr" width="290" height="100">
+    <img src="Docs/asmr-title.svg" alt="asmr" width="290" height="100">
   </a>
 
 <h3 align="center">asmr</h3>
